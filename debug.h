@@ -7,11 +7,11 @@ string to_string(bool b) {
 }
 
 string to_string(char c){
-    return string({c});
+    return "'" + string({c}) + "'";
 }
 
 string to_string(string s) {
-    return s;
+    return '"' + s + '"';
 }
 
 string to_string(const char* s) {
