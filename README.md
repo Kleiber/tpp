@@ -29,24 +29,29 @@ tpp run <filename>
 
 ## Template
 
-
-```go
+Since in competitive programming time is a very important constant, `tpp` tool allows you to generate a code base template. In this template first we can see the following reference:
+```c++
 // remove this code before your submission
 #include "debug.h"
 ```
+The inclusion of this reference allows us to use some additional debugging methods. **Do not forget that before submitting our code we must always remove this reference**. 
 
 
-```go
+
+The second and no less important thing that we can see in our template are the following two code lines:
+```c++
 // do not remove this code if you use cin or cout
 ios::sync_with_stdio(false);
 cin.tie(0);
 ```
+In competitive programming is often recommended to use `scanf/printf` instead of cin/cout for a fast input and output. However, you can still **use `cin/cout` and achieve the same speed as `scanf/printf` by including these two code lines in our `main()` function.**
+
 
 ## Debug
 
 `tpp` tool also includes an easier way to show the content of our variables. It is very simple, we just have to use the `debug` function and send the variable that we want to show as a parameter. This is very useful when debugging our code. An example:
 
-```go
+```c++
 #include <bits/stdc++.h>
 using namespace std;
 
