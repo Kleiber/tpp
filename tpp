@@ -2,17 +2,13 @@
 
 ## author: KleiberXD
 
-exec="build"
-input_file="in.in"
-ouput_file="out.out"
+ROOTDIR="$(cd "$(dirname "${BASH_SOURCE-$0}")" && pwd)"
+TPP_PATH=${ROOTDIR}
+source "${ROOTDIR}/scripts/help.sh"
 
-# the command line help
-function help_tpp() {
-	if [ "$1" == "-h" ] || [ "$1" == 'help' ]; then
-		echo "Usage: $0 {init|build|run} [filename|filename.cpp]" >&2
-		echo "   -h, --help      show help options"
-	fi
-}
+EXEC="build"
+INPUT_FILE="in.in"
+OUTPUT_FILE="out.out"
 
 #  init new template cpp 
 function init_tpp() {
@@ -28,7 +24,7 @@ function init_tpp() {
 		using namespace std;
 
 		// remove this code before your submission
-		#include "debug.h"
+		#include "${TPP_PATH}/debug.h"
 
 		int main() { 
 		    // do not remove this code if you use cin or cout
@@ -49,7 +45,7 @@ function init_tpp() {
 # build cpp file
 function build_tpp() {
 	if [ -f $1 ]; then   
-	    run=$(g++ -o $exec $1)
+	    local run=$(g++ -o $EXEC $1)
 	    if [ $? -eq 1 ]; then
 			echo "Error: $1 compilation failed" >&2
 			exit 1
@@ -64,14 +60,14 @@ function build_tpp() {
 # run cpp file with or without input file
 function run_tpp() {
 	if [ -f $1 ]; then
-	    if [ -f $input_file ]; then
-			./$exec<$input_file
+	    if [ -f $INPUT_FILE ]; then
+			./$EXEC<$INPUT_FILE
 			if [ $? -eq 1 ]; then
 				echo "Error: $1 execution with input file in.in failed" >&2
 				exit 1
 			fi
 		else
-			./$exec
+			./$EXEC
 			if [ $? -eq 1 ]; then
 	   			echo "Error: $1 execution failed" >&2
 				exit 1
@@ -83,17 +79,18 @@ function run_tpp() {
 	fi
 }
 
-function tpp() {	
-	help_tpp $1
+function tpp() {
+	local commands=($@)
+	help_tpp ${commands[@]}
 
-	if [ "$#" -ne 2 ]; then
+	if [ "${#commands[@]}" -ne 2 ]; then
 		echo "Error: two arguments are necessary, use the -h flag for more details" >&2
 		exit 1
 	fi
 
-	command="$1"
-	filename="$2"
-	extension="${filename##*.}"
+	local command="${commands[0]}"
+	local filename="${commands[1]}"
+	local extension="${filename##*.}"
 
 	if [ $extension == $filename ]; then
 		filename="$filename.cpp"
@@ -118,4 +115,4 @@ function tpp() {
 	esac
 }
 
-tpp $1 $2
+tpp $@
