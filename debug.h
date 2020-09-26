@@ -1,6 +1,6 @@
 // author: KleiberXD
 
-#define debug(...) cerr<<"debug:"<<__LINE__<<" <"<<#__VA_ARGS__<<">: "<<to_string(__VA_ARGS__)<<endl
+#define debug(...) cerr<<"debug:"<<__LINE__<<" "<<#__VA_ARGS__<<": "<<to_string(__VA_ARGS__)<<endl
 
 string to_string(bool b) {
     return (b?"1":"0");
