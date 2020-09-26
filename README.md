@@ -1,6 +1,9 @@
 
 # tpp tool
 
+## Overview
+
+`tpp` is a tool whose objective is to help people who are in the world of competitive programming optimizing compilation, testing and code debugging time.
 
 ## Installing
 Using `tpp` tool is easy. First, clone the repository in your workspace
