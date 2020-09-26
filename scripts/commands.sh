@@ -15,7 +15,27 @@ COMMANDS_DESCRIPTION=(\
 "Compile, run and test the specified .cpp file")
 
 FLAGS=(\
-"-h --help")
+"-h,--help")
 
 FLAGS_DESCRIPTION=(\
 "Show help options")
+
+FLAGS_INIT=(\
+"-f,--force"
+)
+
+FLAGS_INIT_DESCRIPTION=(\
+"Force the creating of the .cpp file template"
+)
+
+FLAGS_TEST=(\
+"-i,--input"
+"-e,--expected"
+"-o,--output"
+)
+
+FLAGS_TEST_DESCRIPTION=(\
+"File path that contain the test cases (default in.tpp)"
+"File path that contain the expected outputs (default test.tpp)"
+"File path that will contain the generated output (default out.tpp)"
+)
