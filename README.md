@@ -5,7 +5,7 @@
 
 `tpp` is a command line that aims to help competitive programmers optimizing code compilation, testing, and debugging time.
 
-## Installing (LINUX)
+## Installing (Linux)
 Using `tpp` command line is simple. First, clone the repository in your workspace
 ```bash
 cd $HOME
