@@ -15,6 +15,8 @@ Next, include the following line in your `~/.bashrc` file
 ```bash
 export PATH=$PATH:$HOME/tools:
 ```
+Finally, restart your terminal or run the command `source ~/.bashrc`
+
 ## Commands
 ### init
 Initialize a new template with the `filename`. Basically a new file is created to start a new code.
