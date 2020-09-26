@@ -59,7 +59,7 @@ In competitive programming is often recommended to use `scanf/printf` instead of
 
 ## Debug
 
-The main task of de `tpp` command line is to include the `debug.h` script, who allows you to debug your variables showing their content in a simple and practical way. Its use is quite straightforward, you just have to call the `debug` method and send the variable, that you want to show as, a parameter.
+The main task of `tpp` command line is to include the `debug.h` script, who allows you to debug your variables showing their content in a simple and practical way. Its use is quite straightforward, you just have to call the `debug` method and send the variable, that you want to show as, a parameter.
 
 An example:
 
