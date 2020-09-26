@@ -20,7 +20,7 @@ extension="${filename##*.}"
 
 exec="build"
 input_file="in.in"
-ouput_file="in.in"
+ouput_file="out.out"
 
 if [ $extension == $filename ]; then
 	filename="$filename.cpp"
@@ -87,7 +87,7 @@ fi
 # run test cases
 if [ $command == 'test' ]; then
 	if [ -f $filename ]; then
-	    if [ -f $input_file ]; then
+	    if ! [ -f $input_file ]; then
 	   		echo "Error: $input_file file does not exist" >&2
 	   		exit 1
 		fi
