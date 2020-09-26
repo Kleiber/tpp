@@ -119,7 +119,6 @@ function help_tpp() {
                 ;;
         esac
 
-        echo ""
-		exit 0
+        exit 0
 	fi
 }
