@@ -16,16 +16,23 @@ Next, include the following line in your `~/.bashrc` file
 export PATH=$PATH:$HOME/tools:
 ```
 ## Commands
+`tpp` tools offers us some commands:
 
-
+#### init
+initialize a new template with the `filename` (no need to put the extension `.cpp` in the filename). Basically a new file is created to start a new code.
 ```bash
 tpp init <filename>
 ```
+
+#### build
+build cpp g++ -o a a.cpp
 
 ```bash
 tpp build <filename>
 ```
 
+#### run
+run test cases
 ```bash
 tpp run <filename>
 ```
