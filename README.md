@@ -44,8 +44,7 @@ cin.tie(0);
 
 ## Debug
 
-
-An example:
+`tpp` tool also includes an easier way to show the content of our variables. It is very simple, we just have to use the `debug` function and send the variable that we want to show as a parameter. This is very useful when debugging our code. An example:
 
 ```go
 #include <bits/stdc++.h>
