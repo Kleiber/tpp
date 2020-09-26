@@ -52,7 +52,9 @@ In competitive programming is often recommended to use `scanf/printf` instead of
 
 ## Debug
 
-`tpp` tool also includes an easier way to show the content of our variables. It is very simple, we just have to use the `debug` function and send the variable that we want to show as a parameter. This is very useful when debugging our code. An example:
+`tpp` tool also includes an easier way to show the content of our variables. It is very simple, we just have to use the `debug` function and send the variable that we want to show as a parameter. This is very useful when debugging our code.
+
+An example:
 
 ```c++
 #include <bits/stdc++.h>
