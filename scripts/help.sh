@@ -1,7 +1,6 @@
 #!/bin/bash
 
-ROOTDIR="$(cd "$(dirname "${BASH_SOURCE-$0}")" && pwd)"
-source "${ROOTDIR}/commands.sh"
+source "${ROOT_DIR}/scripts/commands.sh"
 
 TAB_COMMAND=()
 TAB_FLAG=()
@@ -114,6 +113,11 @@ function help_tpp() {
                 echo ${COMMANDS_DESCRIPTION[2]}
                 echo -e "\nUsage:"
                 echo_with_tab "tpp run <filename>"
+                ;;
+            "test")
+                echo ${COMMANDS_DESCRIPTION[2]}
+                echo -e "\nUsage:"
+                echo_with_tab "tpp test <filename>"
                 ;;
         esac
 

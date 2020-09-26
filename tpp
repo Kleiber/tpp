@@ -2,29 +2,29 @@
 
 ## author: KleiberXD
 
-ROOTDIR="$(cd "$(dirname "${BASH_SOURCE-$0}")" && pwd)"
-TPP_PATH=${ROOTDIR}
-source "${ROOTDIR}/scripts/help.sh"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE-$0}")" && pwd)"
+source "${ROOT_DIR}/scripts/help.sh"
 
 EXEC="build"
-INPUT_FILE="in.in"
-OUTPUT_FILE="out.out"
+INPUT_FILE="in.tpp"
+OUTPUT_FILE="out.tpp"
+TEST_FILE="test.tpp"
 
 #  init new template cpp 
 function init_tpp() {
 	if [ -f $1 ]; then
-		echo "Error: $1 already exists" >&2
+		echo "Error: $1 already exists"
 		exit 1
 	else
+		# generate cpp template file
 		cat > $1 <<-EOF
-		// author: KleiberXD
 		// file: $1
 
 		#include <bits/stdc++.h>
 		using namespace std;
 
 		// remove this code before your submission
-		#include "${TPP_PATH}/debug.h"
+		#include "${ROOT_DIR}/debug.h"
 
 		int main() { 
 		    // do not remove this code if you use cin or cout
@@ -34,47 +34,76 @@ function init_tpp() {
 		    return 0;
 		}
 		EOF
-		if [ $? -eq 1 ]; then
-	   		echo "Error: $1 init failed" >&2
-			exit 1
-	    fi
-	    echo "$1 was initialized successfully!"
+		# generate input file in.tpp
+		touch $INPUT_FILE
+		# generate output file out.tpp
+		touch $OUTPUT_FILE
+		# generate test file test.tpp
+		touch $TEST_FILE
 	fi	
 }
 
 # build cpp file
 function build_tpp() {
 	if [ -f $1 ]; then   
-	    local run=$(g++ -o $EXEC $1)
-	    if [ $? -eq 1 ]; then
-			echo "Error: $1 compilation failed" >&2
-			exit 1
-	    fi
-	    echo "$1 was compiled successfully!"
+	    g++ -o $EXEC $1
 	else
-	    echo "Error: $1 file does not exist" >&2
+	    echo "Error: $1 file does not exist"
 	    exit 1
 	fi
 }
 
-# run cpp file with or without input file
+# run cpp file with input file
+function run_with_input() {
+	./$EXEC<$INPUT_FILE
+	if [ $? -eq 1 ]; then
+		echo "Error: $1 execution with input file $INPUT_FILE failed"
+		exit 1
+	fi
+	echo $ouput
+}
+
+# run cpp file without input file
+function run_without_input() {
+	./$EXEC
+	if [ $? -eq 1 ]; then
+		echo "Error: $1 execution failed"
+		exit 1
+	fi
+}
+
+# compile and run cpp file with/without the input file
 function run_tpp() {
 	if [ -f $1 ]; then
+		build_tpp $1
 	    if [ -f $INPUT_FILE ]; then
-			./$EXEC<$INPUT_FILE
-			if [ $? -eq 1 ]; then
-				echo "Error: $1 execution with input file in.in failed" >&2
-				exit 1
-			fi
+			run_with_input $1
 		else
-			./$EXEC
-			if [ $? -eq 1 ]; then
-	   			echo "Error: $1 execution failed" >&2
-				exit 1
-	    	fi
+			run_without_input $1
 		fi
 	else
-	   echo "Error: $1 file does not exist" >&2
+	   echo "Error: $1 file does not exist"
+	   exit 1
+	fi
+}
+
+ # compile, run and test cpp file ouput with the test file
+function test_tpp() {
+	if [ -f $1 ]; then
+	    if [ -f $TES_FILE ]; then
+			run_tpp $1 > $OUTPUT_FILE
+			diff $TEST_FILE $OUTPUT_FILE --color
+			if [ $? -eq 1 ]; then
+				echo "$filename FAILED TESTS!"
+				exit 1
+			fi
+			echo "$filename PASSED TESTS!"
+		else
+			echo "Error: $OUPUTPUT_FILE file does not exist"
+			exit 1
+		fi
+	else
+	   echo "Error: $1 file does not exist"
 	   exit 1
 	fi
 }
@@ -96,21 +125,35 @@ function tpp() {
 		filename="$filename.cpp"
 	else
 		if ! [ $extension == 'cpp' ]; then
-			echo "Error: file is not cpp" >&2
+			echo "Error: file is not cpp"
 			exit 1
 		fi
 	fi
 
 	case $command in
 	"init")
-		init_tpp $filename;;
+		init_tpp $filename
+		if [ $? -eq 1 ]; then
+			echo "Error: $filename init failed"
+			exit 1
+	    fi
+		echo "$filename was initialized successfully!"
+		;;
 	"build")
-		build_tpp $filename;;
+		build_tpp $filename
+	    if [ $? -eq 1 ]; then
+			echo "Error: $filename compilation failed"
+			exit 1
+	    fi
+	    echo "$filename was compiled successfully!"
+		;;
 	"run")
 		run_tpp $filename;;
+	"test")
+		test_tpp $filename;;
 	*)
-		echo "Error: Invalid arguments, use the -h flag for more details" >&2
-		exit 1	
+		echo "Error: Invalid arguments, use the -h flag for more details"
+		exit 1
 	;;
 	esac
 }

@@ -49,7 +49,7 @@ At the top of the template you will see the following `include` statement:
 // remove this code before your submission
 #include "debug.h"
 ```
-That line allows you to make use of the debug methods. **Do not forget that before submitting your code you must remove that line**.
+That line allows you to make use of the debug method. **Do not forget that before submitting your code you must remove that line**.
 
 The second and no less important thing that we can see in the template are the following two code lines:
 ```c++
@@ -61,7 +61,7 @@ In competitive programming is often recommended to use `scanf/printf` instead of
 
 ## Debug
 
-The main task of `tpp` command line is to include the `debug.h` script, who allows you to debug your variables showing their content in a simple and practical way. Its use is quite straightforward, you just have to call the `debug` method and send the variable, that you want to show as a parameter.
+The main task of `tpp` command line is to include the `debug.h` script, who allows you to debug your variables showing their content in a simple and practical way. Its use is quite straightforward, you just have to call the `debug` method and send the variable, that you want to show, as a parameter.
 
 An example:
 
