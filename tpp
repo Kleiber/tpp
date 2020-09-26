@@ -8,7 +8,7 @@ ouput_file="out.out"
 
 # the command line help
 function help_tpp() {
-	if [ "$1" == "-h" ] || [ "$1" == '--help' ]; then
+	if [ "$1" == "-h" ] || [ "$1" == 'help' ]; then
 		echo "Usage: $0 {init|build|run} [filename|filename.cpp]" >&2
 		echo "   -h, --help      show help options"
 	fi
