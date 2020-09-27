@@ -90,13 +90,7 @@ function test_tpp() {
 	    if [ -f $TES_FILE ]; then
 			run_tpp $1 > $OUTPUT_FILE
 			# command diff with format
-			diff --old-line-format=$'\e[0;32m%dn: %L\e[0m' \
-			--new-line-format=$'\e[0;31m%dn: %L\e[0m' \
-			--unchanged-line-format='' \
-			--changed-group-format='Expected:
-%<Ouput:
-%>' $EXPECTED_FILE $OUTPUT_FILE
-
+			diff $EXPECTED_FILE $OUTPUT_FILE
 			if [ $? -eq 1 ]; then
 				echo "$filename FAILED TESTS!"
 				exit 1
