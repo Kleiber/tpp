@@ -106,7 +106,7 @@ function test_tpp() {
 			# command diff with format
 			diff $EXPECTED_FILE $OUTPUT_FILE --color
 			if [ $? -eq 1 ]; then
-				echo diff $EXPECTED_FILE $OUPUTPUT_FILE
+				echo diff $EXPECTED_FILE $OUTPUT_FILE
 				echo "$filename TESTS FAILED"
 				exit 1
 			fi
