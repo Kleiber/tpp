@@ -21,6 +21,7 @@ Finally, restart your terminal or run the command `source ~/.bashrc`
 ### Windows
 For Windows, you need to have [Git for Windows](https://gitforwindows.org/) installed and do the same setup.
 
+The minimum requirement to use `tpp` tool is the **C++11** standard library
 ## Commands
 ### ***init***
 Initializes a new template with the `filename`. Basically a new `.cpp` file is created to start coding into it.
