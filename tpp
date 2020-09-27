@@ -16,6 +16,13 @@ function init_tpp() {
 		echo "Error: $1 already exists"
 		exit 1
 	else
+		# define reference to debug.h
+		local os=UNAME=$(uname)
+		local reference=$ROOT_DIR
+		if [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+			partition="${reference:1:1}"
+			reference="${partition^}:${reference:2}"
+		fi
 		# generate cpp template file
 		cat > $1 <<-EOF
 		// file: $1
@@ -24,7 +31,7 @@ function init_tpp() {
 		using namespace std;
 
 		// remove this code before your submission
-		#include "${ROOT_DIR}/debug.h"
+		#include "${reference}/debug.h"
 
 		int main() {
 		    // do not remove this code if you use cin or cout
