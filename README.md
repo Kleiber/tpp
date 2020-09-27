@@ -22,23 +22,23 @@ Finally, restart your terminal or run the command `source ~/.bashrc`
 For Windows, you need to have [Git for Windows](https://gitforwindows.org/) installed and do the same setup.
 
 ## Commands
-### init
+### ***init***
 Initializes a new template with the `filename`. Basically a new `.cpp` file is created to start coding into it.
 ```bash
 tpp init <filename>
 ```
-### build
+### ***build***
 Compiles the `filename` by generating a `build` binary. Basically it is the translation of executing command `g++ -o build filename`
 ```bash
 tpp build <filename>
 ```
-### run
+### ***run***
 Compiles and executes the `filename`. If you have an `in.tpp` file with the test cases, They will be used in the execution using standard input (`build < in.tpp`). Otherwise, it will be necessary to manually enter the test cases as usual
 ```bash
 tpp run <filename>
 ```
-### test
-Compiles, executes and test the `filename`. For the execution of this command it is necessary to have the `in.tpp` file with the input cases, `expected.tpp` file with the expected outputs. They will be used in the execution. Internally the file `out.tpp` will be generated with your output to be compared to your defined expected output. Basically it is the translation of executing command `diff expected.tpp out.tpp`
+### ***test***
+Compiles, executes and test the `filename`. For the execution of this command it is necessary to have the `in.tpp` file with the input cases and the `expected.tpp` file with the expected outputs. They will be used in the execution. Internally, the `out.tpp` file will be generated to compare with the defined expected output. Basically it is the translation of executing command `diff expected.tpp out.tpp`
 ```bash
 tpp test <filename>
 ```
