@@ -10,7 +10,7 @@ INPUT_FILE="in.tpp"
 OUTPUT_FILE="out.tpp"
 EXPECTED_FILE="expected.tpp"
 
-#  init new template cpp 
+#  init new template cpp
 function init_tpp() {
 	if [ -f $1 ]; then
 		echo "Error: $1 already exists"
@@ -26,7 +26,7 @@ function init_tpp() {
 		// remove this code before your submission
 		#include "${ROOT_DIR}/debug.h"
 
-		int main() { 
+		int main() {
 		    // do not remove this code if you use cin or cout
 		    ios::sync_with_stdio(false);
 		    cin.tie(0);
@@ -38,12 +38,12 @@ function init_tpp() {
 		touch $INPUT_FILE
 		# generate test file test.tpp
 		touch $EXPECTED_FILE
-	fi	
+	fi
 }
 
 # build cpp file
 function build_tpp() {
-	if [ -f $1 ]; then   
+	if [ -f $1 ]; then
 	    g++ -o $EXEC $1
 	else
 	    echo "Error: $1 file does not exist"
@@ -58,7 +58,6 @@ function run_with_input() {
 		echo "Error: $1 execution with input file $INPUT_FILE failed"
 		exit 1
 	fi
-	echo $ouput
 }
 
 # run cpp file without input file
