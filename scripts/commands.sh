@@ -36,6 +36,6 @@ FLAGS_TEST=(\
 
 FLAGS_TEST_DESCRIPTION=(\
 "File path that contain the test cases (default in.tpp)"
-"File path that contain the expected outputs (default test.tpp)"
+"File path that contain the expected outputs (default expected.tpp)"
 "File path that will contain the generated output (default out.tpp)"
 )

@@ -8,7 +8,7 @@ source "${ROOT_DIR}/scripts/help.sh"
 EXEC="build"
 INPUT_FILE="in.tpp"
 OUTPUT_FILE="out.tpp"
-TEST_FILE="test.tpp"
+EXPECTED_FILE="expected.tpp"
 
 #  init new template cpp 
 function init_tpp() {
@@ -36,10 +36,8 @@ function init_tpp() {
 		EOF
 		# generate input file in.tpp
 		touch $INPUT_FILE
-		# generate output file out.tpp
-		touch $OUTPUT_FILE
 		# generate test file test.tpp
-		touch $TEST_FILE
+		touch $EXPECTED_FILE
 	fi	
 }
 
@@ -92,7 +90,14 @@ function test_tpp() {
 	if [ -f $1 ]; then
 	    if [ -f $TES_FILE ]; then
 			run_tpp $1 > $OUTPUT_FILE
-			diff $TEST_FILE $OUTPUT_FILE --color
+			# command diff with format
+			diff --old-line-format=$'\e[0;32m%dn: %L\e[0m' \
+			--new-line-format=$'\e[0;31m%dn: %L\e[0m' \
+			--unchanged-line-format='' \
+			--changed-group-format='Expected:
+%<Ouput:
+%>' $EXPECTED_FILE $OUTPUT_FILE
+
 			if [ $? -eq 1 ]; then
 				echo "$filename FAILED TESTS!"
 				exit 1
