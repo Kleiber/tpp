@@ -12,7 +12,7 @@ Using `tpp` command line is simple. First, clone the repository in your workspac
 cd $HOME
 git clone https://github.com/Kleiber/tpp.git
 ```
-Next, include the following line in your `~/.bashrc` file
+Next, include the following line in your `.bashrc` file (use the command `vim ~/.bashrc` to edit)
 ```bash
 export PATH=$PATH:$HOME/tpp:
 ```
