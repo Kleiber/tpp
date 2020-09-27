@@ -20,7 +20,8 @@ function init_tpp() {
 		local os=UNAME=$(uname)
 		local reference=$ROOT_DIR
 		if [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
-			reference="C:/${reference:2}"
+			partition="${reference:1:1}"
+			reference="${partition^}:${reference:2}"
 		fi
 		# generate cpp template file
 		cat > $1 <<-EOF
