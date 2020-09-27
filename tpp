@@ -17,9 +17,9 @@ function init_tpp() {
 		exit 1
 	else
 		# define reference to debug.h
-		local os=UNAME=$(uname)
+		local os=$(uname)
 		local reference=$ROOT_DIR
-		if [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+		if [[ "$os" == CYGWIN* || "$os" == MINGW* ]] ; then
 			partition="${reference:1:1}"
 			reference="${partition^}:${reference:2}"
 		fi
