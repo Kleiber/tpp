@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## author: drwn28
+
 source "${ROOT_DIR}/scripts/commands.sh"
 
 TABS=()
@@ -55,6 +57,8 @@ function print_resources() {
             ;;
         "init") echo_with_tab "${FLAGS_INIT[$idx]}${TABS[$idx]}${FLAGS_INIT_DESCRIPTION[$idx]}"
             ;;
+        "run") echo_with_tab "${FLAGS_RUN[$idx]}${TABS[$idx]}${FLAGS_RUN_DESCRIPTION[$idx]}"
+            ;;
         "test") echo_with_tab "${FLAGS_TEST[$idx]}${TABS[$idx]}${FLAGS_TEST_DESCRIPTION[$idx]}"
             ;;
     esac
@@ -107,6 +111,10 @@ function help_tpp() {
                 echo ${COMMANDS_DESCRIPTION[2]}
                 echo -e "\nUsage:"
                 echo_with_tab "tpp run <filename>"
+
+                init_tabs "run"
+                echo -e "\nFlags:"
+                for i in $(seq 0 ${#FLAGS_RUN[@]}); do print_resources "run" $i; done
                 ;;
             "test")
                 echo ${COMMANDS_DESCRIPTION[3]}

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## author: drwn28
+
 TPP_DESC="tpp is a command line that aims to help competitive programmers optimizing code compilation, testing, and debugging time."
 
 COMMANDS=(\
@@ -26,6 +28,14 @@ FLAGS_INIT=(\
 
 FLAGS_INIT_DESCRIPTION=(\
 "Force the creating of the .cpp file template"
+)
+
+FLAGS_RUN=(\
+"-i,--input"
+)
+
+FLAGS_RUN_DESCRIPTION=(\
+"File path that contain the test cases (default in.tpp)"
 )
 
 FLAGS_TEST=(\
