@@ -130,19 +130,18 @@ function test_tpp() {
 }
 
 # clean debug reference and its usage
-function clean_tpp() {
+function submit_tpp() {
   if ! fileExists $1; then
     echo "Error: $1 file does not exist" >&2
     exit 1
   fi
 
-  local TEMP_FILE=".$1"
-  sed '/debug.h\|debug(/d' $1 > $TEMP_FILE
+  local submit_file="${1%.*}_submit.cpp"
+  sed '/debug.h\|debug(/d' $1 > $submit_file
   if errorExists; then
-    echo "Error: $1 cleaning failed" >&2
+    echo "Error: $1 prepare submit file failed" >&2
     exit 1
   fi
-  mv $TEMP_FILE $1
 }
 
 function fileExists() {
@@ -209,8 +208,8 @@ function tpp() {
     "test")
       test_tpp $filename
       ;;
-    "clean")
-      clean_tpp $filename
+    "submit")
+      submit_tpp $filename
       echo "$filename was cleaned successfully!"
       ;;
     *)

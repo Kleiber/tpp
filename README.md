@@ -43,10 +43,10 @@ Compiles, executes and test the `filename`. For the execution of this command it
 ```bash
 tpp test <filename>
 ```
-### ***clean***
-Clean the debug reference and its usage within the file `filename`. Note that it is an optional command.
+### ***submit***
+Create a new file to submit without the debug reference and use it inside the file `filename`
 ```bash
-tpp clean <filename>
+tpp submit <filename>
 ```
 
 In all commands it is not necessary to put the extension `.cpp` in the `filename` parameter

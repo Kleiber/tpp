@@ -9,14 +9,14 @@ COMMANDS=(\
 "build" \
 "run" \
 "test" \
-"clean")
+"submit")
 
 COMMANDS_DESCRIPTION=(\
 "Create a .cpp file template with the specified name" \
 "Compile the specified .cpp file" \
 "Compile and run the specified .cpp file" \
 "Compile, run and test the specified .cpp file" \
-"Clean debug reference and its usage inside .cpp file")
+"Create a new file to submit without the debug reference and use it inside the .cpp file")
 
 FLAGS=(\
 "-h,--help")
