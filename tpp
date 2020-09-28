@@ -132,26 +132,23 @@ function test_tpp() {
 function fileExists() {
   if [ -f $1 ] ; then
     return 0
-  else
-    return 1
   fi
+  return 1
 }
 
 function errorExists() {
   if [ $? -eq 1 ] ; then
     return 0
-  else
-    return 1
   fi
+  return 1
 }
 
 function isWindows() {
   local os=$(uname)
   if [[ "$os" == CYGWIN* || "$os" == MINGW* ]] ; then
     return 0
-  else
-    return 1
   fi
+  return 1
 }
 
 function tpp() {
