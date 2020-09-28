@@ -36,7 +36,7 @@ function init_tpp() {
 		#include <bits/stdc++.h>
 		using namespace std;
 
-		// remove this code before your submission
+		// remove this reference to debug.h before your submission
 		#include "${reference}/debug.h"
 
 		int main() {
@@ -129,6 +129,22 @@ function test_tpp() {
 	echo "$1 test PASSED!"
 }
 
+# clean debug reference and its usage
+function clean_tpp() {
+	if ! fileExists $1; then
+		echo "Error: $1 file does not exist" >&2
+		exit 1
+	fi
+
+	local TEMP_FILE=".$1"
+	sed '/debug.h\|debug(/d' $1 > $TEMP_FILE
+	if errorExists; then
+		echo "Error: $1 cleaning failed" >&2
+		exit 1
+	fi
+	mv $TEMP_FILE $1
+}
+
 function fileExists() {
 	if [ -f $1 ] ; then
 		return 0
@@ -193,7 +209,10 @@ function tpp() {
 	"run")
 		run_tpp $filename;;
 	"test")
-		test_tpp $filename
+		test_tpp $filename;;
+	"clean")
+		clean_tpp $filename
+		echo "$filename was cleaned successfully!"
 		;;
 	*)
 		echo "Error: Invalid arguments, use the -h flag for more details" >&2

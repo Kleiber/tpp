@@ -169,6 +169,10 @@ function help_tpp() {
                 print_usage "tpp test <filename>"
                 print_flags "test"
                 ;;
+            "clean")
+                print_with_break_line ${COMMANDS_DESCRIPTION[4]}
+                print_usage "tpp clean <filename>"
+                ;;
         esac
 
         exit 0
