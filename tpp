@@ -136,12 +136,27 @@ function submit_tpp() {
     exit 1
   fi
 
+  local tmp_file=".$1"
   local submit_file="${1%.*}_submit.cpp"
-  sed '/debug.h\|debug(/d' $1 > $submit_file
+
+  # TODO: investigate how to put the below two sed command in one
+  # line, for some reason the next command is not working in Mac OS
+  # $ sed '/debug.h\|debug(/d' $1
+
+  # remove 'include' reference
+  sed '/debug.h/d' $1 > $tmp_file
   if errorExists; then
     echo "Error: $1 prepare submit file failed" >&2
     exit 1
   fi
+
+  # remove 'debug(<var>)' use
+  sed '/debug(/d' $tmp_file > $submit_file
+  if errorExists; then
+    echo "Error: $1 prepare submit file failed" >&2
+    exit 1
+  fi
+  rm $tmp_file
 }
 
 function fileExists() {
