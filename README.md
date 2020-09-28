@@ -44,7 +44,7 @@ Compiles, executes and test the `filename`. For the execution of this command it
 tpp test <filename>
 ```
 ### ***submit***
-Create a new file to submit without the debug reference and use it inside the file `filename`
+Create a new file to submit without the debug reference and use it inside the file `filename`. This is an optional command 
 ```bash
 tpp submit <filename>
 ```
