@@ -129,11 +129,11 @@ function help_tpp() {
     local last_command_idx=$((${#command_line[@]}-1))
 
     if [ $last_command_idx -eq -1 ]; then
-		echo "Error: two arguments are necessary, use the -h flag for more details" >&2
-		exit 1
-	fi
+        echo "Error: two arguments are necessary, use the -h flag for more details" >&2
+        exit 1
+    fi
 
-	if [ "${command_line[$last_command_idx]}" == "-h" ] \
+    if [ "${command_line[$last_command_idx]}" == "-h" ] \
             || [ "${command_line[$last_command_idx]}" == '--help' ]; then
 
         local prev_command_idx=$((${#command_line[@]}-2))
@@ -172,5 +172,5 @@ function help_tpp() {
         esac
 
         exit 0
-	fi
+    fi
 }
