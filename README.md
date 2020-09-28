@@ -105,10 +105,17 @@ int main() {
 
     vector<int> myVector;
     for(int i = 0; i < 10; i++) {
-    	myVector.push_back(i);
+        myVector.push_back(i);
     }
 
     debug(myVector);
+
+    vector<pair<int,int>> myPairs;
+    for(int i = 0; i < 5; i++) {
+        myPairs.push_back({i, 2*i});
+    }
+
+    debug(myPairs);
 
     return 0;
 }
@@ -116,13 +123,15 @@ int main() {
 
 Output:
 ```
-debug:17 myVariable: "tpp tool"
-debug:22 myMatrix:
+debug:20 myVariable: "tpp tool"
+debug:25 myMatrix:
 [0 0 0 0 0]
 [0 0 0 0 0]
 [0 0 0 0 0]
 [0 0 0 0 0]
 [0 0 0 0 0]
-debug:29 myVector:
+debug:32 myVector:
 [0 1 2 3 4 5 6 7 8 9]
+debug:39 myPairs:
+[(0,0) (1,2) (2,4) (3,6) (4,8)]
 ```
