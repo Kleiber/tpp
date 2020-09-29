@@ -158,7 +158,7 @@ Expected Output:
 Hello World!
 ```
 
-We can execute the following commands:
+Executing the following `tpp` commands:
 
 ```
 $ tpp init hello
@@ -199,7 +199,7 @@ hello_ready.cpp was generated successfully!
 hello_ready.cpp test PASSED!
 ```
 
-Opening the generated file ready for submission
+Opening the generated file for submission `hello_ready.cpp`:
 
 ```c++
 /**
