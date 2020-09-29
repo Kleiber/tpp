@@ -32,6 +32,13 @@ function get_filename() {
   echo $filename
 }
 
+# clean extra files
+function clean_tpp() {
+  if fileExists $EXEC; then
+    rm $EXEC
+  fi
+}
+
 #  init new template cpp
 function init_tpp() {
   if validateName $1; then
@@ -99,7 +106,7 @@ EOF
     exit 1
   fi
 
-  echo "solution '$1' was initialized successfully!"
+  echo "'$1' solution was initialized successfully!"
 }
 
 # build cpp file
@@ -155,7 +162,8 @@ function run_tpp() {
 
 # run cpp file with input file to test function
 function run_tpp_to_test() {
-  (./$EXEC < $INPUT_FILE) 2> /dev/null
+  # TODO: remove debug prints
+  ./$EXEC < $INPUT_FILE
   if errorExists; then
     echo "Error: $1 execution with input $INPUT_FILE failed" >&2
     exit 1
@@ -264,20 +272,17 @@ function tpp() {
 
   case $command in
     "init")
-      init_tpp $filename
-      ;;
+      init_tpp $filename;;
     "build")
       build_tpp $filename
+      echo "$filename was compiled successfully!"
       ;;
     "run")
-      run_tpp $filename
-      ;;
+      run_tpp $filename;;
     "test")
-      test_tpp $filename
-      ;;
+      test_tpp $filename;;
     "prepare")
-      prepare_tpp $filename
-      ;;
+      prepare_tpp $filename;;
     *)
       echo "Error: Invalid arguments, use the -h flag for more details" >&2
       ;;
