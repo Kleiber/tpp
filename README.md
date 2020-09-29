@@ -115,12 +115,10 @@ int main() {
     cin.tie(0);
 
     string myVariable = "tpp tool";
-
     debug(myVariable);
 
     int myMatrix[8][8];
     memset(myMatrix, 0, sizeof(myMatrix));
-
     debug(myMatrix);
     debug(myMatrix[2][2]);
 
@@ -128,7 +126,6 @@ int main() {
     for(int i = 0; i < 8; i++) {
         myVector.push_back(i);
     }
-
     debug(myVector);
     debug(myVector[4]);
 
@@ -136,7 +133,6 @@ int main() {
     for(int i = 0; i < 4; i++) {
         myPairs.push_back({i, 2*i});
     }
-
     debug(myPairs);
     debug(myPairs[2]);
 
