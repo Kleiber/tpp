@@ -69,7 +69,7 @@ tpp prepare
 
 ## Template
 
-Since in competitive programming time is crucial, `tpp` tool allows you to generate a code base template to start programming there.
+Since in competitive programming time is crucial, `tpp` tool allows you to generate a code base cpp template to start programming there.
 
 At the top of the template you will see the following `include` statement:
 
@@ -94,7 +94,7 @@ In competitive programming is often recommended to use `scanf/printf` instead of
 
 The main task of `tpp` command line is to include the `debug.h` script, who allows you to debug your variables showing their content in a simple and practical way. Its use is quite straightforward, you just have to call the `debug` method and send the variable, that you want to show, as a parameter.
 
-An example:
+### Example
 
 ```c++
 /**
