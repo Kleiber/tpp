@@ -152,26 +152,26 @@ function help_tpp() {
     case "${command_line[$prev_command_idx]}" in
       "init")
         print_with_break_line ${COMMANDS_DESCRIPTION[0]}
-        print_usage "tpp init <filename>"
+        print_usage "tpp init <solution-name>"
         print_flags "init"
         ;;
       "build")
         print_with_break_line ${COMMANDS_DESCRIPTION[1]}
-        print_usage "tpp build <filename>"
+        print_usage "tpp build"
         ;;
       "run")
         print_with_break_line ${COMMANDS_DESCRIPTION[2]}
-        print_usage "tpp run <filename>"
+        print_usage "tpp run"
         print_flags "run"
         ;;
       "test")
         print_with_break_line ${COMMANDS_DESCRIPTION[3]}
-        print_usage "tpp test <filename>"
+        print_usage "tpp test"
         print_flags "test"
         ;;
-      "submit")
+      "prepare")
         print_with_break_line ${COMMANDS_DESCRIPTION[4]}
-        print_usage "tpp submit <filename>"
+        print_usage "tpp prepare"
         ;;
     esac
 
