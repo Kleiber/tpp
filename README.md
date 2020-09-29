@@ -22,37 +22,8 @@ Finally, restart your terminal or run the command `source ~/.bashrc`
 For Windows, you need to have [Git for Windows](https://gitforwindows.org/) installed and do the same setup.
 
 The minimum requirement to use `tpp` tool is the **C++11** standard library
-## Commands
-### ***init***
-Initializes a new template with the `filename`. Basically a new `.cpp` file is created to start coding into it.
-```bash
-tpp init <filename>
-```
-### ***build***
-Compiles the `filename` by generating a `build` binary. Basically it is the translation of executing command `g++ -o build filename`
-```bash
-tpp build <filename>
-```
-### ***run***
-Compiles and executes the `filename`. If you have an `in.tpp` file with the test cases, They will be used in the execution using standard input (`build < in.tpp`). Otherwise, it will be necessary to manually enter the test cases as usual
-```bash
-tpp run <filename>
-```
-### ***test***
-Compiles, executes and test the `filename`. For the execution of this command it is necessary to have the `in.tpp` file with the input cases and the `expected.tpp` file with the expected outputs. They will be used in the execution. Internally, the `out.tpp` file will be generated to compare with the defined expected output. Basically it is the translation of executing command `diff expected.tpp out.tpp`
-```bash
-tpp test <filename>
-```
-### ***submit***
-Create a new file to submit without the debug reference and use it inside the file `filename`. This is an optional command 
-```bash
-tpp submit <filename>
-```
-
-In all commands it is not necessary to put the extension `.cpp` in the `filename` parameter
 
 ## Template
-
 Since in competitive programming time is crucial, `tpp` tool allows you to generate a code base template to start programming there.
 
 At the top of the template you will see the following `include` statement:
@@ -70,8 +41,35 @@ cin.tie(0);
 ```
 In competitive programming is often recommended to use `scanf/printf` instead of `cin/cout` for a fast input and output. However, you can still **use `cin/cout` and achieve the same performace as `scanf/printf` by including those two code lines in our `main()` function.**
 
-## Debug
+## Commands
+### ***init***
+Initializes a new template with the `filename`. Basically a new `.cpp` file is created to start coding into it.
+```bash
+tpp init <solution-name>
+```
+### ***build***
+Compiles the `filename` by generating a `build` binary. Basically it is the translation of executing command `g++ -o build filename`
+```
+tpp build
+```
+### ***run***
+Compiles and executes the `filename`. If you have an `in.tpp` file with the test cases, They will be used in the execution using standard input (`build < in.tpp`). Otherwise, it will be necessary to manually enter the test cases as usual
+```
+tpp run
+```
+### ***test***
+Compiles, executes and test the `filename`. For the execution of this command it is necessary to have the `in.tpp` file with the input cases and the `expected.tpp` file with the expected outputs. They will be used in the execution. Internally, the `out.tpp` file will be generated to compare with the defined expected output. Basically it is the translation of executing command `diff expected.tpp out.tpp`
+```
+tpp test
+```
+### ***prepare***
+Create a new file to submit without the debug reference and use it inside the file `filename`. This is an optional command 
+```
+tpp prepare
+```
+In all commands it is not necessary to put the extension `.cpp` in the `filename` parameter
 
+## Debug
 The main task of `tpp` command line is to include the `debug.h` script, who allows you to debug your variables showing their content in a simple and practical way. Its use is quite straightforward, you just have to call the `debug` method and send the variable, that you want to show, as a parameter.
 
 An example:

@@ -9,14 +9,14 @@ COMMANDS=(\
 "build" \
 "run" \
 "test" \
-"submit")
+"prepare")
 
 COMMANDS_DESCRIPTION=(\
-"Create a .cpp file template with the specified name" \
-"Compile the specified .cpp file" \
-"Compile and run the specified .cpp file" \
-"Compile, run and test the specified .cpp file" \
-"Create a new file to submit without the debug reference and use it inside the .cpp file")
+"Init a new solution with the specified name" \
+"Compile the .cpp file into the solution" \
+"Compile and run the .cpp file into the solution" \
+"Compile, run and test the .cpp file into the solution" \
+"Generate and test a new file without the debug references from the .cpp file into the solution")
 
 FLAGS=(\
 "-h,--help")
@@ -29,7 +29,7 @@ FLAGS_INIT=(\
 )
 
 FLAGS_INIT_DESCRIPTION=(\
-"Force the creating of the .cpp file template"
+"Force creation of solution"
 )
 
 FLAGS_RUN=(\
