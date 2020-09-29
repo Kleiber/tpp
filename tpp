@@ -47,7 +47,7 @@ function init_tpp() {
   fi
 
   if dirExists $1; then
-    echo "Error: solution '$1' already exists" >&2
+    echo "Error: '$1' solution already exists" >&2
     exit 1
   fi
 
@@ -68,7 +68,7 @@ function init_tpp() {
     hour = $(date +"%T")
 EOF
   if errorExists; then
-    echo "Error: solution init failed '$1'" >&2
+    echo "Error: init '$1' solution failed" >&2
     exit 1
   fi
 
@@ -102,7 +102,7 @@ int main() {
 }
 EOF
   if errorExists; then
-    echo "Error: solution init failed '$1'" >&2
+    echo "Error: init '$1' solution failed" >&2
     exit 1
   fi
 
@@ -162,8 +162,7 @@ function run_tpp() {
 
 # run cpp file with input file to test function
 function run_tpp_to_test() {
-  # TODO: remove debug prints
-  ./$EXEC < $INPUT_FILE
+  ./$EXEC < $INPUT_FILE 2>/dev/null
   if errorExists; then
     echo "Error: $1 execution with input $INPUT_FILE failed" >&2
     exit 1
@@ -197,6 +196,7 @@ function test_tpp() {
     exit 1
   fi
 
+  build_tpp $1
   run_tpp_to_test $1 > $OUTPUT_FILE
   diff $EXPECTED_FILE $OUTPUT_FILE --color
   if errorExists; then
