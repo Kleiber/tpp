@@ -94,11 +94,11 @@ using namespace std;
 #include "${reference}/debug.h"
 
 int main() {
-  // do not remove this code if you use cin or cout
-  ios::sync_with_stdio(false);
-  cin.tie(0);
+    // do not remove this code if you use cin or cout
+    ios::sync_with_stdio(false);
+    cin.tie(0);
 
-  return 0;
+    return 0;
 }
 EOF
   if errorExists; then
