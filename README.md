@@ -161,6 +161,7 @@ $ tpp init hello
 'hello' solution was initialized successfully!
 
 // go to generated solution
+$ cd hello/
 // copy the code snippet into the generated template hello.cpp
 // copy the contents of files in.tpp and expected.tpp
 
