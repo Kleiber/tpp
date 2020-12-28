@@ -44,6 +44,29 @@ string to_string(vector<A> a) {
     return output;
 }
 
+template <typename A>
+string to_string(queue<A>& a) {
+  typedef typename queue<A>::container_type Container;
+  const auto containerPtr = reinterpret_cast<const Container*>(&a);
+
+  vector<A> tmp;
+  for(auto v : *containerPtr) tmp.push_back(v);
+
+  return to_string(tmp);
+}
+
+template <typename A>
+string to_string(stack<A>& a) {
+  typedef typename stack<A>::container_type Container;
+  const auto containerPtr = reinterpret_cast<const Container*>(&a);
+
+  vector<A> tmp;
+  for(auto v : *containerPtr) tmp.push_back(v);
+  reverse(tmp.begin(), tmp.end());
+
+  return to_string(tmp);
+}
+
 template <typename A, size_t R>
 string to_string(A (&a)[R]){
     string output = "\n[";
