@@ -46,7 +46,7 @@ string to_string(vector<A> a) {
 
 template <typename A>
 string to_string(queue<A>& a) {
-  typedef typename queue<A>::container_type Container;
+  typedef typename std::queue<A>::container_type Container;
   const auto containerPtr = reinterpret_cast<const Container*>(&a);
 
   vector<A> tmp;
@@ -57,7 +57,7 @@ string to_string(queue<A>& a) {
 
 template <typename A>
 string to_string(stack<A>& a) {
-  typedef typename stack<A>::container_type Container;
+  typedef typename std::stack<A>::container_type Container;
   const auto containerPtr = reinterpret_cast<const Container*>(&a);
 
   vector<A> tmp;
