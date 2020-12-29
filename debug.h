@@ -1,6 +1,7 @@
 // author: KleiberXD
 
 #define debug(...) cerr<<"debug:"<<__LINE__<<" "<<#__VA_ARGS__<<": "<<to_string(__VA_ARGS__)<<endl
+#define debugm(...) cerr<<"debug:"<<__LINE__<<" ", debug_out_multiple(#__VA_ARGS__, __VA_ARGS__)
 
 string to_string(bool b) {
     return (b?"1":"0");
@@ -99,4 +100,24 @@ string to_string(A a) {
   }
   output += "]";
   return output;
+}
+
+void debug_out_multiple(string names) { cerr << endl; }
+
+template <typename Head, typename... Tail>
+void debug_out_multiple(string names, Head H, Tail... T) {
+  auto pos = names.find(',');
+  auto name = names.substr(0, pos);
+  names = names.substr(pos + 1);
+  while(names.front() == ' '){
+    names = names.substr(1);
+  }
+
+  auto output = to_string(H);
+
+  regex remove_newlines("\n+");
+  output = regex_replace(output, remove_newlines, "");
+
+  cerr<<name<<": "<<output<<"  ";
+  debug_out_multiple(names, T...);
 }

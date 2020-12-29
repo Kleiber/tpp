@@ -222,7 +222,13 @@ function prepare_tpp() {
   # $ sed '/debug.h\|debug(/d' $1
 
   # remove 'include' reference
-  sed '/debug.h/d' $1 > $tmp_file
+  sed '/debug.h/d' $1 > $ready_file
+  if errorExists; then
+    echo "Error: prepare $1 file failed" >&2
+    exit 1
+  fi
+  # remove 'debugm(<var>)' use
+  sed '/debugm(/d' $ready_file > $tmp_file
   if errorExists; then
     echo "Error: prepare $1 file failed" >&2
     exit 1
