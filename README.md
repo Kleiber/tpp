@@ -21,8 +21,11 @@ export PATH=$PATH:$HOME/tpp:
 
 Finally, restart your terminal or run the command `source ~/.bashrc`
 
+### Mac
+For Mac, you need to run the command `bash`, create the `.bashrc` file `touch ~/.bashrc` and perform the same steps as in linux.
+
 ### Windows
-For Windows, you need to have [Git for Windows](https://gitforwindows.org/) installed and and perform the same steps as in linux.
+For Windows, you need to have [Git for Windows](https://gitforwindows.org/) installed and perform the same steps as in linux.
 
 The minimum requirement to use `tpp` tool is the **C++11** standard library
 
