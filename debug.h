@@ -1,5 +1,13 @@
 // author: KleiberXD
 
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <regex>
+
+using namespace std;
+
 #define debug(...) cerr<<"debug:"<<__LINE__<<" "<<#__VA_ARGS__<<": "<<to_string(__VA_ARGS__)<<endl
 #define debugm(...) cerr<<"debug:"<<__LINE__<<" ", debug_out_multiple(#__VA_ARGS__, __VA_ARGS__)
 
