@@ -23,9 +23,25 @@ function errorExists() {
   return 1
 }
 
+function isLinux() {
+  local os=$(uname)
+  if [[ "$os" == Linux* ]] ; then
+    return 0
+  fi
+  return 1
+}
+
 function isWindows() {
   local os=$(uname)
   if [[ "$os" == CYGWIN* || "$os" == MINGW* ]] ; then
+    return 0
+  fi
+  return 1
+}
+
+function isMac() {
+  local os=$(uname)
+  if [[ "$os" == Darwin* ]] ; then
     return 0
   fi
   return 1
