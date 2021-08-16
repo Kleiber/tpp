@@ -50,7 +50,7 @@ expected_tpp_solution() {
     set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
 
     # open source code using vim editor
-    vi ${solutionExpected}
+    ${TPP_IDE} ${solutionExpected}
 }
 
 expected_help() {

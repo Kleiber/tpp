@@ -50,7 +50,7 @@ output_tpp_solution() {
     set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
 
     # open source code using vim editor
-    vi ${solutionOutput}
+    ${TPP_IDE} ${solutionOutput}
 }
 
 output_help() {
