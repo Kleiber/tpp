@@ -57,11 +57,25 @@ function get_test_status_from_config() {
 function set_last_update_into_config() {
     local configFile=${1}
     local lastUpdate=${2}
+    local currentLastUpdate=$(get_last_update_from_config ${configFile})
+
+    sed -i -e "s/update = ${currentLastUpdate}/update = ${lastUpdate}/g" ${configFile}
+    if errorExists; then
+        echo "Error: set last update failed." >&2
+        exit 1
+    fi
 }
 
 function set_test_status_into_config() {
     local configFile=${1}
     local testStatus=${2}
+    local currentTestStatus=$(get_test_status_from_config ${configFile})
+
+    sed -i -e "s/test = ${currentTestStatus}/test = ${testStatus}/g" ${configFile}
+    if errorExists; then
+        echo "Error: set test status failed." >&2
+        exit 1
+    fi
 }
 
 build_cpp_file() {

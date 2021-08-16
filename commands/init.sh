@@ -79,10 +79,9 @@ config_template() {
     cat > ${solutionConfigFilepath} <<-EOF
 [info]
     name = $solutionFilename
-    date = $(date +"%d-%m-%Y")
-    hour = $(date +"%T")
+    create = $(date +"%d-%m-%Y %H:%M:%S")
     judge = empty
-    update = $(date +"%d-%m-%Y") $(date +"%T")
+    update = $(date +"%d-%m-%Y %H:%M:%S")
     test = pending
 EOF
 }

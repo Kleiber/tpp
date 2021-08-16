@@ -8,7 +8,7 @@ list_tpp_solutions() {
     local listSolutions=$(ls -d ${TPP_WORKSPACE}/*)
 
     # print colum headers
-    printf "%-30s  %-15s  %-15s  %-20s  %-5s\n" "SOLUTION NAME" "JUDGE" "TEST STATUS" "LAST UPDATE" "READY"
+    printf "%-25s  %-13s  %-13s  %-8s  %s\n" "SOLUTION NAME" "JUDGE" "TEST STATUS" "READY" "LAST UPDATE"
 
     # list all solution directories
     for solutionDir in ${listSolutions}; do
@@ -25,7 +25,7 @@ list_tpp_solutions() {
             isReady="Yes"
         fi
 
-        printf "%-30s  %-15s  %-15s  %-20s  %-5s\n" "${solutionName}" "${judgeName}" "${testStatus}" "${lastUpdate}" "${isReady}"
+        printf "%-25s  %-13s  %-13s  %-8s  %s\n" "${solutionName}" "${judgeName}" "${testStatus}" "${isReady}" "${lastUpdate}"
     done
 
 }
