@@ -49,7 +49,7 @@ submit_tpp_solution() {
     # retrieve test status
     local testStatus=$(get_test_status_from_config ${solutionConfigFile})
 
-    if [[ ${testStatus} != "passed" ]]; then
+    if [[ ${testStatus} != "Passed" ]]; then
         echo "Error: The tests did not pass, first test your solution!" >&2
         exit 1
     fi
@@ -66,6 +66,11 @@ submit_tpp_solution() {
     # retrieve judge
     local judgeName=$(get_judge_name_from_config ${solutionConfigFile})
     local judgeDir="${repoDir}/${judgeName}"
+
+    if [[ ${judgeName} == "empty" ]]; then
+        echo "Error: judge name unset. please set a value."
+        exit 1
+    fi
 
     # copy solution to repo
     mkdir -p ${judgeDir}

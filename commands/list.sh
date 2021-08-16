@@ -21,7 +21,11 @@ list_tpp_solutions() {
         local lastUpdate=$(get_last_update_from_config ${solutionConfigFile})
         local isReady="No"
 
-        if fileExists ${solutionFilenameReady} && [[ ${testStatus} == "passed" ]]; then
+        if [[ ${judgeName} == "empty" ]]; then
+            judgeName=""
+        fi
+
+        if fileExists ${solutionFilenameReady} && [[ ${testStatus} == "Passed" ]]; then
             isReady="Yes"
         fi
 

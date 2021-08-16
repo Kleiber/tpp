@@ -168,14 +168,14 @@ test_cpp_file() {
         echo diff ${expectedFile} ${outputFile} >&2
         echo "'${solutionFilename}' test FAILED!"
         # update test status
-        set_test_status_into_config ${configFile} "failed"
+        set_test_status_into_config ${configFile} "Failed"
         exit 1
     fi
 
     echo "'${solutionFilename}' test PASSED!"
 
     # update test status
-    set_test_status_into_config ${configFile} "passed"
+    set_test_status_into_config ${configFile} "Passed"
 }
 
 prepare_cpp_file() {

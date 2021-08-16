@@ -82,7 +82,7 @@ config_template() {
     create = $(date +"%d-%m-%Y %H:%M:%S")
     judge = empty
     update = $(date +"%d-%m-%Y %H:%M:%S")
-    test = pending
+    test = Pending
 EOF
 }
 
