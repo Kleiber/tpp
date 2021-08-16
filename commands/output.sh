@@ -7,6 +7,7 @@ set -e
 output_tpp_solution() {
     local solutionName=${1}
     local solutionDir="${TPP_WORKSPACE}/${solutionName}"
+    local solutionConfigFile="${solutionDir}/${SOLUTION_CONFIG_DIR}/${SOLUTION_CONFIG_FILE}"
     local solutionOutput="${solutionDir}/${SOLUTION_OUTPUT_FILE}"
 
     if ! dirExists ${solutionDir}; then

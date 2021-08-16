@@ -52,6 +52,16 @@ test_tpp_solution() {
         exit 1
     fi
 
+    if isEmpty ${solutionInput}; then
+        echo "Error: '${solutionFilename}' solution does not contain input data."
+        exit 1
+    fi
+
+    if isEmpty ${solutionExpected}; then
+        echo "Error: '${solutionFilename}' solution does not contain expected data."
+        exit 1
+    fi
+
     # build cpp file and create executable
     build_cpp_file ${solutionFilename} ${solutionExec}
 
