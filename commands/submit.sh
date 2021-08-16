@@ -5,8 +5,13 @@
 set -e
 
 check_submit_setup() {
+    if [[ ${TPP_GITHUB} == "tpp_github" ]]; then
+        echo "Error: 'TPP_GITHUB' is unset, please set a value." >&2
+        exit 1
+    fi
+
     if [[ ${TPP_REPO} == "tpp_repo" ]]; then
-        echo "Error: 'TPP_REPO' is unset, please set a valuee." >&2
+        echo "Error: 'TPP_REPO' is unset, please set a value." >&2
         exit 1
     fi
 
@@ -60,12 +65,12 @@ submit_tpp_solution() {
     fi
 
     # clone tpp github repo if it does not exist yet
-    repoGithub=$(basename ${TPP_REPO})
-    repoDir="${HOME}/${repoGithub%.*}"
+    repoGithub=$(basename ${TPP_GITHUB})
+    repoDir=${TPP_REPO}
 
     if ! dirExists ${repoDir}; then
         echo "Cloning into '${repoDir}'..."
-        git clone --quiet ${TPP_REPO} ${repoDir}
+        git clone --quiet ${TPP_GITHUB} ${repoDir}
     fi
 
     # check judge name
