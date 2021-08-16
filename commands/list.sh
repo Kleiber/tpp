@@ -5,8 +5,12 @@
 set -e
 
 list_tpp_solutions() {
-    local listSolutions=$(ls -d ${TPP_WORKSPACE}/*)
+    if [[ $(ls ${TPP_WORKSPACE}) == "" ]] ; then
+        echo "Nothing to list! "
+        exit 0
+    fi
 
+    local listSolutions=$(ls -d ${TPP_WORKSPACE}/*)
     # print colum headers
     printf "%-25s  %-13s  %-13s  %-8s  %s\n" "SOLUTION NAME" "JUDGE" "TEST STATUS" "READY" "LAST UPDATE"
 
