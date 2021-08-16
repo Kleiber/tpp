@@ -21,7 +21,7 @@ list_tpp_solutions() {
         local lastUpdate=$(get_last_update_from_config ${solutionConfigFile})
         local isReady="No"
 
-        if fileExists ${solutionFilenameReady}; then
+        if fileExists ${solutionFilenameReady} && [[ ${testStatus} == "passed" ]]; then
             isReady="Yes"
         fi
 
