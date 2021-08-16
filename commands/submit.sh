@@ -65,7 +65,7 @@ submit_tpp_solution() {
 
     # retrieve judge
     local judgeName=$(get_judge_name_from_config ${solutionConfigFile})
-    local judgeDir="${repoDir}/${judgeName}" 
+    local judgeDir="${repoDir}/${judgeName}"
 
     # copy solution to repo
     mkdir -p ${judgeDir}
