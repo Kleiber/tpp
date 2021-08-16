@@ -88,29 +88,32 @@ submit_tpp_solution() {
     # check prepare solution
     local solutionFilenameReady="${solutionFilename%.*}_ready.${SOLUTION_EXTENSION_FILE}"
 
-    if ! fileExists "${solutionDir}/${solutionFilenameReady}"; then
+    if ! fileExists "${solutionFilenameReady}"; then
         echo "Error: prepare file does not exists. Prepare your solution!" >&2
         exit 1
     fi
 
     # checkout to the tpp branch and update it
-    cd ${repoDir}
+    pushd ${repoDir} > /dev/null
     git checkout --quiet ${TPP_BRANCH}
     git pull --quiet origin ${TPP_BRANCH}
+    popd > /dev/null
 
     # copy solution to repo
     mkdir -p ${judgeDir}
-    cp "${solutionDir}/${solutionFilenameReady}" ${judgeDir}
+    cp ${solutionFilenameReady} ${judgeDir}
 
     # request commit message
     echo "Insert a commit message and press enter:"
     read commitMessage
 
     # push changes to github repo
-    echo "Pushing '${solutionFilenameReady}' to '${judgeDir}' directory..."
+    echo "Pushing '$(basename ${solutionFilenameReady})' to '$(basename ${judgeDir})' directory..."
+    pushd ${repoDir} > /dev/null
     git add .
     git commit --quiet --message "${commitMessage}"
     git push --quiet origin ${TPP_BRANCH}
+    popd > /dev/null
     echo "'$(basename ${solutionFilename%.*})' solution was upload to the github repo successfully!"
 
     # clean solution from worspace

@@ -54,6 +54,18 @@ function get_test_status_from_config() {
     echo $testStatus
 }
 
+function set_judge_name_into_config() {
+    local configFile=${1}
+    local judgeName=${2}
+    local currentJudgeName=$(get_judge_name_from_config ${configFile})
+
+    sed -i -e "s/judge = ${currentJudgeName}/judge = ${judgeName}/g" ${configFile}
+    if errorExists; then
+        echo "Error: set judge name failed." >&2
+        exit 1
+    fi
+}
+
 function set_last_update_into_config() {
     local configFile=${1}
     local lastUpdate=${2}

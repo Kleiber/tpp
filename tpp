@@ -19,6 +19,7 @@ source ${TPP_DIR}/commands/run.sh
 source ${TPP_DIR}/commands/submit.sh
 source ${TPP_DIR}/commands/test.sh
 
+source ${TPP_DIR}/commands/judge.sh
 source ${TPP_DIR}/commands/open.sh
 source ${TPP_DIR}/commands/input.sh
 source ${TPP_DIR}/commands/output.sh
@@ -75,6 +76,10 @@ tpp_cmd() {
         in)
             shift
             input_cmd ${@}
+            ;;
+        judge)
+            shift
+            judge_cmd ${@}
             ;;
         list)
             shift
