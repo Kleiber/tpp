@@ -64,7 +64,7 @@ tpp_cmd() {
             shift
             build_cmd ${@}
             ;;
-        expected)
+        exp)
             shift
             expected_cmd ${@}
             ;;
@@ -72,7 +72,7 @@ tpp_cmd() {
             shift
             init_cmd ${@}
             ;;
-        input)
+        in)
             shift
             input_cmd ${@}
             ;;
@@ -84,7 +84,7 @@ tpp_cmd() {
             shift
             open_cmd ${@}
             ;;
-        output)
+        out)
             shift
             output_cmd ${@}
             ;;

@@ -39,7 +39,7 @@ list_help() {
 
 List all solutions in the workspace.
 
-Usage:  tpp test [solution-name]
+Usage:  tpp list
 
 Options:
   -h, --help   Show more information about command

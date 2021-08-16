@@ -18,18 +18,45 @@ check_submit_setup() {
 
 submit_tpp_solution() {
     local solutionName=${1}
-    local solutionDir="${TPP_WORKSPACE}/${solutionName}"
-    local solutionConfigDir="${solutionDir}/${SOLUTION_CONFIG_DIR}"
-    local solutionConfigFile="${solutionDir}/${SOLUTION_CONFIG_DIR}/${SOLUTION_CONFIG_FILE}"
 
-    if isValidName ${solutionName}; then
-        echo "Error: invalid solution name '${solutionName}'." >&2
-        exit 1
-    fi
+    local solutionDir=""
+    local solutionFilename=""
+    local solutionConfigDir=${SOLUTION_CONFIG_DIR}
+    local solutionConfigFile="${SOLUTION_CONFIG_DIR}/${SOLUTION_CONFIG_FILE}"
+    local solutionExec=${SOLUTION_BUILD}
+    local solutionInput=${SOLUTION_INPUT_FILE}
+    local solutionOutput=${SOLUTION_OUTPUT_FILE}
+    local solutionExpected=${SOLUTION_EXPECTED_FILE}
 
-    if ! dirExists ${solutionDir}; then
-        echo "Error: '${solutionName}' solution does not exist." >&2
-        exit 1
+    # check if the solution name is an argument
+    if [[ ! ${solutionName} ]]; then
+        if ! fileExists ${solutionConfigFile}; then
+            echo "Error: there is not a solution, tpp config file does not exist." >&2
+            exit 1
+        fi
+
+        solutionFilename=$(get_name_from_config ${solutionConfigFile})
+    else
+        solutionDir="${TPP_WORKSPACE}/${solutionName}"
+        solutionConfigDir="${solutionDir}/${solutionConfigDir}"
+        solutionConfigFile="${solutionDir}/${solutionConfigFile}"
+        solutionExec="${solutionDir}/${solutionExec}"
+        solutionInput="${solutionDir}/${solutionInput}"
+        solutionOutput="${solutionDir}/${solutionOutput}"
+        solutionExpected="${solutionDir}/${solutionExpected}"
+
+        if ! dirExists ${solutionDir}; then
+            echo "Error: '${solutionName}' solution does not exist." >&2
+            exit 1
+        fi
+
+        if ! fileExists ${solutionConfigFile}; then
+            echo "Error: there is not a solution, tpp config file does not exist." >&2
+            exit 1
+        fi
+
+        solutionFilename=$(get_name_from_config ${solutionConfigFile})
+        solutionFilename="${solutionDir}/${solutionFilename}"
     fi
 
     # clone tpp github repo if it does not exist yet
@@ -41,12 +68,16 @@ submit_tpp_solution() {
         git clone --quiet ${TPP_REPO} ${repoDir}
     fi
 
-    # checkout to the tpp branch and update it
-    cd ${repoDir}
-    git checkout --quiet ${TPP_BRANCH}
-    git pull --quiet origin ${TPP_BRANCH}
+    # check judge name
+    local judgeName=$(get_judge_name_from_config ${solutionConfigFile})
+    local judgeDir="${repoDir}/${judgeName}"
 
-    # retrieve test status
+    if [[ ${judgeName} == "empty" ]]; then
+        echo "Error: judge name unset. please set a value." >&2
+        exit 1
+    fi
+
+    # check test status
     local testStatus=$(get_test_status_from_config ${solutionConfigFile})
 
     if [[ ${testStatus} != "Passed" ]]; then
@@ -54,23 +85,18 @@ submit_tpp_solution() {
         exit 1
     fi
 
-    # retrive filename
-    local solutionFilename=$(get_name_from_config ${solutionConfigFile})
+    # check prepare solution
     local solutionFilenameReady="${solutionFilename%.*}_ready.${SOLUTION_EXTENSION_FILE}"
 
     if ! fileExists "${solutionDir}/${solutionFilenameReady}"; then
-        echo "Error: '${solutionFilenameReady}' file does not exist. Prepare your solution!" >&2
+        echo "Error: prepare file does not exists. Prepare your solution!" >&2
         exit 1
     fi
 
-    # retrieve judge
-    local judgeName=$(get_judge_name_from_config ${solutionConfigFile})
-    local judgeDir="${repoDir}/${judgeName}"
-
-    if [[ ${judgeName} == "empty" ]]; then
-        echo "Error: judge name unset. please set a value."
-        exit 1
-    fi
+    # checkout to the tpp branch and update it
+    cd ${repoDir}
+    git checkout --quiet ${TPP_BRANCH}
+    git pull --quiet origin ${TPP_BRANCH}
 
     # copy solution to repo
     mkdir -p ${judgeDir}
@@ -85,17 +111,19 @@ submit_tpp_solution() {
     git add .
     git commit --quiet --message "${commitMessage}"
     git push --quiet origin ${TPP_BRANCH}
-    echo "Solution '${solutionFilenameReady}' was upload to the github repo successfully!"
+    echo "'$(basename ${solutionFilename%.*})' solution was upload to the github repo successfully!"
 
     # clean solution from worspace
+    echo "'$(basename ${solutionFilename%.*})' solution was cleaned from your workspace."
     rm -rf ${solutionDir}
 }
 
 submit_help() {
     cat <<EOF
 
-Submit solution to github repository. If the command is run from
-within the solution directory, the solution name is an optional argument.
+Submit solution to github repository. Once submited, the solution will be cleaned
+from the workspace. If the command is run from within the solution directory, the
+solution name is an optional argument.
 
 Usage:  tpp test [solution-name]
 

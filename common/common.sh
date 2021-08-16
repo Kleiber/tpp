@@ -83,31 +83,31 @@ build_cpp_file() {
     local execFile=${2}
 
     if ! fileExists ${cppFile}; then
-        echo "Error: '${cppFile}' file does not exist." >&2
+        echo "Error: '$(basename ${cppFile})' file does not exist." >&2
         exit 1
     fi
 
     g++ -std=c++11 -o ${execFile} ${cppFile}
     if errorExists; then
-        echo "Error: '${cppFile}' compilation failed." >&2
+        echo "Error: '$(basename ${cppFile})' compilation failed." >&2
         exit 1
     fi
 }
 
 run_cpp_file() {
-    local solutionFilename=${1}
+    local cppFile=${1}
     local execFile=${2}
     local inputFile=${3}
     local outputFile=${4}
     local showOutput=${5}
 
     if ! fileExists ${execFile}; then
-        echo "Error: solution '${solutionFilename}' does not contain the executable." >&2
+        echo "Error: '$(basename ${cppFile%.*})' solution does not contain the executable file." >&2
         exit 1
     fi
 
     if ! fileExists ${inputFile}; then
-        echo "Error: solution '${solutionFilename}' does not contain the in.tpp file." >&2
+        echo "Error: '$(basename ${cppFile%.*})' solution does not contain the input file." >&2
         exit 1
     fi
 
@@ -115,13 +115,13 @@ run_cpp_file() {
         if isEmpty ${solutionInput}; then
             ${execFile}
             if errorExists; then
-                echo "Error: '${cppFile}' execution failed." >&2
+                echo "Error: '$(basename ${cppFile})' execution failed." >&2
                 exit 1
             fi
         else
             ${execFile} < ${inputFile}
             if errorExists; then
-                echo "Error: '${cppFile}' execution with input failed." >&2
+                echo "Error: '$(basename ${cppFile})' execution with input data failed." >&2
                 exit 1
             fi
         fi
@@ -129,13 +129,13 @@ run_cpp_file() {
         if isEmpty ${solutionInput}; then
             ${execFile} 2>/dev/null > ${outputFile}
             if errorExists; then
-                echo "Error: '${cppFile}' execution failed." >&2
+                echo "Error: '$(basename ${cppFile})' execution failed." >&2
                 exit 1
             fi
         else
             ${execFile} < ${inputFile} 2>/dev/null > ${outputFile}
             if errorExists; then
-                echo "Error: '${cppFile}' execution with input failed." >&2
+                echo "Error: '$(basename ${cppFile})' execution with input data failed." >&2
                 exit 1
             fi
         fi
@@ -143,18 +143,18 @@ run_cpp_file() {
 }
 
 test_cpp_file() {
-    local solutionFilename=${1}
+    local cppFile=${1}
     local outputFile=${2}
     local expectedFile=${3}
     local configFile=${4}
 
     if ! fileExists ${outputFile}; then
-        echo "Error: solution '${solutionFilename}' does not contain the out.tpp file." >&2
+        echo "Error: '$(basename ${cppFile%.*})' solution does not contain the output file." >&2
         exit 1
     fi
 
     if ! fileExists ${expectedFile}; then
-        echo "Error: solution '${solutionFilename}' does not contain the expected.tpp file." >&2
+        echo "Error: '$(basename ${cppFile%.*})' solution does not contain the expected file." >&2
         exit 1
     fi
 
@@ -166,55 +166,55 @@ test_cpp_file() {
 
     if errorExists; then
         echo diff ${expectedFile} ${outputFile} >&2
-        echo "'${solutionFilename}' test FAILED!"
+        echo "'$(basename ${cppFile})' test FAILED!"
         # update test status
         set_test_status_into_config ${configFile} "Failed"
         exit 1
     fi
 
-    echo "'${solutionFilename}' test PASSED!"
+    echo "'$(basename ${cppFile})' test PASSED!"
 
     # update test status
     set_test_status_into_config ${configFile} "Passed"
 }
 
 prepare_cpp_file() {
-    local solutionFilename=${1}
+    local cppFile=${1}
     local outputFile=${2}
     local expectedFile=${3}
     local configFile=${4}
 
-    local cppTmpFile="$(dirname ${solutionFilename})/.$(basename ${solutionFilename})"
-    local cppReadyFile="${solutionFilename%.*}_ready.${SOLUTION_EXTENSION_FILE}"
+    local cppTmpFile="$(dirname ${cppFile})/.$(basename ${cppFile})"
+    local cppReadyFile="${cppFile%.*}_ready.${SOLUTION_EXTENSION_FILE}"
 
     # TODO: investigate how to put the below two sed command in one
     # line, for some reason the next command is not working in Mac OS
     # $ sed '/debug.h\|debug(/d' $1
 
     # remove 'include' reference
-    sed '/debug.h/d' ${solutionFilename} > ${cppReadyFile}
+    sed '/debug.h/d' ${cppFile} > ${cppReadyFile}
     if errorExists; then
-        echo "Error: prepare '${solutionFilename}' file failed" >&2
+        echo "Error: '$(basename ${cppFile%.*})' solution prepare file failed." >&2
         exit 1
     fi
 
     # remove 'debugm(<var>)' use
     sed '/debugm(/d' ${cppReadyFile} > ${cppTmpFile}
     if errorExists; then
-        echo "Error: prepare '${solutionFilename}' file failed" >&2
+        echo "Error: '$(basename ${cppFile%.*})' solution prepare file failed." >&2
         exit 1
     fi
 
     # remove 'debug(<var>)' use
     sed '/debug(/d' ${cppTmpFile} > ${cppReadyFile}
     if errorExists; then
-        echo "Error: prepare '${solutionFilename}' file failed" >&2
+        echo "Error: '$(basename ${cppFile%.*})' solution prepare file failed." >&2
         exit 1
     fi
 
     rm ${cppTmpFile}
 
-    echo "'${cppReadyFile}' was generated successfully!"
+    echo "'$(basename ${cppReadyFile})' was generated successfully!"
 
     test_cpp_file ${cppReadyFile} ${outputFile} ${expectedFile} ${configFile}
 }

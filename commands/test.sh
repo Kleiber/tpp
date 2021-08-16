@@ -48,17 +48,17 @@ test_tpp_solution() {
     fi
 
     if ! fileExists ${solutionFilename}; then
-        echo "Error: '${solutionFilename}' file does not exist." >&2
+        echo "Error: '$(basename ${solutionFilename%.*})' solution does not contain the cpp file." >&2
         exit 1
     fi
 
     if isEmpty ${solutionInput}; then
-        echo "Error: '${solutionFilename}' solution does not contain input data."
+        echo "Error: '$(basename ${solutionFilename%.*})' solution does not contain input data."
         exit 1
     fi
 
     if isEmpty ${solutionExpected}; then
-        echo "Error: '${solutionFilename}' solution does not contain expected data."
+        echo "Error: '$(basename ${solutionFilename%.*})' solution does not contain expected data."
         exit 1
     fi
 
