@@ -60,10 +60,13 @@ function prepare_tpp_solution() {
     run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} ${solutionOutput} false
 
     # test cpp solution
-    test_cpp_file ${solutionFilename} ${solutionOutput} ${solutionExpected}
+    test_cpp_file ${solutionFilename} ${solutionOutput} ${solutionExpected} ${solutionConfigFile}
 
     # prepate cpp solution to submit
-    prepare_cpp_file ${solutionFilename} ${solutionOutput} ${solutionExpected}
+    prepare_cpp_file ${solutionFilename} ${solutionOutput} ${solutionExpected} ${solutionConfigFile}
+
+    # last update
+    set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
 }
 
 prepare_help() {

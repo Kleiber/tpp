@@ -48,6 +48,9 @@ function run_tpp_solution() {
 
     # run cpp executable
     run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} "" true
+
+    # last update
+    set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
 }
 
 run_help() {

@@ -23,6 +23,9 @@ open_tpp_solution() {
     solutionFilename=$(get_name_from_config ${solutionConfigFile})
     solutionFilename="${solutionDir}/${solutionFilename}"
 
+    # last update
+    set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
+
     # open source code using vim editor
     vi ${solutionFilename}
 }

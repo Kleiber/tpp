@@ -19,6 +19,9 @@ input_tpp_solution() {
         exit 1
     fi
 
+    # last update
+    set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
+
     # open source code using vim editor
     vi ${solutionInput}
 }

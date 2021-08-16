@@ -54,6 +54,16 @@ function get_test_status_from_config() {
     echo $testStatus
 }
 
+function set_last_update_into_config() {
+    local configFile=${1}
+    local lastUpdate=${2}
+}
+
+function set_test_status_into_config() {
+    local configFile=${1}
+    local testStatus=${2}
+}
+
 build_cpp_file() {
     local cppFile=${1}
     local execFile=${2}
@@ -122,6 +132,7 @@ test_cpp_file() {
     local solutionFilename=${1}
     local outputFile=${2}
     local expectedFile=${3}
+    local configFile=${4}
 
     if ! fileExists ${outputFile}; then
         echo "Error: solution '${solutionFilename}' does not contain the out.tpp file." >&2
@@ -142,18 +153,24 @@ test_cpp_file() {
     if errorExists; then
         echo diff ${expectedFile} ${outputFile} >&2
         echo "'${solutionFilename}' test FAILED!"
+        # update test status
+        set_test_status_into_config ${configFile} "failed"
         exit 1
     fi
 
     echo "'${solutionFilename}' test PASSED!"
+
+    # update test status
+    set_test_status_into_config ${configFile} "passed"
 }
 
 prepare_cpp_file() {
     local solutionFilename=${1}
     local outputFile=${2}
     local expectedFile=${3}
+    local configFile=${4}
 
-    local cppTmpFile=".${solutionFilename}"
+    local cppTmpFile="$(dirname ${solutionFilename})/.$(basename ${solutionFilename})"
     local cppReadyFile="${solutionFilename%.*}_ready.${SOLUTION_EXTENSION_FILE}"
 
     # TODO: investigate how to put the below two sed command in one
@@ -185,5 +202,5 @@ prepare_cpp_file() {
 
     echo "'${cppReadyFile}' was generated successfully!"
 
-    test_cpp_file ${cppReadyFile} ${outputFile} ${expectedFile}
+    test_cpp_file ${cppReadyFile} ${outputFile} ${expectedFile} ${configFile}
 }

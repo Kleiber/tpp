@@ -43,6 +43,9 @@ build_tpp_solution() {
 
     # build cpp file and create executable
     build_cpp_file ${solutionFilename} ${solutionExec}
+
+    # last update
+    set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
 }
 
 build_help() {
