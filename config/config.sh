@@ -12,4 +12,6 @@ export SOLUTION_INPUT_FILE="in.tpp"
 export SOLUTION_OUTPUT_FILE="out.tpp"
 export SOLUTION_EXPECTED_FILE="expected.tpp"
 
-export TPP_WORKSPACE=${TPP_WORKSPACE:-"${HOME}/workspace"}
+export TPP_WORKSPACE=${TPP_WORKSPACE:-"${HOME}/tpp_workspace"}
+export TPP_REPO=${TPP_REPO:-"tpp_repo"}
+export TPP_BRANCH=${TPP_BRANCH:-"tpp_branch"}
