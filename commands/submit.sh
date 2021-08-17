@@ -115,21 +115,11 @@ submit_tpp_solution() {
     # push changes to github repo
     echo "Pushing '$(basename ${solutionFilenameReady})' to '$(basename ${judgeDir})' directory..."
     pushd ${repoDir} > /dev/null
-    #git add .
-    #git commit --quiet --message "${commitMessage}"
-    #git push --quiet origin ${TPP_BRANCH}
+    git add .
+    git commit --quiet --message "${commitMessage}"
+    git push --quiet origin ${TPP_BRANCH}
     popd > /dev/null
     echo "'$(basename ${solutionFilename%.*})' solution was upload to the github repo successfully!"
-
-    # clean solution from worspace
-    echo "'$(basename ${solutionFilename%.*})' solution was cleaned from your workspace."
-    if [[ ! ${solutionName} ]]; then
-        cd ${TPP_WORKSPACE}
-        rm -rf ${solutionFilename%.*}
-    else
-        cd ${TPP_WORKSPACE}
-        rm -rf ${solutionDir}
-    fi
 }
 
 submit_help() {
