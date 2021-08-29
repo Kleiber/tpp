@@ -170,31 +170,25 @@ test_cpp_file() {
         exit 1
     fi
 
+    local difference=""
     if isMac; then
-        diff ${expectedFile} ${outputFile}
+        difference=$(diff ${expectedFile} ${outputFile} || true)
     else
-        diff ${expectedFile} ${outputFile} --color
+        difference=$(diff ${expectedFile} ${outputFile} --color || true)
     fi
 
-    if errorExists; then
-        echo diff ${expectedFile} ${outputFile} >&2
-        echo "'$(basename ${cppFile})' test FAILED!"
-        # update test status
+    if [[ ${difference} != "" ]]; then
+        echo ${difference}
         set_test_status_into_config ${configFile} "Failed"
-        exit 1
+    else
+        set_test_status_into_config ${configFile} "Passed"
     fi
-
-    echo "'$(basename ${cppFile})' test PASSED!"
-
-    # update test status
-    set_test_status_into_config ${configFile} "Passed"
 }
 
 prepare_cpp_file() {
     local cppFile=${1}
     local outputFile=${2}
     local expectedFile=${3}
-    local configFile=${4}
 
     local cppTmpFile="$(dirname ${cppFile})/.$(basename ${cppFile})"
     local cppReadyFile="${cppFile%.*}_ready.${SOLUTION_EXTENSION_FILE}"
@@ -227,6 +221,4 @@ prepare_cpp_file() {
     rm ${cppTmpFile}
 
     echo "'$(basename ${cppReadyFile})' was generated successfully!"
-
-    test_cpp_file ${cppReadyFile} ${outputFile} ${expectedFile} ${configFile}
 }

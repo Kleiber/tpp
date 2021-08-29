@@ -125,11 +125,10 @@ submit_tpp_solution() {
 submit_help() {
     cat <<EOF
 
-Submit solution to github repository. Once submited, the solution will be cleaned
-from the workspace. If the command is run from within the solution directory, the
-solution name is an optional argument.
+Submit solution to github repository. . If the command is run from within the solution
+directory, the solution name is an optional argument.
 
-Usage:  tpp test [solution-name]
+Usage:  tpp submit [solution-name]
 
 Options:
   -h, --help   Show more information about command

@@ -46,6 +46,8 @@ build_tpp_solution() {
 
     # last update
     set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
+
+    echo "'$(basename ${solutionFilename%.*})' solution was compiled successfully!"
 }
 
 build_help() {

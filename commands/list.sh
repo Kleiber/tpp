@@ -43,7 +43,7 @@ list_help() {
 
 List all solutions in the workspace.
 
-Usage:  tpp list
+Usage:  tpp ls
 
 Options:
   -h, --help   Show more information about command

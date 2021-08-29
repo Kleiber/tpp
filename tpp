@@ -42,8 +42,13 @@ Usage:  kad COMMAND [OPTIONS]
 
 Commands:
   build     Compile the .cpp file into the solution
+  exp       Open expected file into the solution
   init      Init a new solution with the specified name
-  list      List all solutions in your workspace
+  in        Open input file into the solution
+  judge     Set a judge name value to the solution
+  ls        List all solutions in your workspace
+  open      Open .cpp file into the solution
+  out       Open output file into the solution
   prepare   Generate and test a new file without the debug references from the .cpp file into the solution
   run       Compile and run the .cpp file into the solution
   submit    Submit solution to github repository 
@@ -81,7 +86,7 @@ tpp_cmd() {
             shift
             judge_cmd ${@}
             ;;
-        list)
+        ls)
             shift
             list_cmd ${@}
             ;;

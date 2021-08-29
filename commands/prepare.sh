@@ -69,11 +69,32 @@ function prepare_tpp_solution() {
     # run cpp executable
     run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} ${solutionOutput} false
 
-    # test cpp solution
+    # test cpp solution and update test status
     test_cpp_file ${solutionFilename} ${solutionOutput} ${solutionExpected} ${solutionConfigFile}
 
+    # get test status
+    local testStatus=$(get_test_status_from_config ${solutionConfigFile})
+    if [[ ${testStatus} == "Failed" ]]; then
+        echo "'$(basename ${solutionFilename})' test FAILED!"
+        exit 1
+    fi
+
     # prepate cpp solution to submit
-    prepare_cpp_file ${solutionFilename} ${solutionOutput} ${solutionExpected} ${solutionConfigFile}
+    prepare_cpp_file ${solutionFilename} ${solutionOutput} ${solutionExpected}
+
+    # prepare filename
+    local readySolutionFilename="${solutionFilename%.*}_ready.${SOLUTION_EXTENSION_FILE}"
+
+    # test prepare cpp solution and update status
+    test_cpp_file ${readySolutionFilename} ${solutionOutput} ${solutionExpected} ${solutionConfigFile}
+
+    # get test status
+    testStatus=$(get_test_status_from_config ${solutionConfigFile})
+    if [[ ${testStatus} == "Passed" ]]; then
+        echo "'$(basename ${readySolutionFilename})' test PASSED!"
+    else
+        echo "'$(basename ${readySolutionFilename})' test FAILED!"
+    fi
 
     # last update
     set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"

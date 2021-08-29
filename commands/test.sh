@@ -68,8 +68,16 @@ test_tpp_solution() {
     # run cpp executable
     run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} ${solutionOutput} false
 
-    # test cpp solution
+    # test cpp solution and update test status
     test_cpp_file ${solutionFilename} ${solutionOutput} ${solutionExpected} ${solutionConfigFile}
+
+    # get test status
+    local testStatus=$(get_test_status_from_config ${solutionConfigFile})
+    if [[ ${testStatus} == "Passed" ]]; then
+        echo "'$(basename ${solutionFilename})' test PASSED!"
+    else
+        echo "'$(basename ${solutionFilename})' test FAILED!"
+    fi
 
     # last update
     set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"

@@ -29,6 +29,7 @@ int main() {
 
     return 0;
 }
+
 EOF
 }
 
@@ -69,6 +70,7 @@ int main() {
 
     return 0;
 }
+
 EOF
 }
 
