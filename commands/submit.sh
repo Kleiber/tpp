@@ -76,20 +76,19 @@ submit_tpp_solution() {
     # check judge name and retrieve tag name
     local tagName=$(get_tag_name_from_config ${solutionConfigFile})
     local judgeName=$(get_judge_name_from_config ${solutionConfigFile})
-
     if [[ ${judgeName} == "empty" ]]; then
         echo "Error: judge name unset. please set a value." >&2
         exit 1
     fi
 
-    local targetDir=""
-
+    local judgeDir=""
     if [[ ${tagName} == "empty" ]]; then
-        targetDir="${repoDir}/${judgeName}"
+        judgeDir="${judgeName}"
     else
-        targetDir="${repoDir}/${judgeName}/${tagName}"
+        judgeDir="${judgeName}/${tagName}"
     fi
 
+    local targetDir="${repoDir}/${judgeDir}"
 
     # check test status
     local testStatus=$(get_test_status_from_config ${solutionConfigFile})
@@ -122,7 +121,7 @@ submit_tpp_solution() {
     read commitMessage
 
     # push changes to github repo
-    echo "Pushing '$(basename ${solutionFilenameReady})' to '$(basename ${targetDir})' directory..."
+    echo "Pushing '$(basename ${solutionFilenameReady})' to '${judgeDir}' directory..."
     pushd ${repoDir} > /dev/null
     git add .
     git commit --quiet --message "${commitMessage}"
