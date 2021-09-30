@@ -97,7 +97,7 @@ Prepares and test a new file to submit without the debug reference and its uses 
 tpp prepare
 ```
 
-### ***list***
+### ***ls***
 
 List all the solutions created that are in the workspace. some columns are displayed in the output:
 
@@ -109,7 +109,7 @@ List all the solutions created that are in the workspace. some columns are displ
 - _LAST UPDATE:_ Last time the solution was updated.
 
 ```bash
-tpp list
+tpp ls
 ```
 
 ### ***submit***
