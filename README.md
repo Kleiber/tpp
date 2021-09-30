@@ -255,8 +255,8 @@ $ tpp in
 $ tpp exp
 
 $ tpp ls
-SOLUTION NAME              JUDGE          TAG           TEST STATUS    READY     LAST UPDATE
-hello                                                   Pending        No        28-08-2021 18:45:45
+SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
+hello                                             Pending        No        28-08-2021 18:45:45
 
 $ tpp build
 'hello' solution was compiled successfully!
@@ -294,16 +294,16 @@ $ tpp test
 'hello.cpp' test PASSED!
 
 $ tpp ls
-SOLUTION NAME              JUDGE          TAG           TEST STATUS    READY     LAST UPDATE
-hello                                                   Passed         No        28-08-2021 18:48:54
+SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
+hello                                             Passed         No        28-08-2021 18:48:54
 
 $ tpp prepare
 'hello_ready.cpp' was generated successfully!
 'hello_ready.cpp' test PASSED!
 
 $ tpp ls
-SOLUTION NAME              JUDGE          TAG           TEST STATUS    READY     LAST UPDATE
-hello                                                   Passed         Yes       28-08-2021 18:49:12
+SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
+hello                                             Passed         Yes       28-08-2021 18:49:12
 ```
 
 Opening the generated file for submission `hello_ready.cpp`:
@@ -367,8 +367,8 @@ $ tpp judge Kattis
 $ tpp tag AdHoc
 
 $ tpp ls
-SOLUTION NAME              JUDGE          TAG           TEST STATUS    READY     LAST UPDATE
-hello                      Kattis         AdHoc         Passed         Yes       28-08-2021 18:51:12
+SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
+hello                   Kattis      AdHoc         Passed         Yes       28-08-2021 18:51:12
 
 $ tpp submit
 Insert a commit message and press enter:
