@@ -47,11 +47,13 @@ export TPP_BRANCH=<github-branch-name>
 export TPP_IDE=<ide-to-edit-files>
 ```
 
-- _TPP_WORKSPACE_:
-- _TPP_REPO_:
-- _TPP_GITHUB_:
-- _TPP_BRANCH_:
-- _TPP_IDE_:
+Where:
+
+- _TPP_WORKSPACE_: Local directory path where solutions will be created.
+- _TPP_REPO_: Local directory path where the Github repository will be cloned.
+- _TPP_GITHUB_: Github repository url where the solutions will be uploaded.
+- _TPP_BRANCH_: Github repository branch.
+- _TPP_IDE_: IDE command that will be used to edit the solutions.
 
 ## Commands
 
@@ -59,7 +61,7 @@ export TPP_IDE=<ide-to-edit-files>
 
 Initializes a new solution with the name passed as a parameter. Basically a new directory is created with four files: the cpp template `<solution-name>.cpp`, the input file `in.tpp`, the expected output file `expected.tpp` and the output file `out.tpp`
 
-```
+```bash
 tpp init <solution-name>
 ```
 
@@ -67,7 +69,7 @@ tpp init <solution-name>
 
 Compiles the generated cpp template within the solution. Basically it is the translation of executing command `g ++ -o build <solution-name>.cpp`
 
-```
+```bash
 tpp build
 ```
 
@@ -75,7 +77,7 @@ tpp build
 
 Compiles and executes the generated cpp template within the solution. If the `in.tpp` file has test cases, they will be used in the execution using standard input (`build < in.tpp`). Otherwise, it will be necessary to manually enter the test cases as usual
 
-```
+```bash
 tpp run
 ```
 
@@ -83,30 +85,42 @@ tpp run
 
 Compiles, executes and test the generated cpp template within the solution. For the execution of this command it is necessary to have the `in.tpp` file with the input cases and the `expected.tpp` file with the expected outputs. From the cpp template an `out.tpp` file will be generated to be compared (`build < in.tpp > out.tpp`). Basically it is the translation of executing command `diff expected.tpp out.tpp`
 
-```
+```bash
 tpp test
 ```
 
 ### ***prepare***
+
 Prepares and test a new file to submit without the debug reference and its uses within the generated template
 
-```
+```bash
 tpp prepare
 ```
 
 ### ***list***
 
-```
+List all the solutions created that are in the workspace. some columns are displayed in the output:
+
+- _SOLUTION NAME:_ Name of the solution with which it was created.
+- _JUDGE:_ Name of the assigned judge.
+- _TAG:_ Name of the assigned tag.
+- _TEST STATUS:_ Test status of the solution.
+- _READY:_ Indicates if the solution was ready to submit.
+- _LAST UPDATE:_ Last time the solution was updated.
+
+```bash
 tpp list
 ```
 
 ### ***submit***
 
-```
+Submit solution to github repository. The path where the solution will be placed in the repository will be the concatenation between the judge and tag assigned to the solution (To assign the judge and tag use the commands `tpp judge` and `tpp tag` respectively).
+
+```bash
 tpp submit
 ```
 
-`tpp` tool also provides other commands that can help you in developing your solution, to get more information about these other commands run _tpp --help_.
+**Note:** `tpp` tool also provides other commands that can help you in developing your solution, to get more information about these other commands run _tpp --help_.
 
 ## Template
 
@@ -204,7 +218,7 @@ int main() {
 
 If we have the above code snippet and the following input file and expected ouput file contents:
 
-```
+```bash
 Input:
 Hello World!
 
@@ -214,7 +228,7 @@ Hello World!
 
 Executing the following `tpp` commands:
 
-```
+```bash
 $ cat ~/.bashrc
 export TPP_WORKSPACE=$HOME/code
 export TPP_REPO=$HOME/repository
@@ -240,9 +254,9 @@ $ tpp in
 // open the generated expected file expected.tpp and copy the content
 $ tpp exp
 
-$ tpp list
-SOLUTION NAME              JUDGE          TEST STATUS    READY     LAST UPDATE
-hello                                     Pending        No        28-08-2021 18:45:45
+$ tpp ls
+SOLUTION NAME              JUDGE          TAG           TEST STATUS    READY     LAST UPDATE
+hello                                                   Pending        No        28-08-2021 18:45:45
 
 $ tpp build
 'hello' solution was compiled successfully!
@@ -279,17 +293,17 @@ Hello World!
 $ tpp test
 'hello.cpp' test PASSED!
 
-$ tpp list
-SOLUTION NAME              JUDGE          TEST STATUS    READY     LAST UPDATE
-hello                                     Passed         No        28-08-2021 18:48:54
+$ tpp ls
+SOLUTION NAME              JUDGE          TAG           TEST STATUS    READY     LAST UPDATE
+hello                                                   Passed         No        28-08-2021 18:48:54
 
 $ tpp prepare
 'hello_ready.cpp' was generated successfully!
 'hello_ready.cpp' test PASSED!
 
-$ tpp list
-SOLUTION NAME              JUDGE          TEST STATUS    READY     LAST UPDATE
-hello                                     Passed         Yes       28-08-2021 18:49:12
+$ tpp ls
+SOLUTION NAME              JUDGE          TAG           TEST STATUS    READY     LAST UPDATE
+hello                                                   Passed         Yes       28-08-2021 18:49:12
 ```
 
 Opening the generated file for submission `hello_ready.cpp`:
@@ -343,4 +357,22 @@ int main() {
 
     return 0;
 }
+```
+
+`tpp` also gives us the option to save our solutions in our Github repository as follows:
+
+```bash
+$ tpp judge Kattis
+
+$ tpp tag AdHoc
+
+$ tpp ls
+SOLUTION NAME              JUDGE          TAG           TEST STATUS    READY     LAST UPDATE
+hello                      Kattis         AdHoc         Passed         Yes       28-08-2021 18:51:12
+
+$ tpp submit
+Insert a commit message and press enter:
+add hello solution using tpp tool
+Pushing 'hello_ready.cpp' to 'Kattis/AdHoc' directory...
+'hello' solution was upload to the github repo successfully!
 ```
