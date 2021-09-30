@@ -83,6 +83,7 @@ config_template() {
     name = $solutionFilename
     create = $(date +"%d-%m-%Y %H:%M:%S")
     judge = empty
+    tag = empty
     update = $(date +"%d-%m-%Y %H:%M:%S")
     test = Pending
 EOF

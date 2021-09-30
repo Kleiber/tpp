@@ -73,14 +73,23 @@ submit_tpp_solution() {
         git clone --quiet ${TPP_GITHUB} ${repoDir}
     fi
 
-    # check judge name
+    # check judge name and retrieve tag name
+    local tagName=$(get_tag_name_from_config ${solutionConfigFile})
     local judgeName=$(get_judge_name_from_config ${solutionConfigFile})
-    local judgeDir="${repoDir}/${judgeName}"
 
     if [[ ${judgeName} == "empty" ]]; then
         echo "Error: judge name unset. please set a value." >&2
         exit 1
     fi
+
+    local targetDir=""
+
+    if [[ ${tagName} == "empty" ]]; then
+        targetDir="${repoDir}/${judgeName}"
+    else
+        targetDir="${repoDir}/${judgeName}/${tagName}"
+    fi
+
 
     # check test status
     local testStatus=$(get_test_status_from_config ${solutionConfigFile})
@@ -105,15 +114,15 @@ submit_tpp_solution() {
     popd > /dev/null
 
     # copy solution to repo
-    mkdir -p ${judgeDir}
-    cp ${solutionFilenameReady} ${judgeDir}
+    mkdir -p ${targetDir}
+    cp ${solutionFilenameReady} ${targetDir}
 
     # request commit message
     echo "Insert a commit message and press enter:"
     read commitMessage
 
     # push changes to github repo
-    echo "Pushing '$(basename ${solutionFilenameReady})' to '$(basename ${judgeDir})' directory..."
+    echo "Pushing '$(basename ${solutionFilenameReady})' to '$(basename ${targetDir})' directory..."
     pushd ${repoDir} > /dev/null
     git add .
     git commit --quiet --message "${commitMessage}"
@@ -125,7 +134,8 @@ submit_tpp_solution() {
 submit_help() {
     cat <<EOF
 
-Submit solution to github repository. . If the command is run from within the solution
+Submit the solution to the github repository, the path where it will be placed is the
+concatenation of the judge and tag name. If the command is run from within the solution
 directory, the solution name is an optional argument.
 
 Usage:  tpp submit [solution-name]

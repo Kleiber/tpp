@@ -17,6 +17,7 @@ source ${TPP_DIR}/commands/list.sh
 source ${TPP_DIR}/commands/prepare.sh
 source ${TPP_DIR}/commands/run.sh
 source ${TPP_DIR}/commands/submit.sh
+source ${TPP_DIR}/commands/tag.sh
 source ${TPP_DIR}/commands/test.sh
 
 source ${TPP_DIR}/commands/judge.sh
@@ -52,6 +53,7 @@ Commands:
   prepare   Generate and test a new file without the debug references from the .cpp file into the solution
   run       Compile and run the .cpp file into the solution
   submit    Submit solution to github repository 
+  tag       Set a tag name value to the solution
   test      Compile, run and test the .cpp file into the solution
 
 Options:
@@ -113,6 +115,10 @@ tpp_cmd() {
         test)
             shift
             test_cmd ${@}
+            ;;
+        tag)
+            shift
+            tag_cmd ${@}
             ;;
         --version | -v)
             tpp_version

@@ -28,6 +28,19 @@ function get_judge_name_from_config() {
     echo $judgeName
 }
 
+function get_tag_name_from_config() {
+    local configFile=${1}
+    local tagName=""
+
+    if isMac; then
+        tagName=$(perl -nle'print $& while m{tag\s*=\s*\K[\w\s-._]+}g' ${configFile})
+    else
+        tagName=$(cat ${configFile} | grep -oP "tag\s*=\s*\K[\w\s-._]+")
+    fi
+
+    echo $tagName
+}
+
 function get_last_update_from_config() {
     local configFile=${1}
     local lastUpdate=""
@@ -62,6 +75,18 @@ function set_judge_name_into_config() {
     sed -i -e "s/judge = ${currentJudgeName}/judge = ${judgeName}/g" ${configFile}
     if errorExists; then
         echo "Error: set judge name failed." >&2
+        exit 1
+    fi
+}
+
+function set_tag_name_into_config() {
+    local configFile=${1}
+    local tagName=${2}
+    local currentTagName=$(get_tag_name_from_config ${configFile})
+
+    sed -i -e "s/tag = ${currentTagName}/tag = ${tagName}/g" ${configFile}
+    if errorExists; then
+        echo "Error: set tag name failed." >&2
         exit 1
     fi
 }
