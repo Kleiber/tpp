@@ -112,6 +112,13 @@ List all the solutions created that are in the workspace. some columns are displ
 tpp ls
 ```
 
+Finnaly, setup the git configuration.
+
+```bash
+git config --global user.name "<your-name>"
+git config --global user.email "<your-email-address>"
+```
+
 ### ***submit***
 
 Submit solution to github repository. The path where the solution will be placed in the repository will be the concatenation between the judge and tag assigned to the solution (To assign the judge and tag use the commands `tpp judge` and `tpp tag` respectively).
