@@ -55,6 +55,13 @@ Where:
 - _TPP_BRANCH_: Github repository branch.
 - _TPP_IDE_: IDE command that will be used to edit the solutions.
 
+Finnaly, setup the git configuration.
+
+```bash
+git config --global user.name "<your-name>"
+git config --global user.email "<your-email-address>"
+```
+
 ## Commands
 
 ### ***init***
@@ -110,13 +117,6 @@ List all the solutions created that are in the workspace. some columns are displ
 
 ```bash
 tpp ls
-```
-
-Finnaly, setup the git configuration.
-
-```bash
-git config --global user.name "<your-name>"
-git config --global user.email "<your-email-address>"
 ```
 
 ### ***submit***
