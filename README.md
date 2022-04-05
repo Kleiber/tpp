@@ -55,7 +55,7 @@ Where:
 - _TPP_BRANCH_: Github repository branch.
 - _TPP_IDE_: IDE command that will be used to edit the solutions.
 
-Finnaly, setup the git configuration.
+Finally, setup the git configuration.
 
 ```bash
 git config --global user.name "<your-name>"
