@@ -53,6 +53,8 @@ function mac_os_template {
 #include <sstream>
 #include <set>
 #include <map>
+#include <unordered_map>
+#include <unordered_set>
 #include <queue>
 #include <stack>
 #include <cstdio>
