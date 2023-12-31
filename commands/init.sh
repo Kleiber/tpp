@@ -60,6 +60,7 @@ function mac_os_template {
 #include <cstdio>
 #include <cmath>
 #include <cstdlib>
+#icnlude <cstring>
 using namespace std;
 
 // remove this reference to debug.h before your submission
