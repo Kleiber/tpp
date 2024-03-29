@@ -383,3 +383,28 @@ add hello solution using tpp tool
 Pushing 'hello_ready.cpp' to 'Kattis/AdHoc' directory...
 'hello' solution was upload to the github repo successfully!
 ```
+
+## Judge Autofill I/O
+
+This is a new functionality, which allows completing the inputs and outputs in the created solution (just to test your solution). This using API/Scraping to autocomplete them. Currently it is only for `Codeforces` but the idea is to extend it for the other judges
+
+In the `wrapper` folder it is necessary to execute the following command to install the tools used in the script:
+
+```bash
+pip3 install -r requirements.txt
+```
+
+The usage mode is simple, just call the command:
+
+```bash
+// From other path out of the solution folder
+tpp fill [solution_name]
+
+// From the solution folder
+tpp fill
+```
+It is important to enter the name of the solution when initializing using the `[ProblemId]_[ProblemName]` format:
+
+```bash
+tpp init 1950A_Stair_Peak_Or_Neither
+```

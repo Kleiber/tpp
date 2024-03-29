@@ -25,6 +25,7 @@ source ${TPP_DIR}/commands/open.sh
 source ${TPP_DIR}/commands/input.sh
 source ${TPP_DIR}/commands/output.sh
 source ${TPP_DIR}/commands/expected.sh
+source ${TPP_DIR}/commands/fill.sh
 
 tpp_version() {
     local tpp_version=$(cat ${TPP_DIR}/config/VERSION)
@@ -44,6 +45,7 @@ Usage:  kad COMMAND [OPTIONS]
 Commands:
   build     Compile the .cpp file into the solution
   exp       Open expected file into the solution
+  fill      Fill in the inputs and expected outputs
   init      Init a new solution with the specified name
   in        Open input file into the solution
   judge     Set a judge name value to the solution
@@ -75,6 +77,10 @@ tpp_cmd() {
         exp)
             shift
             expected_cmd ${@}
+            ;;
+        fill)
+            shift
+            fill_cmd ${@}
             ;;
         init)
             shift
