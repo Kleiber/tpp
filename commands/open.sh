@@ -52,8 +52,11 @@ open_tpp_solution() {
     set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
 
     # open source code using vim editor
-    # ${TPP_IDE} ${solutionFilename}
-    ${TPP_IDE} -O ${solutionFilename} ${solutionOutput} -c "winc l" -c "sp ${solutionInput}" -c "vertical res 70"
+    if ! dirExists ${VIM_PLUGIN_DIR}; then
+        ${TPP_IDE} ${solutionFilename}
+    else
+        ${TPP_IDE} -O ${solutionFilename} ${solutionOutput} -c "winc l" -c "sp ${solutionInput}" -c "vertical res 70"
+    fi
 }
 
 open_help() {
