@@ -68,7 +68,3 @@ install_cmd() {
             ;;
     esac
 }
-
-
-
-

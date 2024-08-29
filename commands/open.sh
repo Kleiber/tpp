@@ -13,6 +13,7 @@ open_tpp_solution() {
     local solutionConfigFile="${SOLUTION_CONFIG_DIR}/${SOLUTION_CONFIG_FILE}"
     local solutionInput=${SOLUTION_INPUT_FILE}
     local solutionOutput=${SOLUTION_OUTPUT_FILE}
+    local solutionExpected=${SOLUTION_EXPECTED_FILE}
 
     # check if the solution name is an argument
     if [[ ! ${solutionName} ]]; then
@@ -28,6 +29,7 @@ open_tpp_solution() {
         solutionConfigFile="${solutionDir}/${solutionConfigFile}"
         solutionInput="${solutionDir}/${solutionInput}"
         solutionOutput="${solutionDir}/${solutionOutput}"
+        solutionExpected="${solutionDir}/${solutionExpected}"
 
         if ! dirExists ${solutionDir}; then
             echo "Error: '${solutionName}' solution does not exist." >&2
@@ -52,10 +54,10 @@ open_tpp_solution() {
     set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
 
     # open source code using vim editor
-    if ! dirExists ${VIM_PLUGIN_DIR}; then
-        ${TPP_IDE} ${solutionFilename}
+    if dirExists ${VIM_PLUGIN_DIR}; then
+        ${TPP_IDE} -O ${solutionFilename} ${solutionOutput} -c "winc l" -c "sp ${solutionInput}" -c "vertical res 60" -c "winc h"
     else
-        ${TPP_IDE} -O ${solutionFilename} ${solutionOutput} -c "winc l" -c "sp ${solutionInput}" -c "vertical res 70"
+        ${TPP_IDE} ${solutionFilename}
     fi
 }
 

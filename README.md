@@ -45,6 +45,7 @@ export TPP_REPO=<github-path-repository>
 export TPP_GITHUB=<github-url-repository>
 export TPP_BRANCH=<github-branch-name>
 export TPP_IDE=<ide-to-edit-files>
+export TPP_TEST=1
 ```
 
 Where:
@@ -54,6 +55,7 @@ Where:
 - _TPP_GITHUB_: Github repository url where the solutions will be uploaded.
 - _TPP_BRANCH_: Github repository branch.
 - _TPP_IDE_: IDE command that will be used to edit the solutions.
+- _TPP_TEST_: Enable test validation
 
 Finally, setup the git configuration.
 

@@ -5,6 +5,11 @@
 set -e
 
 test_tpp_solution() {
+    if [[ ${TPP_TEST} == "0" ]]; then
+        echo "Set your enviroment variable TPP_TEST to 1"
+        exit 0
+    fi
+
     local solutionName=${1}
 
     local solutionDir=""

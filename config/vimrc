@@ -11,9 +11,6 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin '907th/vim-auto-save'
 call vundle#end()
 
-" Enable AutoSave
-let g:auto_save = 1
-
 " Turn on syntax highlighting.
 syntax on
 
@@ -57,7 +54,8 @@ set matchpairs+=<:>
 set number
 
 " Set status line display
-set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ [BUFFER=%n]\ %{strftime('%c')}
+" set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ [BUFFER=%n]\ %{strftime('%c')}
+set statusline=%F%m%r%h%w
 
 " Encoding
 set encoding=utf-8
@@ -71,9 +69,20 @@ set incsearch
 " Reload content
 set autoread
 
+" Optional
+
+" Enable AutoSave
+" let g:auto_save = 1
+
+" Disable beep on errors
+" set noerrorbells
+
+" Enable mouse for scrolling and resizing
+" set mouse=a
+
 " Functions
 :function SaveChanges()
-:  execute 'w'
+:  execute 'write'
 :endfunction
 
 :function BuildCode()
@@ -98,3 +107,21 @@ set autoread
 :command -nargs=0 P :call PrepareCode()
 :command -nargs=0 Q :call QuitCode()
 :command -nargs=0 W :call SaveChanges()
+
+" Map
+nnoremap e <c-w>k
+nnoremap d <c-w>j
+nnoremap s <c-w>h
+nnoremap f <c-w>l
+
+nnoremap b :write <CR> :!tpp build <CR>
+nnoremap r :write <CR> :!tpp run <CR>
+nnoremap t :write <CR> :!tpp test <CR>
+nnoremap p :write <CR> :!tpp prepare <CR>
+
+nnoremap q :qall <CR>
+nnoremap x :write <CR>
+
+inoremap ww <Esc>
+
+

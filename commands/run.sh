@@ -13,6 +13,7 @@ function run_tpp_solution() {
     local solutionConfigFile="${SOLUTION_CONFIG_DIR}/${SOLUTION_CONFIG_FILE}"
     local solutionExec=${SOLUTION_BUILD}
     local solutionInput=${SOLUTION_INPUT_FILE}
+    local solutionOutput=${SOLUTION_OUTPUT_FILE}
 
     # check if the solution name is an argument
     if [[ ! ${solutionName} ]]; then
@@ -28,6 +29,7 @@ function run_tpp_solution() {
         solutionConfigFile="${solutionDir}/${solutionConfigFile}"
         solutionExec="${solutionDir}/${solutionExec}"
         solutionInput="${solutionDir}/${solutionInput}"
+        solutionOutput="${solutionDir}/${solutionOutput}"
 
         if ! dirExists ${solutionDir}; then
             echo "Error: '${solutionName}' solution does not exist." >&2
@@ -47,7 +49,11 @@ function run_tpp_solution() {
     build_cpp_file ${solutionFilename} ${solutionExec}
 
     # run cpp executable
-    run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} "" true
+    if dirExists ${VIM_PLUGIN_DIR}; then
+        run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} ${solutionOutput} false
+    else
+        run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} "" true
+    fi
 
     # last update
     set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
