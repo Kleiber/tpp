@@ -45,6 +45,7 @@ export TPP_REPO=<github-path-repository>
 export TPP_GITHUB=<github-url-repository>
 export TPP_BRANCH=<github-branch-name>
 export TPP_IDE=<ide-to-edit-files>
+export TPP_TEST=1
 ```
 
 Where:
@@ -54,6 +55,7 @@ Where:
 - _TPP_GITHUB_: Github repository url where the solutions will be uploaded.
 - _TPP_BRANCH_: Github repository branch.
 - _TPP_IDE_: IDE command that will be used to edit the solutions.
+- _TPP_TEST_: Enable test validation
 
 Finally, setup the git configuration.
 
@@ -369,42 +371,17 @@ int main() {
 `tpp` also gives us the option to save our solutions in our Github repository as follows:
 
 ```bash
-$ tpp judge Kattis
+$ tpp judge Codeforces
 
 $ tpp tag AdHoc
 
 $ tpp ls
-SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
-hello                   Kattis      AdHoc         Passed         Yes       28-08-2021 18:51:12
+SOLUTION NAME           JUDGE           TAG           TEST STATUS    READY     LAST UPDATE
+hello                   Codeforces      AdHoc         Passed         Yes       28-08-2021 18:51:12
 
 $ tpp submit
 Insert a commit message and press enter:
 add hello solution using tpp tool
 Pushing 'hello_ready.cpp' to 'Kattis/AdHoc' directory...
 'hello' solution was upload to the github repo successfully!
-```
-
-## Judge Autofill I/O
-
-This is a new functionality, which allows completing the inputs and outputs in the created solution (just to test your solution). This using API/Scraping to autocomplete them. Currently it is only for `Codeforces` but the idea is to extend it for the other judges
-
-In the `wrapper` folder it is necessary to execute the following command to install the tools used in the script:
-
-```bash
-pip3 install -r requirements.txt
-```
-
-The usage mode is simple, just call the command:
-
-```bash
-// From other path out of the solution folder
-tpp fill [solution_name]
-
-// From the solution folder
-tpp fill
-```
-It is important to enter the name of the solution when initializing using the `[ProblemId]_[ProblemName]` format:
-
-```bash
-tpp init 1950A_Stair_Peak_Or_Neither
 ```

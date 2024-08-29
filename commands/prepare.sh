@@ -58,9 +58,11 @@ function prepare_tpp_solution() {
         exit 1
     fi
 
-    if isEmpty ${solutionExpected}; then
-        echo "Error: '$(basename ${solutionFilename%.*})' solution does not contain expected data." >&2
-        exit 1
+    if [[ ${TPP_TEST} == "1" ]]; then
+        if isEmpty ${solutionExpected}; then
+            echo "Error: '$(basename ${solutionFilename%.*})' solution does not contain expected data." >&2
+            exit 1
+        fi
     fi
 
     # build cpp file and create executable
@@ -70,13 +72,15 @@ function prepare_tpp_solution() {
     run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} ${solutionOutput} false
 
     # test cpp solution and update test status
-    test_cpp_file ${solutionFilename} ${solutionOutput} ${solutionExpected} ${solutionConfigFile}
+    if [[ ${TPP_TEST} == "1" ]]; then
+        test_cpp_file ${solutionFilename} ${solutionOutput} ${solutionExpected} ${solutionConfigFile}
 
-    # get test status
-    local testStatus=$(get_test_status_from_config ${solutionConfigFile})
-    if [[ ${testStatus} == "Failed" ]]; then
-        echo "'$(basename ${solutionFilename})' test FAILED!"
-        exit 1
+        # get test status
+        local testStatus=$(get_test_status_from_config ${solutionConfigFile})
+        if [[ ${testStatus} == "Failed" ]]; then
+            echo "'$(basename ${solutionFilename})' test FAILED!"
+            exit 1
+        fi
     fi
 
     # prepate cpp solution to submit
@@ -86,14 +90,16 @@ function prepare_tpp_solution() {
     local readySolutionFilename="${solutionFilename%.*}_ready.${SOLUTION_EXTENSION_FILE}"
 
     # test prepare cpp solution and update status
-    test_cpp_file ${readySolutionFilename} ${solutionOutput} ${solutionExpected} ${solutionConfigFile}
+    if [[ ${TPP_TEST} == "1" ]]; then
+        test_cpp_file ${readySolutionFilename} ${solutionOutput} ${solutionExpected} ${solutionConfigFile}
 
-    # get test status
-    testStatus=$(get_test_status_from_config ${solutionConfigFile})
-    if [[ ${testStatus} == "Passed" ]]; then
-        echo "'$(basename ${readySolutionFilename})' test PASSED!"
-    else
-        echo "'$(basename ${readySolutionFilename})' test FAILED!"
+        # get test status
+        testStatus=$(get_test_status_from_config ${solutionConfigFile})
+        if [[ ${testStatus} == "Passed" ]]; then
+            echo "'$(basename ${readySolutionFilename})' test PASSED!"
+        else
+            echo "'$(basename ${readySolutionFilename})' test FAILED!"
+        fi
     fi
 
     # last update
