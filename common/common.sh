@@ -9,7 +9,7 @@ function get_name_from_config() {
     if isMac; then
         name=$(perl -nle'print $& while m{name\s*=\s*\K[\w\s-._]+}g' ${configFile})
     else
-        name=$(cat ${configFile} | grep -oP "name\s*=\s*\K[\w\s-._]+")
+        name=$(cat ${configFile} | grep -oP "name\s*=\s*\K[\w\s._-]+")
     fi
 
     echo $name
@@ -22,7 +22,7 @@ function get_judge_name_from_config() {
     if isMac; then
         judgeName=$(perl -nle'print $& while m{judge\s*=\s*\K[\w\s-._]+}g' ${configFile})
     else
-        judgeName=$(cat ${configFile} | grep -oP "judge\s*=\s*\K[\w\s-._]+")
+        judgeName=$(cat ${configFile} | grep -oP "judge\s*=\s*\K[\w\s._-]+")
     fi
 
     echo $judgeName
@@ -35,7 +35,7 @@ function get_tag_name_from_config() {
     if isMac; then
         tagName=$(perl -nle'print $& while m{tag\s*=\s*\K[\w\s-._]+}g' ${configFile})
     else
-        tagName=$(cat ${configFile} | grep -oP "tag\s*=\s*\K[\w\s-._]+")
+        tagName=$(cat ${configFile} | grep -oP "tag\s*=\s*\K[\w\s._-]+")
     fi
 
     echo $tagName
@@ -48,7 +48,7 @@ function get_last_update_from_config() {
     if isMac; then
         lastUpdate=$(perl -nle'print $& while m{update\s*=\s*\K[\w\s-._:]+}g' ${configFile})
     else
-        lastUpdate=$(cat ${configFile} | grep -oP "update\s*=\s*\K[\w\s-._:]+")
+        lastUpdate=$(cat ${configFile} | grep -oP "update\s*=\s*\K[\w\s._-]+")
     fi
 
     echo $lastUpdate
@@ -61,7 +61,7 @@ function get_test_status_from_config() {
     if isMac; then
         testStatus=$(perl -nle'print $& while m{test\s*=\s*\K[\w\s-._]+}g' ${configFile})
     else
-        testStatus=$(cat ${configFile} | grep -oP "test\s*=\s*\K[\w\s-._]+")
+        testStatus=$(cat ${configFile} | grep -oP "test\s*=\s*\K[\w\s._-]+")
     fi
 
     echo $testStatus

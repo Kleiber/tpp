@@ -50,7 +50,7 @@ function run_tpp_solution() {
 
     # run cpp executable
     if dirExists ${VIM_PLUGIN_DIR}; then
-        run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} ${solutionOutput} false
+        run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} ${solutionOutput} true
     else
         run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} "" true
     fi
