@@ -45,7 +45,7 @@ export TPP_REPO=<github-path-repository>
 export TPP_GITHUB=<github-url-repository>
 export TPP_BRANCH=<github-branch-name>
 export TPP_IDE=<ide-to-edit-files>
-export TPP_TEST=1
+export TPP_TEST=0
 ```
 
 Where:
@@ -244,6 +244,7 @@ export TPP_REPO=$HOME/repository
 export TPP_GITHUB=https://github.com/user/repository.git
 export TPP_BRANCH=master
 export TPP_IDE=vim
+export TPP_TEST=1
 
 // go to workspace
 $ cd $TPP_WORKSPACE
