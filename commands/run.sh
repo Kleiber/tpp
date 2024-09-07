@@ -49,10 +49,10 @@ function run_tpp_solution() {
     build_cpp_file ${solutionFilename} ${solutionExec}
 
     # run cpp executable
+    run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} "" true
+
     if dirExists ${VIM_PLUGIN_DIR}; then
-        run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} ${solutionOutput} true
-    else
-        run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} "" true
+        run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} ${solutionOutput} false
     fi
 
     # last update

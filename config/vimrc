@@ -85,43 +85,20 @@ set autoread
 :  execute 'write'
 :endfunction
 
-:function BuildCode()
-:  execute '!tpp build'
-:endfunction
-
-:function RunCode()
-:  execute '!tpp run'
-:endfunction
-
-:function PrepareCode()
-:  execute '!tpp prepare'
-:endfunction
-
 :function QuitCode()
-:  execute 'wqall'
+:  execute 'qall'
 :endfunction
-
-" Commands
-:command -nargs=0 B :call BuildCode()
-:command -nargs=0 R :call RunCode()
-:command -nargs=0 P :call PrepareCode()
-:command -nargs=0 Q :call QuitCode()
-:command -nargs=0 W :call SaveChanges()
 
 " Map
-nnoremap e <c-w>k
-nnoremap d <c-w>j
-nnoremap s <c-w>h
-nnoremap f <c-w>l
+nnoremap e <c-w>k " Up
+nnoremap d <c-w>j " Right
+nnoremap s <c-w>h " Left
+nnoremap f <c-w>l " Down
 
-nnoremap b :write <CR> :!tpp build <CR>
-nnoremap r :write <CR> :!tpp run <CR>
-nnoremap t :write <CR> :!tpp test <CR>
-nnoremap p :write <CR> :!tpp prepare <CR>
+nnoremap q :qall <CR> " Quit all windows
+nnoremap w :write <CR> " Save window
 
-nnoremap q :qall <CR>
-nnoremap x :write <CR>
-
-inoremap ww <Esc>
+:command -nargs=0 Q :call QuitCode() " Quit all windows
+:command -nargs=0 W :call SaveChanges() " Save window
 
 

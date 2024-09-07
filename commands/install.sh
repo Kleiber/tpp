@@ -41,6 +41,9 @@ function install_tpp() {
     echo "alias build='tpp build'" >> ${bashFilePath}
     echo "alias run='tpp run'" >> ${bashFilePath}
     echo "alias prepare='tpp prepare'" >> ${bashFilePath}
+    echo "alias in='tpp in'" >> ${bashFilePath}
+    echo "alias exp='tpp exp'" >> ${bashFilePath}
+    echo "alias out='tpp out'" >> ${bashFilePath}
 }
 
 install_help() {
