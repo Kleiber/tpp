@@ -6,104 +6,94 @@ set -e
 
 # prepate file to submission by cleaning debug reference and its usage
 function prepare_tpp_solution() {
-    local solutionName=${1}
+    local name=${1}
 
-    local solutionDir=""
-    local solutionFilename=""
-    local solutionConfigDir=${SOLUTION_CONFIG_DIR}
-    local solutionConfigFile="${SOLUTION_CONFIG_DIR}/${SOLUTION_CONFIG_FILE}"
-    local solutionExec=${SOLUTION_BUILD}
-    local solutionInput=${SOLUTION_INPUT_FILE}
-    local solutionOutput=${SOLUTION_OUTPUT_FILE}
-    local solutionExpected=${SOLUTION_EXPECTED_FILE}
+    local dir=""
+    local filename=""
+    local configDir=${CONFIG_DIR}
+    local configFile="${CONFIG_DIR}/${CONFIG_FILE}"
+    local exec=${BUILD}
+    local in=${INPUT_FILE}
+    local out=${OUTPUT_FILE}
+    local exp=${EXPECTED_FILE}
 
     # check if the solution name is an argument
-    if [[ ! ${solutionName} ]]; then
-        if ! fileExists ${solutionConfigFile}; then
+    if [[ ! ${name} ]]; then
+        if ! fileExists ${configFile}; then
             echo "Error: there is not a solution, tpp config file does not exist." >&2
             exit 1
         fi
 
-        solutionFilename=$(get_name_from_config ${solutionConfigFile})
+        filename=$(get_name_from_config ${configFile})
     else
-        solutionDir="${TPP_WORKSPACE}/${solutionName}"
-        solutionConfigDir="${solutionDir}/${solutionConfigDir}"
-        solutionConfigFile="${solutionDir}/${solutionConfigFile}"
-        solutionExec="${solutionDir}/${solutionExec}"
-        solutionInput="${solutionDir}/${solutionInput}"
-        solutionOutput="${solutionDir}/${solutionOutput}"
-        solutionExpected="${solutionDir}/${solutionExpected}"
+        dir="${TPP_WORKSPACE}/${name}"
+        configDir="${dir}/${configDir}"
+        configFile="${dir}/${configFile}"
+        exec="${dir}/${exec}"
+        in="${dir}/${in}"
+        out="${dir}/${out}"
+        exp="${dir}/${exp}"
 
-        if ! dirExists ${solutionDir}; then
-            echo "Error: '${solutionName}' solution does not exist." >&2
+        if ! dirExists ${dir}; then
+            echo "Error: '${name}' solution does not exist." >&2
             exit 1
         fi
 
-        if ! fileExists ${solutionConfigFile}; then
+        if ! fileExists ${configFile}; then
             echo "Error: there is not a solution, tpp config file does not exist." >&2
             exit 1
         fi
 
-        solutionFilename=$(get_name_from_config ${solutionConfigFile})
-        solutionFilename="${solutionDir}/${solutionFilename}"
+        filename=$(get_name_from_config ${configFile})
+        filename="${dir}/${filename}"
     fi
 
-    if ! fileExists ${solutionFilename}; then
-        echo "Error: '$(basename ${solutionFilename%.*})' solution does not contain the cpp file." >&2
+    if ! fileExists ${filename}; then
+        echo "Error: '$(basename ${filename%.*})' solution does not contain the cpp file." >&2
         exit 1
-    fi
-
-    if isEmpty ${solutionInput}; then
-        echo "Error: '$(basename ${solutionFilename%.*})' solution does not contain input data." >&2
-        exit 1
-    fi
-
-    if [[ ${TPP_TEST} == "1" ]]; then
-        if isEmpty ${solutionExpected}; then
-            echo "Error: '$(basename ${solutionFilename%.*})' solution does not contain expected data." >&2
-            exit 1
-        fi
-    fi
-
-    # build cpp file and create executable
-    build_cpp_file ${solutionFilename} ${solutionExec}
-
-    # run cpp executable
-    run_cpp_file ${solutionFilename} ${solutionExec} ${solutionInput} ${solutionOutput} false
-
-    # test cpp solution and update test status
-    if [[ ${TPP_TEST} == "1" ]]; then
-        test_cpp_file ${solutionFilename} ${solutionOutput} ${solutionExpected} ${solutionConfigFile}
-
-        # get test status
-        local testStatus=$(get_test_status_from_config ${solutionConfigFile})
-        if [[ ${testStatus} == "Failed" ]]; then
-            echo "'$(basename ${solutionFilename})' test FAILED!"
-            exit 1
-        fi
     fi
 
     # prepate cpp solution to submit
-    prepare_cpp_file ${solutionFilename} ${solutionOutput} ${solutionExpected}
+    prepare_cpp_file ${filename}
 
     # prepare filename
-    local readySolutionFilename="${solutionFilename%.*}_ready.${SOLUTION_EXTENSION_FILE}"
+    local filenameReady="${filename%.*}_ready.${EXTENSION_FILE}"
 
     # test prepare cpp solution and update status
     if [[ ${TPP_TEST} == "1" ]]; then
-        test_cpp_file ${readySolutionFilename} ${solutionOutput} ${solutionExpected} ${solutionConfigFile}
+        if isEmpty ${in}; then
+            echo "Error: '$(basename ${filename%.*})' solution does not contain input data."
+            exit 1
+        fi
+
+        if isEmpty ${exp}; then
+            echo "Error: '$(basename ${filename%.*})' solution does not contain expected data."
+            exit 1
+        fi
+
+        build_cpp_file ${filenameReady} ${exec}
+
+        run_cpp_file ${filenameReady} ${exec} ${in} ${out} false
+
+        test_cpp_file ${filenameReady} ${out} ${exp} ${configFile}
 
         # get test status
-        testStatus=$(get_test_status_from_config ${solutionConfigFile})
+
+        testStatus=$(get_test_status_from_config ${configFile})
+
+        BRed='\033[1;31m'
+        BGreen='\033[1;32m'
+        ColorOff='\033[0m'
+
         if [[ ${testStatus} == "Passed" ]]; then
-            echo "'$(basename ${readySolutionFilename})' test PASSED!"
+            echo -e "${BGreen}'$(basename ${filenameReady})' test PASSED!${ColorOff}"
         else
-            echo "'$(basename ${readySolutionFilename})' test FAILED!"
+            echo -e "${BRed}'$(basename ${filenameReady})' test FAILED!${ColorOff}"
         fi
     fi
 
     # last update
-    set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
+    set_last_update_into_config ${configFile} "$(date +"%d-%m-%Y") $(date +"%T")"
 }
 
 prepare_help() {

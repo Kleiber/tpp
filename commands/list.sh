@@ -10,20 +10,20 @@ list_tpp_solutions() {
         exit 0
     fi
 
-    local listSolutions=$(ls -d ${TPP_WORKSPACE}/*)
+    local list=$(ls -d ${TPP_WORKSPACE}/*)
     # print colum headers
     printf "%-25s  %-13s  %-13s %-13s  %-8s  %s\n" "SOLUTION NAME" "JUDGE" "TAG" "TEST STATUS" "READY" "LAST UPDATE"
 
     # list all solution directories
-    for solutionDir in ${listSolutions}; do
-        local solutionName=${solutionDir#"${TPP_WORKSPACE}/"}
-        local solutionConfigFile="${solutionDir}/${SOLUTION_CONFIG_DIR}/${SOLUTION_CONFIG_FILE}"
-        local solutionFilenameReady="${solutionDir}/${solutionName}_ready.${SOLUTION_EXTENSION_FILE}"
+    for dir in ${list}; do
+        local name=${dir#"${TPP_WORKSPACE}/"}
+        local configFile="${dir}/${CONFIG_DIR}/${CONFIG_FILE}"
+        local filenameReady="${dir}/${name}_ready.${EXTENSION_FILE}"
 
-        local judgeName=$(get_judge_name_from_config ${solutionConfigFile})
-        local tagName=$(get_tag_name_from_config ${solutionConfigFile})
-        local testStatus=$(get_test_status_from_config ${solutionConfigFile})
-        local lastUpdate=$(get_last_update_from_config ${solutionConfigFile})
+        local judgeName=$(get_judge_name_from_config ${configFile})
+        local tagName=$(get_tag_name_from_config ${configFile})
+        local testStatus=$(get_test_status_from_config ${configFile})
+        local lastUpdate=$(get_last_update_from_config ${configFile})
         local isReady="No"
 
         if [[ ${judgeName} == "empty" ]]; then
@@ -34,11 +34,11 @@ list_tpp_solutions() {
             tagName=""
         fi
 
-        if fileExists ${solutionFilenameReady} && [[ ${testStatus} == "Passed" ]]; then
+        if fileExists ${filenameReady} && [[ ${testStatus} == "Passed" ]]; then
             isReady="Yes"
         fi
 
-        printf "%-25s  %-13s  %-13s %-13s  %-8s  %s\n" "${solutionName}" "${judgeName}" "${tagName}" "${testStatus}" "${isReady}" "${lastUpdate}"
+        printf "%-25s  %-13s  %-13s %-13s  %-8s  %s\n" "${name}" "${judgeName}" "${tagName}" "${testStatus}" "${isReady}" "${lastUpdate}"
     done
 
 }

@@ -117,14 +117,14 @@ function set_test_status_into_config() {
 
 build_cpp_file() {
     local cppFile=${1}
-    local execFile=${2}
+    local exec=${2}
 
     if ! fileExists ${cppFile}; then
         echo "Error: '$(basename ${cppFile})' file does not exist." >&2
         exit 1
     fi
 
-    g++ -std=c++11 -o ${execFile} ${cppFile}
+    g++ -std=${TPP_GCC} -o ${exec} ${cppFile}
     if errorExists; then
         echo "Error: '$(basename ${cppFile})' compilation failed." >&2
         exit 1
@@ -133,90 +133,75 @@ build_cpp_file() {
 
 run_cpp_file() {
     local cppFile=${1}
-    local execFile=${2}
-    local inputFile=${3}
-    local outputFile=${4}
-    local showOutput=${5}
+    local exec=${2}
+    local in=${3}
+    local out=${4}
+    local show=${5}
 
-    if ! fileExists ${execFile}; then
+    if ! fileExists ${exec}; then
         echo "Error: '$(basename ${cppFile%.*})' solution does not contain the executable file." >&2
         exit 1
     fi
 
-    if ! fileExists ${inputFile}; then
+    if ! fileExists ${in}; then
         echo "Error: '$(basename ${cppFile%.*})' solution does not contain the input file." >&2
         exit 1
     fi
 
-    if ${showOutput}; then
-        if isEmpty ${solutionInput}; then
-            ${execFile}
-            if errorExists; then
-                echo "Error: '$(basename ${cppFile})' execution failed." >&2
-                exit 1
-            fi
-        else
-            ${execFile} < ${inputFile}
-            if errorExists; then
-                echo "Error: '$(basename ${cppFile})' execution with input data failed." >&2
-                exit 1
-            fi
+    if isEmpty ${in}; then
+        ${exec}
+        if errorExists; then
+            echo "Error: '$(basename ${cppFile})' execution failed." >&2
+            exit 1
         fi
     else
-        if isEmpty ${solutionInput}; then
-            ${execFile} 2>/dev/null > ${outputFile}
-            if errorExists; then
-                echo "Error: '$(basename ${cppFile})' execution failed." >&2
-                exit 1
-            fi
+        if ${show}; then
+            ${exec} < ${in}
         else
-            ${execFile} < ${inputFile} 2>/dev/null > ${outputFile}
-            if errorExists; then
-                echo "Error: '$(basename ${cppFile})' execution with input data failed." >&2
-                exit 1
-            fi
+            ${exec} < ${in} 2>/dev/null > ${out}
+        fi
+
+        if errorExists; then
+            echo "Error: '$(basename ${cppFile})' execution with input data failed." >&2
+            exit 1
         fi
     fi
 }
 
 test_cpp_file() {
     local cppFile=${1}
-    local outputFile=${2}
-    local expectedFile=${3}
+    local out=${2}
+    local exp=${3}
     local configFile=${4}
 
-    if ! fileExists ${outputFile}; then
+    if ! fileExists ${out}; then
         echo "Error: '$(basename ${cppFile%.*})' solution does not contain the output file." >&2
         exit 1
     fi
 
-    if ! fileExists ${expectedFile}; then
+    if ! fileExists ${exp}; then
         echo "Error: '$(basename ${cppFile%.*})' solution does not contain the expected file." >&2
         exit 1
     fi
 
-    local difference=""
     if isMac; then
-        difference=$(diff ${expectedFile} ${outputFile} || true)
+        diff -c ${exp} ${out} | sed '/^\*/s/.*/*** Expected ***/' | sed '/^\-/s/.*/*** Output ***/' | tail -n +4 || true
     else
-        difference=$(diff ${expectedFile} ${outputFile} --color || true)
+        diff -c ${exp} ${out} --color | sed '/^\*/s/.*/*** Expected ***/' | sed '/^\-/s/.*/*** Output ***/' | tail -n +4 || true
     fi
 
-    if [[ ${difference} != "" ]]; then
-        echo ${difference}
-        set_test_status_into_config ${configFile} "Failed"
-    else
+    if [[  $(diff ${exp} ${out}) ==  "" ]] ; then
         set_test_status_into_config ${configFile} "Passed"
+    else
+        set_test_status_into_config ${configFile} "Failed"
     fi
 }
 
 prepare_cpp_file() {
     local cppFile=${1}
-    local outputFile=${2}
-    local expectedFile=${3}
 
     local cppTmpFile="$(dirname ${cppFile})/.$(basename ${cppFile})"
-    local cppReadyFile="${cppFile%.*}_ready.${SOLUTION_EXTENSION_FILE}"
+    local cppReadyFile="${cppFile%.*}_ready.${EXTENSION_FILE}"
 
     # TODO: investigate how to put the below two sed command in one
     # line, for some reason the next command is not working in Mac OS

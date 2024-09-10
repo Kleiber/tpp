@@ -5,58 +5,58 @@
 set -e
 
 expected_tpp_solution() {
-    local solutionName=${1}
+    local name=${1}
 
-    local solutionDir=""
-    local solutionFilename=""
-    local solutionConfigDir=${SOLUTION_CONFIG_DIR}
-    local solutionConfigFile="${SOLUTION_CONFIG_DIR}/${SOLUTION_CONFIG_FILE}"
-    local solutionExpected=${SOLUTION_EXPECTED_FILE}
+    local dir=""
+    local filename=""
+    local configDir=${CONFIG_DIR}
+    local configFile="${CONFIG_DIR}/${CONFIG_FILE}"
+    local exp=${EXPECTED_FILE}
 
     # check if the solution name is an argument
-    if [[ ! ${solutionName} ]]; then
-        if ! fileExists ${solutionConfigFile}; then
+    if [[ ! ${name} ]]; then
+        if ! fileExists ${configFile}; then
             echo "Error: there is not a solution, tpp config file does not exist." >&2
             exit 1
         fi
 
-        solutionFilename=$(get_name_from_config ${solutionConfigFile})
+        filename=$(get_name_from_config ${configFile})
     else
-        solutionDir="${TPP_WORKSPACE}/${solutionName}"
-        solutionConfigDir="${solutionDir}/${solutionConfigDir}"
-        solutionConfigFile="${solutionDir}/${solutionConfigFile}"
-        solutionExpected="${solutionDir}/${solutionExpected}"
+        dir="${TPP_WORKSPACE}/${name}"
+        configDir="${dir}/${configDir}"
+        configFile="${dir}/${configFile}"
+        exp="${dir}/${exp}"
 
-        if ! dirExists ${solutionDir}; then
-            echo "Error: '${solutionName}' solution does not exist." >&2
+        if ! dirExists ${dir}; then
+            echo "Error: '${name}' solution does not exist." >&2
             exit 1
         fi
 
-        if ! fileExists ${solutionConfigFile}; then
+        if ! fileExists ${configFile}; then
             echo "Error: there is not a solution, tpp config file does not exist." >&2
             exit 1
         fi
 
-        solutionFilename=$(get_name_from_config ${solutionConfigFile})
-        solutionFilename="${solutionDir}/${solutionFilename}"
+        filename=$(get_name_from_config ${configFile})
+        filename="${dir}/${filename}"
     fi
 
-    if ! fileExists ${solutionExpected}; then
-        echo "Error: '$(basename ${solutionFilename%.*})' solution does not contain the expected file." >&2
+    if ! fileExists ${exp}; then
+        echo "Error: '$(basename ${filename%.*})' solution does not contain the exp file." >&2
         exit 1
     fi
 
     # last update
-    set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
+    set_last_update_into_config ${configFile} "$(date +"%d-%m-%Y") $(date +"%T")"
 
     # open source code using vim editor
-    ${TPP_IDE} ${solutionExpected}
+    ${TPP_IDE} ${exp}
 }
 
 expected_help() {
     cat <<EOF
 
-Open expected.tpp file into the solution name. If the command is run from within the
+Open exp.tpp file into the solution name. If the command is run from within the
 solution directory, the solution name is an optional argument.
 
 Usage:  tpp exp [solution-name]

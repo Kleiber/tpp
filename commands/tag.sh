@@ -6,36 +6,36 @@ set -e
 
 set_tag_to_tpp_solution() {
     local tagName=${1}
-    local solutionName=${2}
+    local name=${2}
 
-    local solutionDir=""
-    local solutionConfigDir=${SOLUTION_CONFIG_DIR}
-    local solutionConfigFile="${SOLUTION_CONFIG_DIR}/${SOLUTION_CONFIG_FILE}"
+    local dir=""
+    local configDir=${CONFIG_DIR}
+    local configFile="${CONFIG_DIR}/${CONFIG_FILE}"
 
     # check if the solution name is an argument
-    if [[ ! ${solutionName} ]]; then
-        if ! fileExists ${solutionConfigFile}; then
+    if [[ ! ${name} ]]; then
+        if ! fileExists ${configFile}; then
             echo "Error: there is not a solution, tpp config file does not exist." >&2
             exit 1
         fi
     else
-        solutionDir="${TPP_WORKSPACE}/${solutionName}"
-        solutionConfigDir="${solutionDir}/${solutionConfigDir}"
-        solutionConfigFile="${solutionDir}/${solutionConfigFile}"
+        dir="${TPP_WORKSPACE}/${name}"
+        configDir="${dir}/${configDir}"
+        configFile="${dir}/${configFile}"
 
-        if ! dirExists ${solutionDir}; then
-            echo "Error: '${solutionName}' solution does not exist." >&2
+        if ! dirExists ${dir}; then
+            echo "Error: '${name}' solution does not exist." >&2
             exit 1
         fi
 
-        if ! fileExists ${solutionConfigFile}; then
+        if ! fileExists ${configFile}; then
             echo "Error: there is not a solution, tpp config file does not exist." >&2
             exit 1
         fi
     fi
 
     # set tag name
-    set_tag_name_into_config ${solutionConfigFile} ${tagName}
+    set_tag_name_into_config ${configFile} ${tagName}
 }
 
 tag_help() {
@@ -70,7 +70,7 @@ tag_cmd() {
     fi
 
     local tagName=${1}
-    local solutionName=${2}
+    local name=${2}
 
-    set_tag_to_tpp_solution ${tagName} ${solutionName}
+    set_tag_to_tpp_solution ${tagName} ${name}
 }

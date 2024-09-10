@@ -7,6 +7,7 @@ set -e
 export TPP_DIR="$(cd "$(dirname "${BASH_SOURCE-$0}")" && pwd)"
 
 source ${TPP_DIR}/config/config.sh
+source ${TPP_DIR}/config/template.sh
 
 source ${TPP_DIR}/common/common.sh
 source ${TPP_DIR}/common/util.sh

@@ -40,22 +40,31 @@ The minimum requirement to use `tpp` tool is the **C++11** standard library
 include the following line in your `.bashrc` or `.zshrc`
 
 ```bash
+# default values
+
+export TPP_GITHUB="tpp_github"
+export TPP_REPO="${HOME}/tpp_repo"
+export TPP_BRANCH="main"
+
 export TPP_WORKSPACE=<local-workspace-path>
-export TPP_REPO=<github-path-repository>
-export TPP_GITHUB=<github-url-repository>
-export TPP_BRANCH=<github-branch-name>
-export TPP_IDE=<ide-to-edit-files>
+export TPP_IDE="vi"
 export TPP_TEST=0
+export TPP_FILL=0
+export TPP_VIEWS=0
+export TPP_GCC="c++11"
 ```
 
 Where:
 
-- _TPP_WORKSPACE_: Local directory path where solutions will be created.
 - _TPP_REPO_: Local directory path where the Github repository will be cloned.
 - _TPP_GITHUB_: Github repository url where the solutions will be uploaded.
 - _TPP_BRANCH_: Github repository branch.
+- _TPP_WORKSPACE_: Local directory path where solutions will be created.
 - _TPP_IDE_: IDE command that will be used to edit the solutions.
 - _TPP_TEST_: Enable test validation
+- _TPP_FILL_: Enable prefill inputs/outputs samples
+- _TPP_VIEWS_: Enable split multiple views
+- _TPP_GCC_: Compiler version
 
 Finally, setup the git configuration.
 

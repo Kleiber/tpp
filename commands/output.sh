@@ -5,52 +5,52 @@
 set -e
 
 output_tpp_solution() {
-    local solutionName=${1}
+    local name=${1}
 
-    local solutionDir=""
-    local solutionFilename=""
-    local solutionConfigDir=${SOLUTION_CONFIG_DIR}
-    local solutionConfigFile="${SOLUTION_CONFIG_DIR}/${SOLUTION_CONFIG_FILE}"
-    local solutionOutput=${SOLUTION_OUTPUT_FILE}
+    local dir=""
+    local filename=""
+    local configDir=${CONFIG_DIR}
+    local configFile="${CONFIG_DIR}/${CONFIG_FILE}"
+    local out=${OUTPUT_FILE}
 
     # check if the solution name is an argument
-    if [[ ! ${solutionName} ]]; then
-        if ! fileExists ${solutionConfigFile}; then
+    if [[ ! ${name} ]]; then
+        if ! fileExists ${configFile}; then
             echo "Error: there is not a solution, tpp config file does not exist." >&2
             exit 1
         fi
 
-        solutionFilename=$(get_name_from_config ${solutionConfigFile})
+        filename=$(get_name_from_config ${configFile})
     else
-        solutionDir="${TPP_WORKSPACE}/${solutionName}"
-        solutionConfigDir="${solutionDir}/${solutionConfigDir}"
-        solutionConfigFile="${solutionDir}/${solutionConfigFile}"
-        solutionOutput="${solutionDir}/${solutionOutput}"
+        dir="${TPP_WORKSPACE}/${name}"
+        configDir="${dir}/${configDir}"
+        configFile="${dir}/${configFile}"
+        out="${dir}/${out}"
 
-        if ! dirExists ${solutionDir}; then
-            echo "Error: '${solutionName}' solution does not exist." >&2
+        if ! dirExists ${dir}; then
+            echo "Error: '${name}' solution does not exist." >&2
             exit 1
         fi
 
-        if ! fileExists ${solutionConfigFile}; then
+        if ! fileExists ${configFile}; then
             echo "Error: there is not a solution, tpp config file does not exist." >&2
             exit 1
         fi
 
-        solutionFilename=$(get_name_from_config ${solutionConfigFile})
-        solutionFilename="${solutionDir}/${solutionFilename}"
+        filename=$(get_name_from_config ${configFile})
+        filename="${dir}/${filename}"
     fi
 
-    if ! fileExists ${solutionOutput}; then
-        echo "Error: '$(basename ${solutionFilename%.*})' solution does not contain the output file." >&2
+    if ! fileExists ${out}; then
+        echo "Error: '$(basename ${filename%.*})' solution does not contain the output file." >&2
         exit 1
     fi
 
     # last update
-    set_last_update_into_config ${solutionConfigFile} "$(date +"%d-%m-%Y") $(date +"%T")"
+    set_last_update_into_config ${configFile} "$(date +"%d-%m-%Y") $(date +"%T")"
 
     # open source code using vim editor
-    ${TPP_IDE} ${solutionOutput}
+    ${TPP_IDE} ${out}
 }
 
 output_help() {
