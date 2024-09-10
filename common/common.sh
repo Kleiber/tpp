@@ -185,9 +185,9 @@ test_cpp_file() {
     fi
 
     if isMac; then
-        diff -c ${exp} ${out} | sed '/^\*/s/.*/*** Expected ***/' | sed '/^\-/s/.*/*** Output ***/' | tail -n +4 || true
+        diff -c ${exp} ${out} | sed '/^\*\*/s/.*/====== Expected ======/' | sed '/^\-\-/s/.*/======= Output =======/' | tail -n +4 || true
     else
-        diff -c ${exp} ${out} --color | sed '/^\*/s/.*/*** Expected ***/' | sed '/^\-/s/.*/*** Output ***/' | tail -n +4 || true
+        diff -c ${exp} ${out} --color | sed '/^\*\*/s/.*/====== Expected ======/' | sed '/^\-\-/s/.*/======= Output =======/' | tail -n +4 || true
     fi
 
     if [[  $(diff ${exp} ${out}) ==  "" ]] ; then
