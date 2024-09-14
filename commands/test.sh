@@ -73,19 +73,6 @@ test_tpp_solution() {
 
     test_cpp_file ${filename} ${out} ${exp} ${configFile}
 
-    # get test status
-    local testStatus=$(get_test_status_from_config ${configFile})
-
-    BRed='\033[1;31m'
-    BGreen='\033[1;32m'
-    ColorOff='\033[0m'
-
-    if [[ ${testStatus} == "Passed" ]]; then
-        echo -e "${BGreen}'$(basename ${filename})' test PASSED!${ColorOff}"
-    else
-        echo -e "${BRed}'$(basename ${filename})' test FAILED!${ColorOff}"
-    fi
-
     # last update
     set_last_update_into_config ${configFile} "$(date +"%d-%m-%Y") $(date +"%T")"
 }

@@ -76,20 +76,6 @@ function prepare_tpp_solution() {
         run_cpp_file ${filenameReady} ${exec} ${in} ${out} false
 
         test_cpp_file ${filenameReady} ${out} ${exp} ${configFile}
-
-        # get test status
-
-        testStatus=$(get_test_status_from_config ${configFile})
-
-        BRed='\033[1;31m'
-        BGreen='\033[1;32m'
-        ColorOff='\033[0m'
-
-        if [[ ${testStatus} == "Passed" ]]; then
-            echo -e "${BGreen}'$(basename ${filenameReady})' test PASSED!${ColorOff}"
-        else
-            echo -e "${BRed}'$(basename ${filenameReady})' test FAILED!${ColorOff}"
-        fi
     fi
 
     # last update
