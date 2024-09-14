@@ -11,6 +11,14 @@ using namespace std;
 #define debug(...) cerr<<"debug:"<<__LINE__<<" "<<#__VA_ARGS__<<": "<<to_string(__VA_ARGS__)<<endl
 #define debugm(...) cerr<<"debug:"<<__LINE__<<" ", debug_out_multiple(#__VA_ARGS__, __VA_ARGS__)
 
+#define print(...) fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define debugt(f) \
+    for ( \
+        auto blockTime = make_pair(chrono::high_resolution_clock::now(), true); \
+        blockTime.second; \
+        print("debug:%d Time execution %s(): %lld ms\n", __LINE__, f, chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - blockTime.first).count()), blockTime.second = false \
+    )
+
 string to_string(bool b) {
     return (b?"1":"0");
 }
