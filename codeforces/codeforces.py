@@ -70,7 +70,7 @@ def getMetadata(problemName):
         if letter.isalpha(): break
         index += 1
 
-    return problemName[:index], problemName[index:]
+    return problemName[:index], problemName[index]
 
 def main():
     problemName = sys.argv[1]
