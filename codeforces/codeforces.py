@@ -40,9 +40,20 @@ class Codeforces:
             divList = pre.find_all('div')
 
             inputStr = ''
-            for div in divList:
-                if len(inputStr) > 0: inputStr += '\n'
-                inputStr += div.string
+            # old format
+            if len(divList) == 0:
+                lines = pre.text.split('\n')
+                for line in lines:
+                    if len(inputStr) > 0: inputStr += '\n'
+                    inputStr += line
+            # new format
+            else:
+                for div in divList:
+                    if len(inputStr) > 0: inputStr += '\n'
+                    if len(divList) == 0:
+                        inputStr += div
+                    else:
+                        inputStr += div.string
 
             inputs.append(inputStr)
 
