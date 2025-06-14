@@ -149,7 +149,7 @@ run_cpp_file() {
     fi
 
     if isEmpty ${in}; then
-        ${exec}
+        "./${exec}"
         if errorExists; then
             echo "Error: '$(basename ${cppFile})' execution failed." >&2
             exit 1
