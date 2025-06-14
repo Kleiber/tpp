@@ -156,9 +156,9 @@ run_cpp_file() {
         fi
     else
         if ${show}; then
-            ${exec} < ${in}
+            "./${exec}" < ${in}
         else
-            ${exec} < ${in} 2>/dev/null > ${out}
+            "./${exec}" < ${in} 2>/dev/null > ${out}
         fi
 
         if errorExists; then
