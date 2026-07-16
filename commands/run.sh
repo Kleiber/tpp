@@ -5,18 +5,39 @@
 set -e
 
 function run_tpp_solution() {
-    local name=${1}
+    local num=""
+    local name=""
+
+    # parse args: number = case, text = solution name
+    if [[ ${1} =~ ^[0-9]+$ ]]; then
+        num=${1}
+        name=${2}
+    else
+        name=${1}
+    fi
 
     resolve_solution ${name}
 
-    local inFile=$(get_input_file "${SOL_DIR}" 1)
-    local outFile=$(get_output_file "${SOL_DIR}" 1)
-
-    # build cpp file and create executable
+    # build
     build_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}"
 
-    # run cpp executable
-    run_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}" "${inFile}" "${outFile}" true
+    local exec="${SOL_EXEC}"
+    if [[ "${exec}" != /* ]]; then
+        exec="./${exec}"
+    fi
+
+    if [[ -z ${num} ]]; then
+        # interactive
+        "${exec}"
+    else
+        # run with file input (shows debug)
+        local inFile=$(get_input_file "${SOL_DIR}" ${num})
+        if ! fileExists "${inFile}"; then
+            echo "Error: case ${num} input file does not exist." >&2
+            exit 1
+        fi
+        "${exec}" < "${inFile}"
+    fi
 
     # last update
     set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
@@ -25,10 +46,10 @@ function run_tpp_solution() {
 run_help() {
     cat <<EOF
 
-Compile and run the .cpp file into the solution. If the command is run from within
-the solution directory, the solution name is an optional argument.
+Compile and run the .cpp file into the solution. Without a case number, runs
+interactively. With a case number, runs with that input file.
 
-Usage:  tpp run [solution-name]
+Usage:  tpp run [case-number] [solution-name]
 
 Options:
   -h, --help   Show more information about command
@@ -38,18 +59,15 @@ EOF
 }
 
 run_cmd() {
-    if [[ ${#} -gt 1 ]]; then
+    if [[ ${#} -gt 2 ]]; then
         echo "Error: Invalid number of arguments." >&2
         exit 1
     fi
 
-    local argument=${1}
-    case ${argument} in
-        --help | -h)
-            run_help
-            ;;
-        *)
-            run_tpp_solution ${argument}
-            ;;
-    esac
+    if [[ ${1} == "--help" ]] || [[ ${1} == "-h" ]]; then
+        run_help
+        exit 0
+    fi
+
+    run_tpp_solution ${@}
 }

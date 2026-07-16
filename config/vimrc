@@ -54,7 +54,7 @@ nnoremap <Esc> :nohlsearch<CR>
 
 " tpp commands (type :test, :run, :build, :prepare)
 :command! Test w | !tpp test
-:command! Run w | !tpp run
+:command! -nargs=? Run w | execute '!tpp run' . (<q-args> == '' ? '' : ' ' . <q-args>)
 :command! Build w | !tpp build
 :command! Prepare w | !tpp prepare
 :command! Add !tpp add
