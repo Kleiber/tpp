@@ -13,6 +13,7 @@ source ${TPP_DIR}/common/common.sh
 source ${TPP_DIR}/common/util.sh
 
 source ${TPP_DIR}/commands/build.sh
+source ${TPP_DIR}/commands/clone.sh
 source ${TPP_DIR}/commands/init.sh
 source ${TPP_DIR}/commands/add.sh
 source ${TPP_DIR}/commands/list.sh
@@ -48,6 +49,7 @@ Usage:  tpp COMMAND [OPTIONS]
 Commands:
   add       Add a new test case (input + expected pair) to the solution
   build     Compile the .cpp file into the solution
+  clone     Clone an existing solution as a starting point
   exp       Open expected file into the solution
   init      Init a new solution with the specified name
   in        Open input file into the solution
@@ -81,6 +83,10 @@ tpp_cmd() {
         build)
             shift
             build_cmd ${@}
+            ;;
+        clone)
+            shift
+            clone_cmd ${@}
             ;;
         exp)
             shift
