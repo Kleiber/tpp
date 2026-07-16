@@ -115,7 +115,7 @@ When using `open` command, the following vim commands are available:
 :exp 2          Edit expected case 2
 :out 1          View output case 1
 Ctrl+S          Save
-Ctrl+F          Search
+Ctrl+F          Search (n = next, N = previous, Esc = clear)
 ```
 
 ## Template
