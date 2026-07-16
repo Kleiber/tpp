@@ -17,10 +17,6 @@ export IN_EXT="in"
 export OUT_EXT="out"
 export EXP_EXT="exp"
 
-export VIM_DIR="${HOME}/.vim"
-export VIM_PLUGIN_DIR="${VIM_DIR}/bundle"
-export VIMRC_PATH="${HOME}/.vimrc"
-
 # Defaults if tpp.profile not sourced (fallback)
 export TPP_WORKSPACE=${TPP_WORKSPACE:-"${HOME}/code"}
 export TPP_IDE=${TPP_IDE:-"vi"}
