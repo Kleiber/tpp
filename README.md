@@ -1,397 +1,113 @@
 # tpp
 
 ## Overview
-`tpp` is a command line that aims to help competitive programmers optimizing code compilation, testing, and debugging time.
+`tpp` is a command line tool for competitive programmers that optimizes code compilation, testing, and debugging time.
 
 ## Installing
 
-### Linux
-Using `tpp` command line is simple. First, clone the repository in your workspace
-
 ```bash
-cd $HOME
-git clone https://github.com/Kleiber/tpp.git
+git clone https://github.com/Kleiber/tpp.git ~/tpp
+~/tpp/install.sh
+source ~/.zshrc
 ```
 
-Next, include the following line in your `.bashrc` file (use the command `vim ~/.bashrc` to edit)
-
-```bash
-export PATH=$PATH:$HOME/tpp:
-```
-
-Finally, restart your terminal or run the command `source ~/.bashrc`
-
-### Mac
-For Mac, clone the repository in your workspace and include the following line in your `.zshrc` file (use the command `vim ~/.zshrc` to edit)
-
-```bash
-export PATH=$PATH:$HOME/tpp:
-```
-
-Finally, restart your terminal
-
-### Windows
-For Windows, you need to have [Git for Windows](https://gitforwindows.org/) installed and perform the same steps as in linux.
-
-The minimum requirement to use `tpp` tool is the **C++11** standard library
-
-## Setup
-
-include the following line in your `.bashrc` or `.zshrc`
-
-```bash
-# default values
-
-export TPP_GITHUB="tpp_github"
-export TPP_REPO="${HOME}/tpp_repo"
-export TPP_BRANCH="main"
-
-export TPP_WORKSPACE=<local-workspace-path>
-export TPP_IDE="vi"
-export TPP_TEST=0
-export TPP_FILL=0
-export TPP_VIEWS=0
-export TPP_GCC="c++11"
-```
-
-Where:
-
-- _TPP_REPO_: Local directory path where the Github repository will be cloned.
-- _TPP_GITHUB_: Github repository url where the solutions will be uploaded.
-- _TPP_BRANCH_: Github repository branch.
-- _TPP_WORKSPACE_: Local directory path where solutions will be created.
-- _TPP_IDE_: IDE command that will be used to edit the solutions.
-- _TPP_TEST_: Enable test validation
-- _TPP_FILL_: Enable prefill inputs/outputs samples
-- _TPP_VIEWS_: Enable split multiple views
-- _TPP_GCC_: Compiler version
-
-Finally, setup the git configuration.
-
-```bash
-git config --global user.name "<your-name>"
-git config --global user.email "<your-email-address>"
-```
+That's it. Works on macOS and Linux.
 
 ## Commands
 
-### ***init***
+| Command | Description |
+|---------|-------------|
+| `tpp init <name>` | Create a new solution |
+| `tpp add [name]` | Add a new test case |
+| `tpp build [name]` | Compile |
+| `tpp run [case] [name]` | Run (interactive or with input file) |
+| `tpp test [name]` | Run all test cases and compare |
+| `tpp prepare [name]` | Generate submission file (strips debug) |
+| `tpp open [name]` | Open in editor |
+| `tpp in [case] [name]` | Edit input file |
+| `tpp exp [case] [name]` | Edit expected file |
+| `tpp out [case] [name]` | View output file |
+| `tpp judge <judge> [name]` | Set judge name |
+| `tpp tag <tag> [name]` | Set tag name |
+| `tpp clone <source> <target>` | Copy a solution |
+| `tpp ls` | List all solutions |
+| `tpp submit [name]` | Push to GitHub repo |
 
-Initializes a new solution with the name passed as a parameter. Basically a new directory is created with four files: the cpp template `<solution-name>.cpp`, the input file `in.tpp`, the expected output file `expected.tpp` and the output file `out.tpp`
+All commands work from anywhere with solution name, or from inside the solution directory without it.
 
-```bash
-tpp init <solution-name>
-```
+## Auto-fill Samples
 
-### ***build***
-
-Compiles the generated cpp template within the solution. Basically it is the translation of executing command `g ++ -o build <solution-name>.cpp`
-
-```bash
-tpp build
-```
-
-### ***run***
-
-Compiles and executes the generated cpp template within the solution. If the `in.tpp` file has test cases, they will be used in the execution using standard input (`build < in.tpp`). Otherwise, it will be necessary to manually enter the test cases as usual
-
-```bash
-tpp run
-```
-
-### ***test***
-
-Compiles, executes and test the generated cpp template within the solution. For the execution of this command it is necessary to have the `in.tpp` file with the input cases and the `expected.tpp` file with the expected outputs. From the cpp template an `out.tpp` file will be generated to be compared (`build < in.tpp > out.tpp`). Basically it is the translation of executing command `diff expected.tpp out.tpp`
+Set `TPP_FILL=1` in your profile and name your solution with the problem code:
 
 ```bash
-tpp test
+tpp init 1950A       # Codeforces → fetches samples
+tpp init abc466_a    # AtCoder → fetches samples
 ```
 
-### ***prepare***
+## Test Output
 
-Prepares and test a new file to submit without the debug reference and its uses within the generated template
+```
+Case 1: PASSED (0.04s)
+Case 2: FAILED (0.03s, line 5)
+  Expected:
+    42
+  Output:
+    43
+Case 3: TLE (4.01s)
+Case 4: EMPTY
+```
+
+## File Format
+
+```
+solution/
+├── solution.cpp
+├── 1.in, 1.exp
+├── 2.in, 2.exp
+├── 3.in, 3.exp
+└── .tpp/config
+```
+
+## Vim Commands
+
+When using `tpp open`:
+
+| Command | Action |
+|---------|--------|
+| `:test` | Save + test |
+| `:run` | Save + run (interactive) |
+| `:run 1` | Save + run with case 1 |
+| `:build` | Save + build |
+| `:prepare` | Save + prepare |
+| `:add` | Add test case |
+| `:in 1` | Edit input case 1 |
+| `:exp 2` | Edit expected case 2 |
+| `:out 1` | View output case 1 |
+| `Ctrl+S` | Save |
+| `Ctrl+F` | Search |
+
+## Configuration
+
+All defaults are in `~/tpp/tpp.profile`. Override by setting vars before the source line in your `.zshrc`:
 
 ```bash
-tpp prepare
+export TPP_WORKSPACE="$HOME/code"
+export TPP_IDE="vi"
+export TPP_GCC="c++17"
+export TPP_TL=4
+export TPP_FILL=1
 ```
-
-### ***ls***
-
-List all the solutions created that are in the workspace. some columns are displayed in the output:
-
-- _SOLUTION NAME:_ Name of the solution with which it was created.
-- _JUDGE:_ Name of the assigned judge.
-- _TAG:_ Name of the assigned tag.
-- _TEST STATUS:_ Test status of the solution.
-- _READY:_ Indicates if the solution was ready to submit.
-- _LAST UPDATE:_ Last time the solution was updated.
-
-```bash
-tpp ls
-```
-
-### ***submit***
-
-Submit solution to github repository. The path where the solution will be placed in the repository will be the concatenation between the judge and tag assigned to the solution (To assign the judge and tag use the commands `tpp judge` and `tpp tag` respectively).
-
-```bash
-tpp submit
-```
-
-**Note:** `tpp` tool also provides other commands that can help you in developing your solution, to get more information about these other commands run _tpp --help_.
-
-## Template
-
-Since in competitive programming time is crucial, `tpp` tool allows you to generate a code base cpp template to start programming there.
-
-At the top of the template you will see the following `include` statement:
-
-```c++
-// remove this reference to debug.h before your submission
-#include "debug.h"
-```
-
-That line allows you to make use of the debug method. **Do not forget that before submitting your code you must remove that line or use the command prepare**.
-
-The second and no less important thing that we can see in the template are the following two code lines:
-
-```c++
-// do not remove this code if you use cin or cout
-ios::sync_with_stdio(false);
-cin.tie(0);
-```
-
-In competitive programming is often recommended to use `scanf/printf` instead of `cin/cout` for a fast input and output. However, you can still **use `cin/cout` and achieve the same performace as `scanf/printf` by including those two code lines in our `main()` function.**
 
 ## Debug
 
-The main task of `tpp` command line is to include the `debug.h` script, who allows you to debug your variables showing their content in a simple and practical way. Its use is quite straightforward, you just have to call the `debug` or `debugm` method and send the variable, that you want to show, as a parameter.
+Use `debug()` in your code to print variables to stderr:
 
-### Example
-
-```c++
-/**
-*  Generated by tpp tool
-*  File: hello.cpp
-*  Created: 28-08-2021 14:17:55
-**/
-
-#include <bits/stdc++.h>
-using namespace std;
-
-// remove this reference to debug.h before your submission
+```cpp
 #include "debug.h"
 
-int main() {
-    // do not remove this code if you use cin or cout
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-
-    string myVariable = "tpp tool";
-    debug(myVariable);
-
-    int myMatrix[8][8];
-    memset(myMatrix, 0, sizeof(myMatrix));
-    debug(myMatrix);
-    debug(myMatrix[2][2]);
-
-    int  myArray[4] = {0, 1, 2, 4};
-    debug(myArray);
-    debug(myArray[3]);
-
-    vector<int> myVector;
-    for(int i = 0; i < 8; i++) {
-        myVector.push_back(i);
-    }
-    debug(myVector);
-    debug(myVector[4]);
-
-    vector<pair<int,int>> myPairs;
-    for(int i = 0; i < 4; i++) {
-        myPairs.push_back({i, 2*i});
-    }
-    debug(myPairs);
-    debug(myPairs[2]);
-
-    stack<char> myStack;
-    myStack.push('(');
-    myStack.push(')');
-    debug(myStack);
-
-    queue<pair<int,int>> myQueue;
-    myQueue.push(make_pair(1,0));
-    myQueue.push(make_pair(0,1));
-    debug(myQueue);
-
-    cerr<<"debug multiple variables. DO NOT USE to debug a multi-dimensional array"<<endl;
-    debugm(myVariable ,myStack, myQueue, myPairs, myVector);
-
-    string greeting;
-    getline(cin, greeting);
-    cout << greeting <<endl;
-
-    return 0;
-}
+debug(myVar);           // prints value
+debugm(a, b, c);        // prints multiple
+debugt("solve") { ... } // prints execution time
 ```
 
-If we have the above code snippet and the following input file and expected ouput file contents:
-
-```bash
-Input:
-Hello World!
-
-Expected Output:
-Hello World!
-```
-
-Executing the following `tpp` commands:
-
-```bash
-$ cat ~/.bashrc
-export TPP_WORKSPACE=$HOME/code
-export TPP_REPO=$HOME/repository
-export TPP_GITHUB=https://github.com/user/repository.git
-export TPP_BRANCH=master
-export TPP_IDE=vim
-export TPP_TEST=1
-
-// go to workspace
-$ cd $TPP_WORKSPACE
-
-$ tpp init hello
-'hello' solution was initialized successfully!
-
-// go to generated solution
-$ cd hello
-
-// open the generated template hello.cpp file in the solution and copy the code snippet
-$ tpp open
-
-// open the generated input file in.tpp and copy the content
-$ tpp in
-
-// open the generated expected file expected.tpp and copy the content
-$ tpp exp
-
-$ tpp ls
-SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
-hello                                             Pending        No        28-08-2021 18:45:45
-
-$ tpp build
-'hello' solution was compiled successfully!
-
-$ tpp run
-debug:31 myVariable: "tpp tool"
-debug:35 myMatrix:
-[0 0 0 0 0 0 0 0]
-[0 0 0 0 0 0 0 0]
-[0 0 0 0 0 0 0 0]
-[0 0 0 0 0 0 0 0]
-[0 0 0 0 0 0 0 0]
-[0 0 0 0 0 0 0 0]
-[0 0 0 0 0 0 0 0]
-[0 0 0 0 0 0 0 0]
-debug:36 myMatrix[2][2]: 0
-debug:39 myArray:
-[0 1 2 4]
-debug:40 myArray[3]: 4
-debug:46 myVector:
-[0 1 2 3 4 5 6 7]
-debug:47 myVector[4]: 4
-debug:53 myPairs:
-[(0,0) (1,2) (2,4) (3,6)]
-debug:54 myPairs[2]: (2,4)
-debug:59 myStack:
-[')' '(']
-debug:64 myQueue:
-[(1,0) (0,1)]
-debug multiple variables. DO NOT USE to debug a multi-dimensional array
-debug:67 myVariable : "tpp tool"  myStack: [')' '(']  myQueue: [(1,0) (0,1)]  myPairs: [(0,0) (1,2) (2,4) (3,6)]  myVector: [0 1 2 3 4 5 6 7]  
-Hello World!
-
-$ tpp test
-'hello.cpp' test PASSED!
-
-$ tpp ls
-SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
-hello                                             Passed         No        28-08-2021 18:48:54
-
-$ tpp prepare
-'hello_ready.cpp' was generated successfully!
-'hello_ready.cpp' test PASSED!
-
-$ tpp ls
-SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
-hello                                             Passed         Yes       28-08-2021 18:49:12
-```
-
-Opening the generated file for submission `hello_ready.cpp`:
-
-```c++
-/**
-*  Generated by tpp tool
-*  File: hello.cpp
-*  Created: 28-08-2021 14:17:55
-**/
-
-#include <bits/stdc++.h>
-using namespace std;
-
-
-int main() {
-    // do not remove this code if you use cin or cout
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-
-    string myVariable = "tpp tool";
-
-    int myMatrix[8][8];
-    memset(myMatrix, 0, sizeof(myMatrix));
-
-    int  myArray[4] = {0, 1, 2, 4};
-
-    vector<int> myVector;
-    for(int i = 0; i < 8; i++) {
-        myVector.push_back(i);
-    }
-
-    vector<pair<int,int>> myPairs;
-    for(int i = 0; i < 4; i++) {
-        myPairs.push_back({i, 2*i});
-    }
-
-    stack<char> myStack;
-    myStack.push('(');
-    myStack.push(')');
-
-    queue<pair<int,int>> myQueue;
-    myQueue.push(make_pair(1,0));
-    myQueue.push(make_pair(0,1));
-
-    cerr<<"debug multiple variables. DO NOT USE to debug a multi-dimensional array"<<endl;
-
-    string greeting;
-    getline(cin, greeting);
-    cout << greeting <<endl;
-
-    return 0;
-}
-```
-
-`tpp` also gives us the option to save our solutions in our Github repository as follows:
-
-```bash
-$ tpp judge Codeforces
-
-$ tpp tag AdHoc
-
-$ tpp ls
-SOLUTION NAME           JUDGE           TAG           TEST STATUS    READY     LAST UPDATE
-hello                   Codeforces      AdHoc         Passed         Yes       28-08-2021 18:51:12
-
-$ tpp submit
-Insert a commit message and press enter:
-add hello solution using tpp tool
-Pushing 'hello_ready.cpp' to 'Kattis/AdHoc' directory...
-'hello' solution was upload to the github repo successfully!
-```
+All debug output is stripped by `tpp prepare`.
