@@ -48,8 +48,8 @@ function init_tpp_solution() {
 
     # try to fill samples inputs and outputs
     if [[ ${TPP_FILL} == "1" ]]; then
-        echo "Loading samples inputs/outputs..."
-        python3 -W ignore ${TPP_DIR}/codeforces/codeforces.py ${name} "1.${IN_EXT}" "1.${EXP_EXT}" ${dir}
+        echo "Loading samples..."
+        python3 -W ignore ${TPP_DIR}/scraper/scraper.py ${name} ${dir}
     fi
 
     echo "'${name}' solution was initialized successfully!"
