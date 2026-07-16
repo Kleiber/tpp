@@ -311,54 +311,6 @@ run_cpp_file() {
     fi
 }
 
-test_cpp_file() {
-    local cppFile=${1}
-    local out=${2}
-    local exp=${3}
-    local configFile=${4}
-
-    local status="Pending"
-
-    local red="\x1b[31m"
-    local green="\x1b[32m"
-    local off="\x1b[0m"
-
-    local Red='\033[1;31m'
-    local Green='\033[1;32m'
-    local Off='\033[0m'
-
-    local headerExp="====== Expected ======"
-    local headerOut="======= Output ======="
-
-    if ! fileExists ${out}; then
-        echo "Error: '$(basename ${cppFile%.*})' solution does not contain the output file." >&2
-        exit 1
-    fi
-
-    if ! fileExists ${exp}; then
-        echo "Error: '$(basename ${cppFile%.*})' solution does not contain the expected file." >&2
-        exit 1
-    fi
-
-    if [[ $(diff ${exp} ${out}) ==  "" ]] ; then
-        status="Passed"
-        echo -e "${Green}'$(basename ${cppFile})' TEST PASSED!${Off}"
-    else
-        status="Failed"
-
-        diff -c ${exp} ${out} | \
-            sed "/^\*\*/s/.*/${headerExp}/" | \
-            sed "/^\-\-/s/.*/${headerOut}/" | \
-            sed -e "s/^!/${red}x${off}/" | \
-            tail -n +4 || true
-
-        echo ""
-        echo -e "${Red}'$(basename ${cppFile})' TEST FAILED!${Off}"
-    fi
-
-    set_test_status_into_config ${configFile} ${status}
-}
-
 prepare_cpp_file() {
     local cppFile=${1}
 

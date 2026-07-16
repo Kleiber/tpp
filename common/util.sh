@@ -58,11 +58,3 @@ function isEmpty() {
   fi
   return 1
 }
-
-function sed_inplace() {
-  if isMac; then
-    sed -i '' "$@"
-  else
-    sed -i "$@"
-  fi
-}
