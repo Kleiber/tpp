@@ -15,32 +15,49 @@ function prepare_tpp_solution() {
         exit 1
     fi
 
-    # prepare cpp solution to submit
     prepare_cpp_file "${SOL_FILENAME}"
 
-    # prepare filename
     local filenameReady="${SOL_FILENAME%.*}_ready.${EXTENSION_FILE}"
 
-    # test prepare cpp solution and update status
     if [[ ${TPP_TEST} == "1" ]]; then
-        if isEmpty "${SOL_IN}"; then
-            echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain input data."
-            exit 1
-        fi
+        local caseCount=$(get_case_count "${SOL_DIR}")
 
-        if isEmpty "${SOL_EXP}"; then
-            echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain expected data."
+        if [[ ${caseCount} -eq 0 ]]; then
+            echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain test cases."
             exit 1
         fi
 
         build_cpp_file "${filenameReady}" "${SOL_EXEC}"
 
-        run_cpp_file "${filenameReady}" "${SOL_EXEC}" "${SOL_IN}" "${SOL_OUT}" false
+        local allPassed=true
+        for i in $(seq 1 ${caseCount}); do
+            local inFile=$(get_input_file "${SOL_DIR}" ${i})
+            local outFile=$(get_output_file "${SOL_DIR}" ${i})
+            local expFile=$(get_expected_file "${SOL_DIR}" ${i})
 
-        test_cpp_file "${filenameReady}" "${SOL_OUT}" "${SOL_EXP}" "${SOL_CONFIG}"
+            if isEmpty "${inFile}"; then
+                continue
+            fi
+            if ! fileExists "${expFile}" || isEmpty "${expFile}"; then
+                continue
+            fi
+
+            run_cpp_file "${filenameReady}" "${SOL_EXEC}" "${inFile}" "${outFile}" false
+
+            if [[ $(diff "${expFile}" "${outFile}") != "" ]]; then
+                allPassed=false
+            fi
+        done
+
+        if ${allPassed}; then
+            set_test_status_into_config "${SOL_CONFIG}" "Passed"
+            echo -e "${BGreen}'$(basename ${filenameReady})' TEST PASSED!${ColorOff}"
+        else
+            set_test_status_into_config "${SOL_CONFIG}" "Failed"
+            echo -e "${BRed}'$(basename ${filenameReady})' TEST FAILED!${ColorOff}"
+        fi
     fi
 
-    # last update
     set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 }
 

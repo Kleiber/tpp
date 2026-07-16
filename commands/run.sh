@@ -9,11 +9,14 @@ function run_tpp_solution() {
 
     resolve_solution ${name}
 
+    local inFile=$(get_input_file "${SOL_DIR}" 1)
+    local outFile=$(get_output_file "${SOL_DIR}" 1)
+
     # build cpp file and create executable
     build_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}"
 
     # run cpp executable
-    run_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}" "${SOL_IN}" "${SOL_OUT}" true
+    run_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}" "${inFile}" "${outFile}" true
 
     # last update
     set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"

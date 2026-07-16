@@ -19,21 +19,57 @@ test_tpp_solution() {
         exit 1
     fi
 
-    if isEmpty "${SOL_IN}"; then
-        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain input data."
-        exit 1
-    fi
+    local caseCount=$(get_case_count "${SOL_DIR}")
 
-    if isEmpty "${SOL_EXP}"; then
-        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain expected data."
+    if [[ ${caseCount} -eq 0 ]]; then
+        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain test cases."
         exit 1
     fi
 
     build_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}"
 
-    run_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}" "${SOL_IN}" "${SOL_OUT}" false
+    local allPassed=true
+    local ranAny=false
 
-    test_cpp_file "${SOL_FILENAME}" "${SOL_OUT}" "${SOL_EXP}" "${SOL_CONFIG}"
+    for i in $(seq 1 ${caseCount}); do
+        local inFile=$(get_input_file "${SOL_DIR}" ${i})
+        local outFile=$(get_output_file "${SOL_DIR}" ${i})
+        local expFile=$(get_expected_file "${SOL_DIR}" ${i})
+
+        if isEmpty "${inFile}"; then
+            echo "Case ${i}: SKIPPED (empty input)"
+            continue
+        fi
+
+        if ! fileExists "${expFile}" || isEmpty "${expFile}"; then
+            echo "Case ${i}: SKIPPED (no expected output)"
+            continue
+        fi
+
+        ranAny=true
+        run_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}" "${inFile}" "${outFile}" false
+
+        if [[ $(diff "${expFile}" "${outFile}") == "" ]]; then
+            echo -e "${BGreen}Case ${i}: PASSED${ColorOff}"
+        else
+            allPassed=false
+            echo -e "${BRed}Case ${i}: FAILED${ColorOff}"
+            diff "${expFile}" "${outFile}" | head -10 || true
+            echo ""
+        fi
+    done
+
+    if ! ${ranAny}; then
+        echo "No test cases with data to run."
+        exit 0
+    fi
+
+    # update test status
+    if ${allPassed}; then
+        set_test_status_into_config "${SOL_CONFIG}" "Passed"
+    else
+        set_test_status_into_config "${SOL_CONFIG}" "Failed"
+    fi
 
     # last update
     set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"

@@ -5,29 +5,34 @@
 set -e
 
 output_tpp_solution() {
-    local name=${1}
+    local num=${1}
+    local name=${2}
 
     resolve_solution ${name}
 
-    if ! fileExists "${SOL_OUT}"; then
-        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain the output file." >&2
+    if [[ ! ${num} ]]; then
+        num=1
+    fi
+
+    local outFile=$(get_output_file "${SOL_DIR}" ${num})
+
+    if ! fileExists "${outFile}"; then
+        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain output file for case ${num}." >&2
         exit 1
     fi
 
-    # last update
     set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 
-    # open source code using vim editor
-    ${TPP_IDE} "${SOL_OUT}"
+    ${TPP_IDE} "${outFile}"
 }
 
 output_help() {
     cat <<EOF
 
-Open out.tpp file into the solution name. If the command is run from within the
-solution directory, the solution name is an optional argument.
+Open output file for a specific case number. If no number is given, opens case 1.
+If the command is run from within the solution directory, the solution name is optional.
 
-Usage:  tpp out [solution-name]
+Usage:  tpp out [case-number] [solution-name]
 
 Options:
   -h, --help   Show more information about command
@@ -37,18 +42,19 @@ EOF
 }
 
 output_cmd() {
-   if [[ ${#} -gt 1 ]]; then
+    if [[ ${#} -gt 2 ]]; then
         echo "Error: Invalid number of arguments." >&2
         exit 1
     fi
 
-    local argument=${1}
-    case ${argument} in
-        --help | -h)
-            output_help
-            ;;
-        *)
-            output_tpp_solution ${argument}
-            ;;
-    esac
+    if [[ ${1} == "--help" ]] || [[ ${1} == "-h" ]]; then
+        output_help
+        exit 0
+    fi
+
+    if [[ ${1} =~ ^[0-9]+$ ]]; then
+        output_tpp_solution ${1} ${2}
+    else
+        output_tpp_solution "" ${1}
+    fi
 }

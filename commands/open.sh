@@ -19,7 +19,9 @@ open_tpp_solution() {
 
     # open source code using vim editor
     if [[ ${TPP_VIEWS} == "1" ]]; then
-        ${TPP_IDE} -O "${SOL_FILENAME}" "${SOL_EXP}" -c "winc l" -c "sp ${SOL_IN}" -c "vertical res 60" -c "winc h"
+        local inFile=$(get_input_file "${SOL_DIR}" 1)
+        local expFile=$(get_expected_file "${SOL_DIR}" 1)
+        ${TPP_IDE} -O "${SOL_FILENAME}" "${expFile}" -c "winc l" -c "sp ${inFile}" -c "vertical res 60" -c "winc h"
     else
         ${TPP_IDE} "${SOL_FILENAME}"
     fi

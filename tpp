@@ -14,6 +14,7 @@ source ${TPP_DIR}/common/util.sh
 
 source ${TPP_DIR}/commands/build.sh
 source ${TPP_DIR}/commands/init.sh
+source ${TPP_DIR}/commands/add.sh
 source ${TPP_DIR}/commands/list.sh
 source ${TPP_DIR}/commands/prepare.sh
 source ${TPP_DIR}/commands/run.sh
@@ -45,6 +46,7 @@ code compilation, testing, and debugging time.
 Usage:  tpp COMMAND [OPTIONS]
 
 Commands:
+  add       Add a new test case (input + expected pair) to the solution
   build     Compile the .cpp file into the solution
   exp       Open expected file into the solution
   init      Init a new solution with the specified name
@@ -72,6 +74,10 @@ tpp_cmd() {
     local command=${1}
 
     case ${command} in
+        add)
+            shift
+            add_cmd ${@}
+            ;;
         build)
             shift
             build_cmd ${@}

@@ -178,9 +178,33 @@ resolve_solution() {
     fi
 
     SOL_EXEC="${SOL_DIR}/${BUILD}"
-    SOL_IN="${SOL_DIR}/${INPUT_FILE}"
-    SOL_OUT="${SOL_DIR}/${OUTPUT_FILE}"
-    SOL_EXP="${SOL_DIR}/${EXPECTED_FILE}"
+}
+
+get_input_file() {
+    local dir=${1}
+    local num=${2}
+    echo "${dir}/${num}.${IN_EXT}"
+}
+
+get_output_file() {
+    local dir=${1}
+    local num=${2}
+    echo "${dir}/${num}.${OUT_EXT}"
+}
+
+get_expected_file() {
+    local dir=${1}
+    local num=${2}
+    echo "${dir}/${num}.${EXP_EXT}"
+}
+
+get_case_count() {
+    local dir=${1}
+    local count=0
+    while fileExists "${dir}/$((count + 1)).${IN_EXT}"; do
+        count=$((count + 1))
+    done
+    echo ${count}
 }
 
 build_cpp_file() {
