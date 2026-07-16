@@ -15,21 +15,15 @@ function prepare_tpp_solution() {
         exit 1
     fi
 
-    prepare_cpp_file "${SOL_FILENAME}"
-
     local filenameReady="${SOL_FILENAME%.*}_ready.${EXTENSION_FILE}"
+    local caseCount=$(get_case_count "${SOL_DIR}")
 
-    if [[ ${TPP_TEST} == "1" ]]; then
-        local caseCount=$(get_case_count "${SOL_DIR}")
-
-        if [[ ${caseCount} -eq 0 ]]; then
-            echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain test cases."
-            exit 1
-        fi
-
+    # run tests on ready file
+    local allPassed=true
+    if [[ ${caseCount} -gt 0 ]]; then
+        prepare_cpp_file "${SOL_FILENAME}"
         build_cpp_file "${filenameReady}" "${SOL_EXEC}"
 
-        local allPassed=true
         for i in $(seq 1 ${caseCount}); do
             local inFile=$(get_input_file "${SOL_DIR}" ${i})
             local outFile=$(get_output_file "${SOL_DIR}" ${i})
@@ -38,7 +32,7 @@ function prepare_tpp_solution() {
             if isEmpty "${inFile}"; then
                 continue
             fi
-            if ! fileExists "${expFile}" || isEmpty "${expFile}"; then
+            if ! fileExists "${expFile}"; then
                 continue
             fi
 
@@ -58,7 +52,17 @@ function prepare_tpp_solution() {
         else
             set_test_status_into_config "${SOL_CONFIG}" "Failed"
             echo -e "${BRed}'$(basename ${filenameReady})' TEST FAILED!${ColorOff}"
+
+            # TPP_TEST=1: must pass to generate
+            if [[ ${TPP_TEST} == "1" ]]; then
+                rm -f "${filenameReady}"
+                echo "Ready file removed. Fix your solution first."
+                set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
+                exit 1
+            fi
         fi
+    else
+        prepare_cpp_file "${SOL_FILENAME}"
     fi
 
     set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
