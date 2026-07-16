@@ -7,8 +7,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from codeforces import CodeforcesParser
 from atcoder import AtCoderParser
+from cses import CSESParser
+from codechef import CodeChefParser
+from leetcode import LeetCodeParser
 
-PARSERS = [AtCoderParser, CodeforcesParser]
+PARSERS = [AtCoderParser, CodeforcesParser, CSESParser, CodeChefParser, LeetCodeParser]
 
 
 def detect_parser(name):
@@ -24,6 +27,9 @@ def main():
         print("Usage: scraper.py <problem-name> <path>")
         print("  Codeforces: scraper.py 1950A /path/to/solution")
         print("  AtCoder:    scraper.py abc466_a /path/to/solution")
+        print("  CSES:       scraper.py 1068 /path/to/solution")
+        print("  CodeChef:   scraper.py TRTR3 /path/to/solution")
+        print("  LeetCode:   scraper.py add-two-numbers /path/to/solution")
         return
 
     name = sys.argv[1]
@@ -55,6 +61,10 @@ def main():
             f.write(out + '\n')
 
     print(f"Loaded {len(samples)} sample(s).")
+
+    # For LeetCode, also generate the .cpp template with helpers and main()
+    if hasattr(parser, 'generate_cpp'):
+        parser.generate_cpp(path)
 
 
 if __name__ == '__main__':
