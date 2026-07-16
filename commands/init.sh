@@ -9,7 +9,7 @@ function init_tpp_solution() {
     local dir="${TPP_WORKSPACE}/${name}"
     local configDir="${dir}/${CONFIG_DIR}"
 
-    if isValidName ${name}; then
+    if ! isValidName ${name}; then
         echo "Error: invalid solution name '${name}'." >&2
         exit 1
     fi
@@ -22,8 +22,8 @@ function init_tpp_solution() {
     # create solution and tpp config directories
     mkdir -p "${dir}" "${configDir}"
 
-    # create input, output and expected tpp files
-    touch "${dir}/${INPUT_FILE}" "${dir}/${OUTPUT_FILE}" "${dir}/${EXPECTED_FILE}"
+    # create input and expected files
+    touch "$(get_input_file ${dir} 1)" "$(get_expected_file ${dir} 1)"
 
     # create tpp config file
     local configFile="${configDir}/${CONFIG_FILE}"
@@ -48,8 +48,8 @@ function init_tpp_solution() {
 
     # try to fill samples inputs and outputs
     if [[ ${TPP_FILL} == "1" ]]; then
-        echo "Loading samples inputs/outputs..."
-        python3 -W ignore ${TPP_DIR}/codeforces/codeforces.py ${name} ${INPUT_FILE} ${EXPECTED_FILE} ${dir}
+        echo "Loading samples..."
+        python3 -W ignore ${TPP_DIR}/scraper/scraper.py ${name} ${dir}
     fi
 
     echo "'${name}' solution was initialized successfully!"

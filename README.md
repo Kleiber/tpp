@@ -11,24 +11,19 @@ Using `tpp` command line is simple. First, clone the repository in your workspac
 ```bash
 cd $HOME
 git clone https://github.com/Kleiber/tpp.git
+./tpp/install.sh
+source ~/.bashrc
 ```
-
-Next, include the following line in your `.bashrc` file (use the command `vim ~/.bashrc` to edit)
-
-```bash
-export PATH=$PATH:$HOME/tpp:
-```
-
-Finally, restart your terminal or run the command `source ~/.bashrc`
 
 ### Mac
-For Mac, clone the repository in your workspace and include the following line in your `.zshrc` file (use the command `vim ~/.zshrc` to edit)
+For Mac, clone the repository in your workspace
 
 ```bash
-export PATH=$PATH:$HOME/tpp:
+cd $HOME
+git clone https://github.com/Kleiber/tpp.git
+./tpp/install.sh
+source ~/.zshrc
 ```
-
-Finally, restart your terminal
 
 ### Windows
 For Windows, you need to have [Git for Windows](https://gitforwindows.org/) installed and perform the same steps as in linux.
@@ -37,10 +32,10 @@ The minimum requirement to use `tpp` tool is the **C++11** standard library
 
 ## Setup
 
-include the following line in your `.bashrc` or `.zshrc`
+All configuration is in `~/tpp/tpp.profile` which is sourced automatically. To override defaults, set variables in your `.bashrc` or `.zshrc` before the source line:
 
 ```bash
-# default values
+# override defaults (optional)
 
 export TPP_GITHUB="tpp_github"
 export TPP_REPO="${HOME}/tpp_repo"
@@ -52,6 +47,7 @@ export TPP_TEST=0
 export TPP_FILL=0
 export TPP_VIEWS=0
 export TPP_GCC="c++11"
+export TPP_TL=4
 ```
 
 Where:
@@ -75,70 +71,52 @@ git config --global user.email "<your-email-address>"
 
 ## Commands
 
-### ***init***
+### Commands
 
-Initializes a new solution with the name passed as a parameter. Basically a new directory is created with four files: the cpp template `<solution-name>.cpp`, the input file `in.tpp`, the expected output file `expected.tpp` and the output file `out.tpp`
-
-```bash
-tpp init <solution-name>
+```
+init <name>             Init a new solution (auto-fills samples if TPP_FILL=1)
+add [name]              Add a new test case (input + expected pair)
+build [name]            Compile the .cpp file
+run [case] [name]       Compile and run (interactive or with input file)
+test [name]             Compile, run and test all cases
+prepare [name]          Generate submission file without debug references
+open [name]             Open .cpp file in editor
+in [case] [name]        Open input file
+exp [case] [name]       Open expected file
+out [case] [name]       Open output file
+judge <judge> [name]    Set judge name (Codeforces, AtCoder, etc.)
+tag <tag> [name]        Set tag name (DP, Greedy, Graphs, etc.)
+clone <source> <target> Clone a solution as starting point
+list                    List all solutions in workspace
+submit [name]           Submit solution to github repository
 ```
 
-### ***build***
-
-Compiles the generated cpp template within the solution. Basically it is the translation of executing command `g ++ -o build <solution-name>.cpp`
+Problem name formats for auto-fill (`TPP_FILL=1`):
 
 ```bash
-tpp build
+init 1950A          # Codeforces (contest + problem letter)
+init abc466_a       # AtCoder (contest_task)
 ```
 
-### ***run***
+Run `tpp COMMAND --help` for more information about a given command.
 
-Compiles and executes the generated cpp template within the solution. If the `in.tpp` file has test cases, they will be used in the execution using standard input (`build < in.tpp`). Otherwise, it will be necessary to manually enter the test cases as usual
+## Editor Shortcuts
 
-```bash
-tpp run
+When using `open` command, the following vim commands are available:
+
 ```
-
-### ***test***
-
-Compiles, executes and test the generated cpp template within the solution. For the execution of this command it is necessary to have the `in.tpp` file with the input cases and the `expected.tpp` file with the expected outputs. From the cpp template an `out.tpp` file will be generated to be compared (`build < in.tpp > out.tpp`). Basically it is the translation of executing command `diff expected.tpp out.tpp`
-
-```bash
-tpp test
+:test           Save + test all cases
+:run            Save + run interactive
+:run 1          Save + run with case 1
+:build          Save + build
+:prepare        Save + prepare
+:add            Add new test case
+:in 1           Edit input case 1
+:exp 2          Edit expected case 2
+:out 1          View output case 1
+Ctrl+S          Save
+Ctrl+F          Search (n = next, N = previous, Esc = clear)
 ```
-
-### ***prepare***
-
-Prepares and test a new file to submit without the debug reference and its uses within the generated template
-
-```bash
-tpp prepare
-```
-
-### ***ls***
-
-List all the solutions created that are in the workspace. some columns are displayed in the output:
-
-- _SOLUTION NAME:_ Name of the solution with which it was created.
-- _JUDGE:_ Name of the assigned judge.
-- _TAG:_ Name of the assigned tag.
-- _TEST STATUS:_ Test status of the solution.
-- _READY:_ Indicates if the solution was ready to submit.
-- _LAST UPDATE:_ Last time the solution was updated.
-
-```bash
-tpp ls
-```
-
-### ***submit***
-
-Submit solution to github repository. The path where the solution will be placed in the repository will be the concatenation between the judge and tag assigned to the solution (To assign the judge and tag use the commands `tpp judge` and `tpp tag` respectively).
-
-```bash
-tpp submit
-```
-
-**Note:** `tpp` tool also provides other commands that can help you in developing your solution, to get more information about these other commands run _tpp --help_.
 
 ## Template
 
@@ -258,29 +236,29 @@ export TPP_TEST=1
 // go to workspace
 $ cd $TPP_WORKSPACE
 
-$ tpp init hello
+$ init hello
 'hello' solution was initialized successfully!
 
 // go to generated solution
 $ cd hello
 
 // open the generated template hello.cpp file in the solution and copy the code snippet
-$ tpp open
+$ open
 
-// open the generated input file in.tpp and copy the content
-$ tpp in
+// open the generated input file 1.in and copy the content
+$ in 1
 
-// open the generated expected file expected.tpp and copy the content
-$ tpp exp
+// open the generated expected file 1.exp and copy the content
+$ exp 1
 
-$ tpp ls
+$ list
 SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
 hello                                             Pending        No        28-08-2021 18:45:45
 
-$ tpp build
+$ build
 'hello' solution was compiled successfully!
 
-$ tpp run
+$ run
 debug:31 myVariable: "tpp tool"
 debug:35 myMatrix:
 [0 0 0 0 0 0 0 0]
@@ -309,18 +287,18 @@ debug multiple variables. DO NOT USE to debug a multi-dimensional array
 debug:67 myVariable : "tpp tool"  myStack: [')' '(']  myQueue: [(1,0) (0,1)]  myPairs: [(0,0) (1,2) (2,4) (3,6)]  myVector: [0 1 2 3 4 5 6 7]  
 Hello World!
 
-$ tpp test
-'hello.cpp' test PASSED!
+$ test
+Case 1: PASSED (0.04s)
 
-$ tpp ls
+$ list
 SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
 hello                                             Passed         No        28-08-2021 18:48:54
 
-$ tpp prepare
+$ prepare
 'hello_ready.cpp' was generated successfully!
-'hello_ready.cpp' test PASSED!
+'hello_ready.cpp' TEST PASSED!
 
-$ tpp ls
+$ list
 SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
 hello                                             Passed         Yes       28-08-2021 18:49:12
 ```
@@ -381,15 +359,15 @@ int main() {
 `tpp` also gives us the option to save our solutions in our Github repository as follows:
 
 ```bash
-$ tpp judge Codeforces
+$ judge Codeforces
 
-$ tpp tag AdHoc
+$ tag AdHoc
 
-$ tpp ls
+$ list
 SOLUTION NAME           JUDGE           TAG           TEST STATUS    READY     LAST UPDATE
 hello                   Codeforces      AdHoc         Passed         Yes       28-08-2021 18:51:12
 
-$ tpp submit
+$ submit
 Insert a commit message and press enter:
 add hello solution using tpp tool
 Pushing 'hello_ready.cpp' to 'Kattis/AdHoc' directory...

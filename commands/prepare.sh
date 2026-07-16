@@ -8,78 +8,64 @@ set -e
 function prepare_tpp_solution() {
     local name=${1}
 
-    local dir=""
-    local filename=""
-    local configDir=${CONFIG_DIR}
-    local configFile="${CONFIG_DIR}/${CONFIG_FILE}"
-    local exec=${BUILD}
-    local in=${INPUT_FILE}
-    local out=${OUTPUT_FILE}
-    local exp=${EXPECTED_FILE}
+    resolve_solution ${name}
 
-    # check if the solution name is an argument
-    if [[ ! ${name} ]]; then
-        if ! fileExists ${configFile}; then
-            echo "Error: there is not a solution, tpp config file does not exist." >&2
-            exit 1
-        fi
-
-        filename=$(get_name_from_config ${configFile})
-    else
-        dir="${TPP_WORKSPACE}/${name}"
-        configDir="${dir}/${configDir}"
-        configFile="${dir}/${configFile}"
-        exec="${dir}/${exec}"
-        in="${dir}/${in}"
-        out="${dir}/${out}"
-        exp="${dir}/${exp}"
-
-        if ! dirExists ${dir}; then
-            echo "Error: '${name}' solution does not exist." >&2
-            exit 1
-        fi
-
-        if ! fileExists ${configFile}; then
-            echo "Error: there is not a solution, tpp config file does not exist." >&2
-            exit 1
-        fi
-
-        filename=$(get_name_from_config ${configFile})
-        filename="${dir}/${filename}"
-    fi
-
-    if ! fileExists ${filename}; then
-        echo "Error: '$(basename ${filename%.*})' solution does not contain the cpp file." >&2
+    if ! fileExists "${SOL_FILENAME}"; then
+        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain the cpp file." >&2
         exit 1
     fi
 
-    # prepate cpp solution to submit
-    prepare_cpp_file ${filename}
+    local filenameReady="${SOL_FILENAME%.*}_ready.${EXTENSION_FILE}"
+    local caseCount=$(get_case_count "${SOL_DIR}")
 
-    # prepare filename
-    local filenameReady="${filename%.*}_ready.${EXTENSION_FILE}"
+    # run tests on ready file
+    local allPassed=true
+    if [[ ${caseCount} -gt 0 ]]; then
+        prepare_cpp_file "${SOL_FILENAME}"
+        build_cpp_file "${filenameReady}" "${SOL_EXEC}"
 
-    # test prepare cpp solution and update status
-    if [[ ${TPP_TEST} == "1" ]]; then
-        if isEmpty ${in}; then
-            echo "Error: '$(basename ${filename%.*})' solution does not contain input data."
-            exit 1
+        for i in $(seq 1 ${caseCount}); do
+            local inFile=$(get_input_file "${SOL_DIR}" ${i})
+            local outFile=$(get_output_file "${SOL_DIR}" ${i})
+            local expFile=$(get_expected_file "${SOL_DIR}" ${i})
+
+            if isEmpty "${inFile}"; then
+                continue
+            fi
+            if ! fileExists "${expFile}"; then
+                continue
+            fi
+
+            local runStatus=0
+            run_cpp_file "${filenameReady}" "${SOL_EXEC}" "${inFile}" "${outFile}" false || runStatus=$?
+
+            if [[ ${runStatus} -eq 124 ]]; then
+                allPassed=false
+            elif [[ $(diff "${expFile}" "${outFile}") != "" ]]; then
+                allPassed=false
+            fi
+        done
+
+        if ${allPassed}; then
+            set_test_status_into_config "${SOL_CONFIG}" "Passed"
+            echo -e "${BGreen}'$(basename ${filenameReady})' TEST PASSED!${ColorOff}"
+        else
+            set_test_status_into_config "${SOL_CONFIG}" "Failed"
+            echo -e "${BRed}'$(basename ${filenameReady})' TEST FAILED!${ColorOff}"
+
+            # TPP_TEST=1: must pass to generate
+            if [[ ${TPP_TEST} == "1" ]]; then
+                rm -f "${filenameReady}"
+                echo "Ready file removed. Fix your solution first."
+                set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
+                exit 1
+            fi
         fi
-
-        if isEmpty ${exp}; then
-            echo "Error: '$(basename ${filename%.*})' solution does not contain expected data."
-            exit 1
-        fi
-
-        build_cpp_file ${filenameReady} ${exec}
-
-        run_cpp_file ${filenameReady} ${exec} ${in} ${out} false
-
-        test_cpp_file ${filenameReady} ${out} ${exp} ${configFile}
+    else
+        prepare_cpp_file "${SOL_FILENAME}"
     fi
 
-    # last update
-    set_last_update_into_config ${configFile} "$(date +"%d-%m-%Y") $(date +"%T")"
+    set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 }
 
 prepare_help() {

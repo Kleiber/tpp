@@ -5,61 +5,32 @@
 set -e
 
 expected_tpp_solution() {
-    local name=${1}
+    local num=${1}
+    local name=${2}
 
-    local dir=""
-    local filename=""
-    local configDir=${CONFIG_DIR}
-    local configFile="${CONFIG_DIR}/${CONFIG_FILE}"
-    local exp=${EXPECTED_FILE}
+    resolve_solution ${name}
 
-    # check if the solution name is an argument
-    if [[ ! ${name} ]]; then
-        if ! fileExists ${configFile}; then
-            echo "Error: there is not a solution, tpp config file does not exist." >&2
-            exit 1
-        fi
-
-        filename=$(get_name_from_config ${configFile})
-    else
-        dir="${TPP_WORKSPACE}/${name}"
-        configDir="${dir}/${configDir}"
-        configFile="${dir}/${configFile}"
-        exp="${dir}/${exp}"
-
-        if ! dirExists ${dir}; then
-            echo "Error: '${name}' solution does not exist." >&2
-            exit 1
-        fi
-
-        if ! fileExists ${configFile}; then
-            echo "Error: there is not a solution, tpp config file does not exist." >&2
-            exit 1
-        fi
-
-        filename=$(get_name_from_config ${configFile})
-        filename="${dir}/${filename}"
+    if [[ ! ${num} ]]; then
+        num=1
     fi
 
-    if ! fileExists ${exp}; then
-        echo "Error: '$(basename ${filename%.*})' solution does not contain the exp file." >&2
-        exit 1
-    fi
+    local expFile=$(get_expected_file "${SOL_DIR}" ${num})
 
-    # last update
-    set_last_update_into_config ${configFile} "$(date +"%d-%m-%Y") $(date +"%T")"
+    # create if doesn't exist
+    touch "${expFile}"
 
-    # open source code using vim editor
-    ${TPP_IDE} ${exp}
+    set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
+
+    ${TPP_IDE} "${expFile}"
 }
 
 expected_help() {
     cat <<EOF
 
-Open exp.tpp file into the solution name. If the command is run from within the
-solution directory, the solution name is an optional argument.
+Open expected file for a specific case number. If no number is given, opens case 1.
+If the command is run from within the solution directory, the solution name is optional.
 
-Usage:  tpp exp [solution-name]
+Usage:  tpp exp [case-number] [solution-name]
 
 Options:
   -h, --help   Show more information about command
@@ -69,18 +40,19 @@ EOF
 }
 
 expected_cmd() {
-   if [[ ${#} -gt 1 ]]; then
+    if [[ ${#} -gt 2 ]]; then
         echo "Error: Invalid number of arguments." >&2
         exit 1
     fi
 
-    local argument=${1}
-    case ${argument} in
-        --help | -h)
-            expected_help
-            ;;
-        *)
-            expected_tpp_solution ${argument}
-            ;;
-    esac
+    if [[ ${1} == "--help" ]] || [[ ${1} == "-h" ]]; then
+        expected_help
+        exit 0
+    fi
+
+    if [[ ${1} =~ ^[0-9]+$ ]]; then
+        expected_tpp_solution ${1} ${2}
+    else
+        expected_tpp_solution "" ${1}
+    fi
 }

@@ -5,76 +5,88 @@
 set -e
 
 test_tpp_solution() {
-    if [[ ${TPP_TEST} == "0" ]]; then
-        echo "Set your enviroment variable TPP_TEST to 1"
+    local name=${1}
+
+    resolve_solution ${name}
+
+    if ! fileExists "${SOL_FILENAME}"; then
+        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain the cpp file." >&2
+        exit 1
+    fi
+
+    local caseCount=$(get_case_count "${SOL_DIR}")
+
+    if [[ ${caseCount} -eq 0 ]]; then
+        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain test cases."
+        exit 1
+    fi
+
+    build_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}"
+
+    local allPassed=true
+    local ranAny=false
+
+    for i in $(seq 1 ${caseCount}); do
+        local inFile=$(get_input_file "${SOL_DIR}" ${i})
+        local outFile=$(get_output_file "${SOL_DIR}" ${i})
+        local expFile=$(get_expected_file "${SOL_DIR}" ${i})
+
+        if isEmpty "${inFile}"; then
+            echo "Case ${i}: EMPTY"
+            continue
+        fi
+
+        if ! fileExists "${expFile}"; then
+            echo "Case ${i}: EMPTY"
+            continue
+        fi
+
+        ranAny=true
+        local runStatus=0
+        local startTime=$(perl -MTime::HiRes=time -e 'printf "%.2f\n", time()')
+        run_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}" "${inFile}" "${outFile}" false || runStatus=$?
+        local endTime=$(perl -MTime::HiRes=time -e 'printf "%.2f\n", time()')
+        local elapsed=$(printf "%.2f" $(echo "${endTime} - ${startTime}" | bc))
+
+        if [[ ${runStatus} -eq 124 ]]; then
+            allPassed=false
+            echo -e "${BRed}Case ${i}: TLE (${elapsed}s)${ColorOff}"
+        elif [[ $(diff "${expFile}" "${outFile}") == "" ]]; then
+            echo -e "${BGreen}Case ${i}: PASSED (${elapsed}s)${ColorOff}"
+        else
+            allPassed=false
+            local lineNum=$(diff "${expFile}" "${outFile}" | head -1 | grep -o '^[0-9]*')
+            if [[ "${lineNum}" == "0" || -z "${lineNum}" ]]; then
+                lineNum=1
+            fi
+            local expLine=$(sed -n "${lineNum}p" "${expFile}")
+            local outLine=$(sed -n "${lineNum}p" "${outFile}")
+            echo -e "${BRed}Case ${i}: FAILED (${elapsed}s, line ${lineNum})${ColorOff}"
+            echo "  Expected:"
+            echo "    ${expLine}"
+            echo "  Output:"
+            echo "    ${outLine}"
+        fi
+    done
+
+    if ! ${ranAny}; then
+        echo "No test cases with data to run."
         exit 0
     fi
 
-    local name=${1}
-
-    local dir=""
-    local filename=""
-    local configDir=${CONFIG_DIR}
-    local configFile="${CONFIG_DIR}/${CONFIG_FILE}"
-    local exec=${BUILD}
-    local in=${INPUT_FILE}
-    local out=${OUTPUT_FILE}
-    local exp=${EXPECTED_FILE}
-
-    # check if the solution name is an argument
-    if [[ ! ${name} ]]; then
-        if ! fileExists ${configFile}; then
-            echo "Error: there is not a solution, tpp config file does not exist." >&2
-            exit 1
-        fi
-
-        filename=$(get_name_from_config ${configFile})
+    # update test status
+    if ${allPassed}; then
+        set_test_status_into_config "${SOL_CONFIG}" "Passed"
+        echo ""
+        echo -e "${BGreen}'$(basename ${SOL_FILENAME})' TEST PASSED!${ColorOff}"
     else
-        dir="${TPP_WORKSPACE}/${name}"
-        configDir="${dir}/${configDir}"
-        configFile="${dir}/${configFile}"
-        exec="${dir}/${exec}"
-        in="${dir}/${in}"
-        out="${dir}/${out}"
-        exp="${dir}/${exp}"
-
-        if ! dirExists ${dir}; then
-            echo "Error: '${name}' solution does not exist." >&2
-            exit 1
-        fi
-
-        if ! fileExists ${configFile}; then
-            echo "Error: there is not a solution, tpp config file does not exist." >&2
-            exit 1
-        fi
-
-        filename=$(get_name_from_config ${configFile})
-        filename="${dir}/${filename}"
+        set_test_status_into_config "${SOL_CONFIG}" "Failed"
+        echo ""
+        echo -e "${BRed}'$(basename ${SOL_FILENAME})' TEST FAILED!${ColorOff}"
     fi
-
-    if ! fileExists ${filename}; then
-        echo "Error: '$(basename ${filename%.*})' solution does not contain the cpp file." >&2
-        exit 1
-    fi
-
-    if isEmpty ${in}; then
-        echo "Error: '$(basename ${filename%.*})' solution does not contain input data."
-        exit 1
-    fi
-
-    if isEmpty ${exp}; then
-        echo "Error: '$(basename ${filename%.*})' solution does not contain expected data."
-        exit 1
-    fi
-
-    build_cpp_file ${filename} ${exec}
-
-    run_cpp_file ${filename} ${exec} ${in} ${out} false
-
-    test_cpp_file ${filename} ${out} ${exp} ${configFile}
 
     # last update
-    set_last_update_into_config ${configFile} "$(date +"%d-%m-%Y") $(date +"%T")"
+    set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 }
 
 test_help() {

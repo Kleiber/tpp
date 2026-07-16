@@ -1,104 +1,76 @@
-" Set compatibility to Vim only.
+" tpp - competitive programming vimrc
+" Clean editor config for fast coding
+
+" General
 set nocompatible
-
-" Helps force plug-ins to load correctly when it is turned back on below.
-filetype off
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin '907th/vim-auto-save'
-call vundle#end()
-
-" Turn on syntax highlighting.
 syntax on
-
-" For plug-ins to load correctly.
 filetype plugin indent on
-
-" Turn off modelines
-set modelines=0
-
-" Automatically wrap text that extends beyond the screen length.
-set wrap
-
-" Uncomment below to set the max textwidth. Use a value corresponding to the width of your screen.
-" set textwidth=79
-set formatoptions=tcqrn1
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
-set expandtab
-set noshiftround
-
-" Display 5 lines above/below the cursor when scrolling with a mouse.
-set scrolloff=5
-" Fixes common backspace problems
-set backspace=indent,eol,start
-
-" Speed up scrolling in Vim
-set ttyfast
-
-" Status bar
-set laststatus=2
-
-" Display options
-set showmode
-set showcmd
-
-" Highlight matching pairs of brackets. Use the '%' character to jump between them.
-set matchpairs+=<:>
-
-" Show line numbers
-set number
-
-" Set status line display
-" set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ [BUFFER=%n]\ %{strftime('%c')}
-set statusline=%F%m%r%h%w
-
-" Encoding
 set encoding=utf-8
+set mouse=a
 
-" Highlight matching search patterns
+" Indentation
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+set smartindent
+set autoindent
+
+" Display
+set number
+set ruler
+set showcmd
+set laststatus=2
+set statusline=%F%m%r%h%w
+set scrolloff=5
+
+" Search
 set hlsearch
-
-" Enable incremental search
 set incsearch
+set ignorecase
+set smartcase
 
-" Reload content
+" Performance
+set ttyfast
 set autoread
+set nobackup
+set noswapfile
+set nowritebackup
 
-" Optional
+" Editing
+set backspace=indent,eol,start
+set matchpairs+=<:>
+set clipboard=unnamed
 
-" Enable AutoSave
-" let g:auto_save = 1
+" Ctrl+S = save
+nnoremap <C-s> :w<CR>
+inoremap <C-s> <Esc>:w<CR>a
 
-" Disable beep on errors
-" set noerrorbells
+" Ctrl+F = search
+nnoremap <C-f> /
 
-" Enable mouse for scrolling and resizing
-" set mouse=a
+" Esc clears search highlights
+nnoremap <Esc> :nohlsearch<CR>
 
-" Functions
-:function SaveChanges()
-:  execute 'write'
-:endfunction
+" tpp commands (type :test, :run, :build, :prepare)
+:command! Test w | !tpp test
+:command! -nargs=? Run w | execute '!tpp run' . (<q-args> == '' ? '' : ' ' . <q-args>)
+:command! Build w | !tpp build
+:command! Prepare w | !tpp prepare
+:command! Add !tpp add
 
-:function QuitCode()
-:  execute 'qall'
-:endfunction
+cnoreabbrev test Test
+cnoreabbrev run Run
+cnoreabbrev build Build
+cnoreabbrev prepare Prepare
+cnoreabbrev add Add
 
-" Map
-nnoremap e <c-w>k " Up
-nnoremap d <c-w>j " Right
-nnoremap s <c-w>h " Left
-nnoremap f <c-w>l " Down
+" File commands (type :in 1, :out 2, :exp 1)
+" Opens file in external editor, returns to code when done.
+:command! -nargs=? In w | execute '!tpp in ' . (<q-args> == '' ? '1' : <q-args>)
+:command! -nargs=? Out w | execute '!tpp out ' . (<q-args> == '' ? '1' : <q-args>)
+:command! -nargs=? Exp w | execute '!tpp exp ' . (<q-args> == '' ? '1' : <q-args>)
 
-nnoremap q :qall <CR> " Quit all windows
-nnoremap w :write <CR> " Save window
-
-:command -nargs=0 Q :call QuitCode() " Quit all windows
-:command -nargs=0 W :call SaveChanges() " Save window
-
-
+cnoreabbrev in In
+cnoreabbrev out Out
+cnoreabbrev exp Exp

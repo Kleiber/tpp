@@ -7,57 +7,28 @@ set -e
 open_tpp_solution() {
     local name=${1}
 
-    local dir=""
-    local filename=""
-    local configDir=${CONFIG_DIR}
-    local configFile="${CONFIG_DIR}/${CONFIG_FILE}"
-    local in=${INPUT_FILE}
-    local out=${OUTPUT_FILE}
-    local exp=${EXPECTED_FILE}
+    resolve_solution ${name}
 
-    # check if the solution name is an argument
-    if [[ ! ${name} ]]; then
-        if ! fileExists ${configFile}; then
-            echo "Error: there is not a solution, tpp config file does not exist." >&2
-            exit 1
-        fi
-
-        filename=$(get_name_from_config ${configFile})
-    else
-        dir="${TPP_WORKSPACE}/${name}"
-        configDir="${dir}/${configDir}"
-        configFile="${dir}/${configFile}"
-        in="${dir}/${in}"
-        out="${dir}/${out}"
-        exp="${dir}/${exp}"
-
-        if ! dirExists ${dir}; then
-            echo "Error: '${name}' solution does not exist." >&2
-            exit 1
-        fi
-
-        if ! fileExists ${configFile}; then
-            echo "Error: there is not a solution, tpp config file does not exist." >&2
-            exit 1
-        fi
-
-        filename=$(get_name_from_config ${configFile})
-        filename="${dir}/${filename}"
-    fi
-
-    if ! fileExists ${filename}; then
-        echo "Error: '$(basename ${filename%.*})' solution does not contain the cpp file." >&2
+    if ! fileExists "${SOL_FILENAME}"; then
+        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain the cpp file." >&2
         exit 1
     fi
 
     # last update
-    set_last_update_into_config ${configFile} "$(date +"%d-%m-%Y") $(date +"%T")"
+    set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 
-    # open source code using vim editor
+    # open source code
+    local ide_cmd="${TPP_IDE}"
+    if [[ "${TPP_IDE}" == "vi" || "${TPP_IDE}" == "vim" ]]; then
+        ide_cmd="${TPP_IDE} -u ${TPP_VIMRC}"
+    fi
+
     if [[ ${TPP_VIEWS} == "1" ]]; then
-        ${TPP_IDE} -O ${filename} ${exp} -c "winc l" -c "sp ${in}" -c "vertical res 60" -c "winc h"
+        local inFile=$(get_input_file "${SOL_DIR}" 1)
+        local expFile=$(get_expected_file "${SOL_DIR}" 1)
+        ${ide_cmd} -O "${SOL_FILENAME}" "${expFile}" -c "winc l" -c "sp ${inFile}" -c "vertical res 60" -c "winc h"
     else
-        ${TPP_IDE} ${filename}
+        ${ide_cmd} "${SOL_FILENAME}"
     fi
 }
 

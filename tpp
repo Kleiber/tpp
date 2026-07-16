@@ -13,7 +13,9 @@ source ${TPP_DIR}/common/common.sh
 source ${TPP_DIR}/common/util.sh
 
 source ${TPP_DIR}/commands/build.sh
+source ${TPP_DIR}/commands/clone.sh
 source ${TPP_DIR}/commands/init.sh
+source ${TPP_DIR}/commands/add.sh
 source ${TPP_DIR}/commands/list.sh
 source ${TPP_DIR}/commands/prepare.sh
 source ${TPP_DIR}/commands/run.sh
@@ -26,8 +28,6 @@ source ${TPP_DIR}/commands/open.sh
 source ${TPP_DIR}/commands/input.sh
 source ${TPP_DIR}/commands/output.sh
 source ${TPP_DIR}/commands/expected.sh
-
-source ${TPP_DIR}/commands/install.sh
 
 tpp_version() {
     local tpp_version=$(cat ${TPP_DIR}/config/VERSION)
@@ -42,14 +42,15 @@ code compilation, testing, and debugging time.
 
  Find more information at: https://github.com/Kleiber/tpp
 
-Usage:  kad COMMAND [OPTIONS]
+Usage:  tpp COMMAND [OPTIONS]
 
 Commands:
+  add       Add a new test case (input + expected pair) to the solution
   build     Compile the .cpp file into the solution
+  clone     Clone an existing solution as a starting point
   exp       Open expected file into the solution
   init      Init a new solution with the specified name
   in        Open input file into the solution
-  install   Install configuration to Vim editor
   judge     Set a judge name value to the solution
   ls        List all solutions in your workspace
   open      Open .cpp file into the solution
@@ -72,9 +73,17 @@ tpp_cmd() {
     local command=${1}
 
     case ${command} in
+        add)
+            shift
+            add_cmd ${@}
+            ;;
         build)
             shift
             build_cmd ${@}
+            ;;
+        clone)
+            shift
+            clone_cmd ${@}
             ;;
         exp)
             shift
@@ -87,10 +96,6 @@ tpp_cmd() {
         in)
             shift
             input_cmd ${@}
-            ;;
-        install)
-            shift
-            install_cmd ${@}
             ;;
         judge)
             shift
