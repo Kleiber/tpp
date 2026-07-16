@@ -79,6 +79,7 @@ add [name]              Add a new test case (input + expected pair)
 build [name]            Compile the .cpp file
 run [case] [name]       Compile and run (interactive or with input file)
 test [name]             Compile, run and test all cases
+dif [case] [name]       Show side-by-side diff between expected and output
 prepare [name]          Generate submission file without debug references
 open [name]             Open .cpp file in editor
 in [case] [name]        Open input file
@@ -110,6 +111,8 @@ When using `open` command, the following vim commands are available:
 :run 1          Save + run with case 1
 :build          Save + build
 :prepare        Save + prepare
+:dif            Show diff for all cases
+:dif 1          Show diff for case 1
 :add            Add new test case
 :in 1           Edit input case 1
 :exp 2          Edit expected case 2
@@ -289,6 +292,13 @@ Hello World!
 
 $ test
 Case 1: PASSED (0.04s)
+
+$ dif 1
+     │ Expected                        │ Output
+─────┼─────────────────────────────────┼──────────────────────────
+   1 │ Hello World!                 1  │ Hello World!
+
+  ✓ All lines match
 
 $ list
 SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
