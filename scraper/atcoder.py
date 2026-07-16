@@ -57,16 +57,17 @@ class AtCoderParser:
     def parse_name(name):
         """Extract contest_id and task_id from name like 'abc466_a'"""
         if '_' in name:
-            parts = name.split('_')
+            parts = name.split('_', 1)
             contest_id = parts[0]
             task_id = name
         else:
             # abc466a -> contest: abc466, task: abc466_a
-            for i, c in enumerate(name):
-                if c.isalpha() and i > 3 and not name[i-1].isalpha():
-                    contest_id = name[:i]
-                    task_id = f"{contest_id}_{name[i:]}"
-                    break
+            # Find where the prefix letters end and digits begin, then find trailing letter
+            import re
+            m = re.match(r'^([a-z]+\d+)([a-z]\d*)$', name)
+            if m:
+                contest_id = m.group(1)
+                task_id = f"{contest_id}_{m.group(2)}"
             else:
                 return None, None
 

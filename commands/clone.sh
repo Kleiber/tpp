@@ -5,15 +5,15 @@
 set -e
 
 clone_tpp_solution() {
-    local source=${1}
-    local target=${2}
+    local source="${1}"
+    local target="${2}"
 
-    if [[ ! ${source} ]] || [[ ! ${target} ]]; then
+    if [[ ! "${source}" ]] || [[ ! "${target}" ]]; then
         echo "Error: source and target names are required." >&2
         exit 1
     fi
 
-    if ! isValidName ${target}; then
+    if ! isValidName "${target}"; then
         echo "Error: invalid solution name '${target}'." >&2
         exit 1
     fi
@@ -21,42 +21,36 @@ clone_tpp_solution() {
     local sourceDir="${TPP_WORKSPACE}/${source}"
     local targetDir="${TPP_WORKSPACE}/${target}"
 
-    if ! dirExists ${sourceDir}; then
+    if ! dirExists "${sourceDir}"; then
         echo "Error: '${source}' solution does not exist." >&2
         exit 1
     fi
 
-    if dirExists ${targetDir}; then
+    if dirExists "${targetDir}"; then
         echo "Error: '${target}' solution already exists." >&2
         exit 1
     fi
 
-    # copy solution directory
-    cp -r ${sourceDir} ${targetDir}
+    cp -r "${sourceDir}" "${targetDir}"
 
-    # rename cpp file
     local sourceCpp="${targetDir}/${source}.${EXTENSION_FILE}"
     local targetCpp="${targetDir}/${target}.${EXTENSION_FILE}"
-    if fileExists ${sourceCpp}; then
-        mv ${sourceCpp} ${targetCpp}
+    if fileExists "${sourceCpp}"; then
+        mv "${sourceCpp}" "${targetCpp}"
     fi
 
-    # rename ready file if exists
+    # Don't carry over old ready file or build binary
     local sourceReady="${targetDir}/${source}_ready.${EXTENSION_FILE}"
-    local targetReady="${targetDir}/${target}_ready.${EXTENSION_FILE}"
-    if fileExists ${sourceReady}; then
-        rm ${sourceReady}
+    if fileExists "${sourceReady}"; then
+        rm "${sourceReady}"
     fi
 
-    # remove build executable
     local buildFile="${targetDir}/${BUILD}"
-    if fileExists ${buildFile}; then
-        rm ${buildFile}
+    if fileExists "${buildFile}"; then
+        rm "${buildFile}"
     fi
 
-    # update config
     local configFile="${targetDir}/${CONFIG_DIR}/${CONFIG_FILE}"
-    local create=$(get_create_from_config "${configFile}")
     local judge=$(get_judge_name_from_config "${configFile}")
     local tag=$(get_tag_name_from_config "${configFile}")
 
@@ -85,10 +79,10 @@ clone_cmd() {
         exit 1
     fi
 
-    if [[ ${1} == "--help" ]] || [[ ${1} == "-h" ]]; then
+    if [[ "${1}" == "--help" ]] || [[ "${1}" == "-h" ]]; then
         clone_help
         exit 0
     fi
 
-    clone_tpp_solution ${1} ${2}
+    clone_tpp_solution "${1}" "${2}"
 }

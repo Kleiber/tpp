@@ -5,26 +5,21 @@
 set -e
 
 add_tpp_case() {
-    local name=${1}
+    local name="${1}"
 
-    resolve_solution ${name}
+    resolve_solution "${name}"
 
-    # get next case number
     local count=$(get_case_count "${SOL_DIR}")
     local next=$((count + 1))
 
-    local inFile=$(get_input_file "${SOL_DIR}" ${next})
-    local expFile=$(get_expected_file "${SOL_DIR}" ${next})
+    local inFile=$(get_input_file "${SOL_DIR}" "${next}")
+    local expFile=$(get_expected_file "${SOL_DIR}" "${next}")
 
-    # create new case files
     touch "${inFile}" "${expFile}"
 
-    echo "Case ${next} created: $(basename ${inFile}), $(basename ${expFile})"
-
-    # last update
+    echo "Case ${next} created: $(basename "${inFile}"), $(basename "${expFile}")"
     set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 
-    # open both files in editor
     ${TPP_IDE} "${inFile}" "${expFile}"
 }
 
@@ -49,13 +44,13 @@ add_cmd() {
         exit 1
     fi
 
-    local argument=${1}
+    local argument="${1}"
     case ${argument} in
         --help | -h)
             add_help
             ;;
         *)
-            add_tpp_case ${argument}
+            add_tpp_case "${argument}"
             ;;
     esac
 }

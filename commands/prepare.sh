@@ -4,30 +4,28 @@
 
 set -e
 
-# prepate file to submission by cleaning debug reference and its usage
 function prepare_tpp_solution() {
-    local name=${1}
+    local name="${1}"
 
-    resolve_solution ${name}
+    resolve_solution "${name}"
 
     if ! fileExists "${SOL_FILENAME}"; then
-        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain the cpp file." >&2
+        echo "Error: '$(basename "${SOL_FILENAME%.*}")' solution does not contain the cpp file." >&2
         exit 1
     fi
 
     local filenameReady="${SOL_FILENAME%.*}_ready.${EXTENSION_FILE}"
     local caseCount=$(get_case_count "${SOL_DIR}")
 
-    # run tests on ready file
     local allPassed=true
     if [[ ${caseCount} -gt 0 ]]; then
         prepare_cpp_file "${SOL_FILENAME}"
         build_cpp_file "${filenameReady}" "${SOL_EXEC}"
 
         for i in $(seq 1 ${caseCount}); do
-            local inFile=$(get_input_file "${SOL_DIR}" ${i})
-            local outFile=$(get_output_file "${SOL_DIR}" ${i})
-            local expFile=$(get_expected_file "${SOL_DIR}" ${i})
+            local inFile=$(get_input_file "${SOL_DIR}" "${i}")
+            local outFile=$(get_output_file "${SOL_DIR}" "${i}")
+            local expFile=$(get_expected_file "${SOL_DIR}" "${i}")
 
             if isEmpty "${inFile}"; then
                 continue
@@ -48,13 +46,13 @@ function prepare_tpp_solution() {
 
         if ${allPassed}; then
             set_test_status_into_config "${SOL_CONFIG}" "Passed"
-            echo -e "${BGreen}'$(basename ${filenameReady})' TEST PASSED!${ColorOff}"
+            echo -e "${BGreen}'$(basename "${filenameReady}")' TEST PASSED!${ColorOff}"
         else
             set_test_status_into_config "${SOL_CONFIG}" "Failed"
-            echo -e "${BRed}'$(basename ${filenameReady})' TEST FAILED!${ColorOff}"
+            echo -e "${BRed}'$(basename "${filenameReady}")' TEST FAILED!${ColorOff}"
 
-            # TPP_TEST=1: must pass to generate
-            if [[ ${TPP_TEST} == "1" ]]; then
+            # TPP_TEST=1: must pass to generate ready file
+            if [[ "${TPP_TEST}" == "1" ]]; then
                 rm -f "${filenameReady}"
                 echo "Ready file removed. Fix your solution first."
                 set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
@@ -90,13 +88,13 @@ prepare_cmd() {
         exit 1
     fi
 
-    local argument=${1}
+    local argument="${1}"
     case ${argument} in
         --help | -h)
             prepare_help
             ;;
         *)
-            prepare_tpp_solution ${argument}
+            prepare_tpp_solution "${argument}"
             ;;
     esac
 }

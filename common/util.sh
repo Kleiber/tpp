@@ -3,58 +3,32 @@
 ## author: KleiberXD
 
 function fileExists() {
-  if [ -f $1 ] ; then
-    return 0
-  fi
-  return 1
+    [ -f "$1" ]
 }
 
 function dirExists() {
-  if [ -d $1 ] ; then
-    return 0
-  fi
-  return 1
-}
-
-function errorExists() {
-  if [ $? -eq 1 ] ; then
-    return 0
-  fi
-  return 1
+    [ -d "$1" ]
 }
 
 function isLinux() {
-  local os=$(uname)
-  if [[ "$os" == Linux* ]] ; then
-    return 0
-  fi
-  return 1
+    local os=$(uname)
+    [[ "$os" == Linux* ]]
 }
 
 function isWindows() {
-  local os=$(uname)
-  if [[ "$os" == CYGWIN* || "$os" == MINGW* ]] ; then
-    return 0
-  fi
-  return 1
+    local os=$(uname)
+    [[ "$os" == CYGWIN* || "$os" == MINGW* ]]
 }
 
 function isMac() {
-  local os=$(uname)
-  if [[ "$os" == Darwin* ]] ; then
-    return 0
-  fi
-  return 1
+    local os=$(uname)
+    [[ "$os" == Darwin* ]]
 }
 
 function isValidName() {
-  [[ $1 =~ ^[0-9a-zA-Z]+[0-9a-zA-Z._-]*$ ]]
+    [[ "$1" =~ ^[0-9a-zA-Z]+[0-9a-zA-Z._-]*$ ]]
 }
 
 function isEmpty() {
-  grep -q '[^[:space:]]' $1
-  if errorExists; then
-    return 0
-  fi
-  return 1
+    ! grep -q '[^[:space:]]' "$1"
 }

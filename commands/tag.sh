@@ -5,13 +5,13 @@
 set -e
 
 set_tag_to_tpp_solution() {
-    local tagName=${1}
-    local name=${2}
+    local tagName="${1}"
+    local name="${2}"
 
-    resolve_solution ${name}
+    resolve_solution "${name}"
 
     # set tag name
-    set_tag_name_into_config "${SOL_CONFIG}" ${tagName}
+    set_tag_name_into_config "${SOL_CONFIG}" "${tagName}"
 }
 
 tag_help() {
@@ -35,18 +35,18 @@ tag_cmd() {
         exit 1
     fi
 
-    if [[ ${1} == "--help" ]] || [[ ${1} == "-h" ]]; then
+    if [[ "${1}" == "--help" ]] || [[ "${1}" == "-h" ]]; then
         tag_help
         exit 0
     fi
 
-    if [[ ${1} == -* ]] || [[ ${2} == -* ]]; then
+    if [[ "${1}" == -* ]] || [[ "${2}" == -* ]]; then
         echo "Error: Invalid flag." >&2
         exit 1
     fi
 
-    local tagName=${1}
-    local name=${2}
+    local tagName="${1}"
+    local name="${2}"
 
-    set_tag_to_tpp_solution ${tagName} ${name}
+    set_tag_to_tpp_solution "${tagName}" "${name}"
 }

@@ -5,16 +5,16 @@
 set -e
 
 input_tpp_solution() {
-    local num=${1}
-    local name=${2}
+    local num="${1}"
+    local name="${2}"
 
-    resolve_solution ${name}
+    resolve_solution "${name}"
 
-    if [[ ! ${num} ]]; then
+    if [[ ! "${num}" ]]; then
         num=1
     fi
 
-    local inFile=$(get_input_file "${SOL_DIR}" ${num})
+    local inFile=$(get_input_file "${SOL_DIR}" "${num}")
 
     # create if doesn't exist
     touch "${inFile}"
@@ -45,15 +45,15 @@ input_cmd() {
         exit 1
     fi
 
-    if [[ ${1} == "--help" ]] || [[ ${1} == "-h" ]]; then
+    if [[ "${1}" == "--help" ]] || [[ "${1}" == "-h" ]]; then
         input_help
         exit 0
     fi
 
     # determine if first arg is a number or solution name
-    if [[ ${1} =~ ^[0-9]+$ ]]; then
-        input_tpp_solution ${1} ${2}
+    if [[ "${1}" =~ ^[0-9]+$ ]]; then
+        input_tpp_solution "${1}" "${2}"
     else
-        input_tpp_solution "" ${1}
+        input_tpp_solution "" "${1}"
     fi
 }

@@ -9,16 +9,14 @@ function run_tpp_solution() {
     local name=""
 
     # parse args: number = case, text = solution name
-    if [[ ${1} =~ ^[0-9]+$ ]]; then
-        num=${1}
-        name=${2}
+    if [[ "${1}" =~ ^[0-9]+$ ]]; then
+        num="${1}"
+        name="${2}"
     else
-        name=${1}
+        name="${1}"
     fi
 
-    resolve_solution ${name}
-
-    # build
+    resolve_solution "${name}"
     build_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}"
 
     local exec="${SOL_EXEC}"
@@ -26,12 +24,12 @@ function run_tpp_solution() {
         exec="./${exec}"
     fi
 
-    if [[ -z ${num} ]]; then
-        # interactive
+    if [[ -z "${num}" ]]; then
+        # interactive mode
         "${exec}"
     else
-        # run with file input (shows debug)
-        local inFile=$(get_input_file "${SOL_DIR}" ${num})
+        # run with file input (debug output visible on stderr)
+        local inFile=$(get_input_file "${SOL_DIR}" "${num}")
         if ! fileExists "${inFile}"; then
             echo "Error: case ${num} input file does not exist." >&2
             exit 1
@@ -39,7 +37,6 @@ function run_tpp_solution() {
         "${exec}" < "${inFile}"
     fi
 
-    # last update
     set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 }
 
@@ -64,10 +61,10 @@ run_cmd() {
         exit 1
     fi
 
-    if [[ ${1} == "--help" ]] || [[ ${1} == "-h" ]]; then
+    if [[ "${1}" == "--help" ]] || [[ "${1}" == "-h" ]]; then
         run_help
         exit 0
     fi
 
-    run_tpp_solution ${@}
+    run_tpp_solution "$@"
 }
