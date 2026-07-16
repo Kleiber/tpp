@@ -362,35 +362,13 @@ test_cpp_file() {
 prepare_cpp_file() {
     local cppFile=${1}
 
-    local cppTmpFile="$(dirname ${cppFile})/.$(basename ${cppFile})"
     local cppReadyFile="${cppFile%.*}_ready.${EXTENSION_FILE}"
 
-    # TODO: investigate how to put the below two sed command in one
-    # line, for some reason the next command is not working in Mac OS
-    # $ sed '/debug.h\|debug(/d' $1
-
-    # remove 'include' reference
-    sed '/debug.h/d' ${cppFile} > ${cppReadyFile}
+    sed '/debug\.h/d; /debugm(/d; /debug(/d; /debugt(/d' ${cppFile} > ${cppReadyFile}
     if errorExists; then
         echo "Error: '$(basename ${cppFile%.*})' solution prepare file failed." >&2
         exit 1
     fi
-
-    # remove 'debugm(<var>)' use
-    sed '/debugm(/d' ${cppReadyFile} > ${cppTmpFile}
-    if errorExists; then
-        echo "Error: '$(basename ${cppFile%.*})' solution prepare file failed." >&2
-        exit 1
-    fi
-
-    # remove 'debug(<var>)' use
-    sed '/debug(/d' ${cppTmpFile} > ${cppReadyFile}
-    if errorExists; then
-        echo "Error: '$(basename ${cppFile%.*})' solution prepare file failed." >&2
-        exit 1
-    fi
-
-    rm ${cppTmpFile}
 
     echo "'$(basename ${cppReadyFile})' was generated successfully!"
 }
