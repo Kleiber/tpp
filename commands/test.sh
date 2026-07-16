@@ -32,12 +32,12 @@ test_tpp_solution() {
         local expFile=$(get_expected_file "${SOL_DIR}" "${i}")
 
         if isEmpty "${inFile}"; then
-            echo "Case ${i}: EMPTY"
+            echo "Input ${i}: EMPTY"
             continue
         fi
 
         if ! fileExists "${expFile}"; then
-            echo "Case ${i}: EMPTY"
+            echo "Input ${i}: EMPTY"
             continue
         fi
 
@@ -50,22 +50,12 @@ test_tpp_solution() {
 
         if [[ ${runStatus} -eq 124 ]]; then
             allPassed=false
-            echo -e "${BRed}Case ${i}: TLE (${elapsed}s)${ColorOff}"
+            echo -e "${BRed}Input ${i}: TLE (${elapsed}s)${ColorOff}"
         elif [[ $(diff "${expFile}" "${outFile}") == "" ]]; then
-            echo -e "${BGreen}Case ${i}: PASSED (${elapsed}s)${ColorOff}"
+            echo -e "${BGreen}Input ${i}: PASSED (${elapsed}s)${ColorOff}"
         else
             allPassed=false
-            local lineNum=$(diff "${expFile}" "${outFile}" | head -1 | grep -o '^[0-9]*')
-            if [[ "${lineNum}" == "0" || -z "${lineNum}" ]]; then
-                lineNum=1
-            fi
-            local expLine=$(sed -n "${lineNum}p" "${expFile}")
-            local outLine=$(sed -n "${lineNum}p" "${outFile}")
-            echo -e "${BRed}Case ${i}: FAILED (${elapsed}s, line ${lineNum})${ColorOff}"
-            echo "  Expected:"
-            echo "    ${expLine}"
-            echo "  Output:"
-            echo "    ${outLine}"
+            echo -e "${BRed}Input ${i}: FAILED (${elapsed}s)${ColorOff}"
         fi
     done
 
