@@ -12,6 +12,9 @@ build_tpp_solution() {
     # build cpp file and create executable
     build_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}"
 
+    # reset test status (code changed)
+    set_test_status_into_config "${SOL_CONFIG}" "Pending"
+
     # last update
     set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 
