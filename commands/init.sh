@@ -9,7 +9,7 @@ function init_tpp_solution() {
     local dir="${TPP_WORKSPACE}/${name}"
     local configDir="${dir}/${CONFIG_DIR}"
 
-    if isValidName ${name}; then
+    if ! isValidName ${name}; then
         echo "Error: invalid solution name '${name}'." >&2
         exit 1
     fi

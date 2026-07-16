@@ -15,14 +15,27 @@ function get_name_from_config() {
     echo $name
 }
 
+function get_create_from_config() {
+    local configFile=${1}
+    local create=""
+
+    if isMac; then
+        create=$(perl -nle'print $& while m{create\s*=\s*\K[\w\s-._:]+}g' ${configFile})
+    else
+        create=$(cat ${configFile} | grep -oP "create\s*=\s*\K[\w\s._:-]+")
+    fi
+
+    echo $create
+}
+
 function get_judge_name_from_config() {
     local configFile=${1}
     local judgeName=""
 
     if isMac; then
-        judgeName=$(perl -nle'print $& while m{judge\s*=\s*\K[\w\s-._]+}g' ${configFile})
+        judgeName=$(perl -nle'print $& while m{judge\s*=\s*\K[^\n]+}g' ${configFile})
     else
-        judgeName=$(cat ${configFile} | grep -oP "judge\s*=\s*\K[\w\s._-]+")
+        judgeName=$(cat ${configFile} | grep -oP "judge\s*=\s*\K.+")
     fi
 
     echo $judgeName
@@ -33,9 +46,9 @@ function get_tag_name_from_config() {
     local tagName=""
 
     if isMac; then
-        tagName=$(perl -nle'print $& while m{tag\s*=\s*\K[\w\s-._]+}g' ${configFile})
+        tagName=$(perl -nle'print $& while m{tag\s*=\s*\K[^\n]+}g' ${configFile})
     else
-        tagName=$(cat ${configFile} | grep -oP "tag\s*=\s*\K[\w\s._-]+")
+        tagName=$(cat ${configFile} | grep -oP "tag\s*=\s*\K.+")
     fi
 
     echo $tagName
@@ -48,7 +61,7 @@ function get_last_update_from_config() {
     if isMac; then
         lastUpdate=$(perl -nle'print $& while m{update\s*=\s*\K[\w\s-._:]+}g' ${configFile})
     else
-        lastUpdate=$(cat ${configFile} | grep -oP "update\s*=\s*\K[\w\s._-]+")
+        lastUpdate=$(cat ${configFile} | grep -oP "update\s*=\s*\K[\w\s._:-]+")
     fi
 
     echo $lastUpdate
@@ -67,52 +80,107 @@ function get_test_status_from_config() {
     echo $testStatus
 }
 
+function write_config() {
+    local configFile=${1}
+    local name=${2}
+    local create=${3}
+    local judge=${4}
+    local tag=${5}
+    local update=${6}
+    local test=${7}
+
+    cat > "${configFile}" <<EOF
+[info]
+    name = ${name}
+    create = ${create}
+    judge = ${judge}
+    tag = ${tag}
+    update = ${update}
+    test = ${test}
+EOF
+}
+
 function set_judge_name_into_config() {
     local configFile=${1}
     local judgeName=${2}
-    local currentJudgeName=$(get_judge_name_from_config ${configFile})
 
-    sed -i -e "s/judge = ${currentJudgeName}/judge = ${judgeName}/g" ${configFile}
-    if errorExists; then
-        echo "Error: set judge name failed." >&2
-        exit 1
-    fi
+    local name=$(get_name_from_config "${configFile}")
+    local create=$(get_create_from_config "${configFile}")
+    local tag=$(get_tag_name_from_config "${configFile}")
+    local update=$(get_last_update_from_config "${configFile}")
+    local test=$(get_test_status_from_config "${configFile}")
+
+    write_config "${configFile}" "${name}" "${create}" "${judgeName}" "${tag}" "${update}" "${test}"
 }
 
 function set_tag_name_into_config() {
     local configFile=${1}
     local tagName=${2}
-    local currentTagName=$(get_tag_name_from_config ${configFile})
 
-    sed -i -e "s/tag = ${currentTagName}/tag = ${tagName}/g" ${configFile}
-    if errorExists; then
-        echo "Error: set tag name failed." >&2
-        exit 1
-    fi
+    local name=$(get_name_from_config "${configFile}")
+    local create=$(get_create_from_config "${configFile}")
+    local judge=$(get_judge_name_from_config "${configFile}")
+    local update=$(get_last_update_from_config "${configFile}")
+    local test=$(get_test_status_from_config "${configFile}")
+
+    write_config "${configFile}" "${name}" "${create}" "${judge}" "${tagName}" "${update}" "${test}"
 }
 
 function set_last_update_into_config() {
     local configFile=${1}
     local lastUpdate=${2}
-    local currentLastUpdate=$(get_last_update_from_config ${configFile})
 
-    sed -i -e "s/update = ${currentLastUpdate}/update = ${lastUpdate}/g" ${configFile}
-    if errorExists; then
-        echo "Error: set last update failed." >&2
-        exit 1
-    fi
+    local name=$(get_name_from_config "${configFile}")
+    local create=$(get_create_from_config "${configFile}")
+    local judge=$(get_judge_name_from_config "${configFile}")
+    local tag=$(get_tag_name_from_config "${configFile}")
+    local test=$(get_test_status_from_config "${configFile}")
+
+    write_config "${configFile}" "${name}" "${create}" "${judge}" "${tag}" "${lastUpdate}" "${test}"
 }
 
 function set_test_status_into_config() {
     local configFile=${1}
     local testStatus=${2}
-    local currentTestStatus=$(get_test_status_from_config ${configFile})
 
-    sed -i -e "s/test = ${currentTestStatus}/test = ${testStatus}/g" ${configFile}
-    if errorExists; then
-        echo "Error: set test status failed." >&2
-        exit 1
+    local name=$(get_name_from_config "${configFile}")
+    local create=$(get_create_from_config "${configFile}")
+    local judge=$(get_judge_name_from_config "${configFile}")
+    local tag=$(get_tag_name_from_config "${configFile}")
+    local update=$(get_last_update_from_config "${configFile}")
+
+    write_config "${configFile}" "${name}" "${create}" "${judge}" "${tag}" "${update}" "${testStatus}"
+}
+
+resolve_solution() {
+    local name=${1}
+
+    if [[ ! ${name} ]]; then
+        SOL_DIR="."
+        SOL_CONFIG="${CONFIG_DIR}/${CONFIG_FILE}"
+        if ! fileExists "${SOL_CONFIG}"; then
+            echo "Error: no solution found, tpp config file does not exist." >&2
+            exit 1
+        fi
+        SOL_FILENAME=$(get_name_from_config "${SOL_CONFIG}")
+    else
+        SOL_DIR="${TPP_WORKSPACE}/${name}"
+        SOL_CONFIG="${SOL_DIR}/${CONFIG_DIR}/${CONFIG_FILE}"
+        if ! dirExists "${SOL_DIR}"; then
+            echo "Error: '${name}' solution does not exist." >&2
+            exit 1
+        fi
+        if ! fileExists "${SOL_CONFIG}"; then
+            echo "Error: no solution found, tpp config file does not exist." >&2
+            exit 1
+        fi
+        SOL_FILENAME="${SOL_DIR}/$(get_name_from_config "${SOL_CONFIG}")"
     fi
+
+    SOL_EXEC="${SOL_DIR}/${BUILD}"
+    SOL_IN="${SOL_DIR}/${INPUT_FILE}"
+    SOL_OUT="${SOL_DIR}/${OUTPUT_FILE}"
+    SOL_EXP="${SOL_DIR}/${EXPECTED_FILE}"
 }
 
 build_cpp_file() {
@@ -148,17 +216,21 @@ run_cpp_file() {
         exit 1
     fi
 
+    if [[ "${exec}" != /* ]]; then
+        exec="./${exec}"
+    fi
+
     if isEmpty ${in}; then
-        "./${exec}"
+        "${exec}"
         if errorExists; then
             echo "Error: '$(basename ${cppFile})' execution failed." >&2
             exit 1
         fi
     else
         if ${show}; then
-            "./${exec}" < ${in}
+            "${exec}" < ${in}
         else
-            "./${exec}" < ${in} 2>/dev/null > ${out}
+            "${exec}" < ${in} 2>/dev/null > ${out}
         fi
 
         if errorExists; then

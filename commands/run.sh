@@ -7,52 +7,16 @@ set -e
 function run_tpp_solution() {
     local name=${1}
 
-    local dir=""
-    local filename=""
-    local configDir=${CONFIG_DIR}
-    local configFile="${CONFIG_DIR}/${CONFIG_FILE}"
-    local exec=${BUILD}
-    local in=${INPUT_FILE}
-    local out=${OUTPUT_FILE}
-
-    # check if the solution name is an argument
-    if [[ ! ${name} ]]; then
-        if ! fileExists ${configFile}; then
-            echo "Error: there is not a solution, tpp config file does not exist." >&2
-            exit 1
-        fi
-
-        filename=$(get_name_from_config ${configFile})
-    else
-        dir="${TPP_WORKSPACE}/${name}"
-        configDir="${dir}/${configDir}"
-        configFile="${dir}/${configFile}"
-        exec="${dir}/${exec}"
-        in="${dir}/${in}"
-        out="${dir}/${out}"
-
-        if ! dirExists ${dir}; then
-            echo "Error: '${name}' solution does not exist." >&2
-            exit 1
-        fi
-
-        if ! fileExists ${configFile}; then
-            echo "Error: there is not a solution, tpp config file does not exist." >&2
-            exit 1
-        fi
-
-        filename=$(get_name_from_config ${configFile})
-        filename="${dir}/${filename}"
-    fi
+    resolve_solution ${name}
 
     # build cpp file and create executable
-    build_cpp_file ${filename} ${exec}
+    build_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}"
 
     # run cpp executable
-    run_cpp_file ${filename} ${exec} ${in} ${out} true
+    run_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}" "${SOL_IN}" "${SOL_OUT}" true
 
     # last update
-    set_last_update_into_config ${configFile} "$(date +"%d-%m-%Y") $(date +"%T")"
+    set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 }
 
 run_help() {

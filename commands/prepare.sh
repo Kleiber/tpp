@@ -8,78 +8,40 @@ set -e
 function prepare_tpp_solution() {
     local name=${1}
 
-    local dir=""
-    local filename=""
-    local configDir=${CONFIG_DIR}
-    local configFile="${CONFIG_DIR}/${CONFIG_FILE}"
-    local exec=${BUILD}
-    local in=${INPUT_FILE}
-    local out=${OUTPUT_FILE}
-    local exp=${EXPECTED_FILE}
+    resolve_solution ${name}
 
-    # check if the solution name is an argument
-    if [[ ! ${name} ]]; then
-        if ! fileExists ${configFile}; then
-            echo "Error: there is not a solution, tpp config file does not exist." >&2
-            exit 1
-        fi
-
-        filename=$(get_name_from_config ${configFile})
-    else
-        dir="${TPP_WORKSPACE}/${name}"
-        configDir="${dir}/${configDir}"
-        configFile="${dir}/${configFile}"
-        exec="${dir}/${exec}"
-        in="${dir}/${in}"
-        out="${dir}/${out}"
-        exp="${dir}/${exp}"
-
-        if ! dirExists ${dir}; then
-            echo "Error: '${name}' solution does not exist." >&2
-            exit 1
-        fi
-
-        if ! fileExists ${configFile}; then
-            echo "Error: there is not a solution, tpp config file does not exist." >&2
-            exit 1
-        fi
-
-        filename=$(get_name_from_config ${configFile})
-        filename="${dir}/${filename}"
-    fi
-
-    if ! fileExists ${filename}; then
-        echo "Error: '$(basename ${filename%.*})' solution does not contain the cpp file." >&2
+    if ! fileExists "${SOL_FILENAME}"; then
+        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain the cpp file." >&2
         exit 1
     fi
 
-    # prepate cpp solution to submit
-    prepare_cpp_file ${filename}
+    # prepare cpp solution to submit
+    prepare_cpp_file "${SOL_FILENAME}"
 
     # prepare filename
-    local filenameReady="${filename%.*}_ready.${EXTENSION_FILE}"
+    local filenameReady="${SOL_FILENAME%.*}_ready.${EXTENSION_FILE}"
 
     # test prepare cpp solution and update status
     if [[ ${TPP_TEST} == "1" ]]; then
-        if isEmpty ${in}; then
-            echo "Error: '$(basename ${filename%.*})' solution does not contain input data."
+        if isEmpty "${SOL_IN}"; then
+            echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain input data."
             exit 1
         fi
 
-        if isEmpty ${exp}; then
-            echo "Error: '$(basename ${filename%.*})' solution does not contain expected data."
+        if isEmpty "${SOL_EXP}"; then
+            echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain expected data."
             exit 1
         fi
 
-        build_cpp_file ${filenameReady} ${exec}
+        build_cpp_file "${filenameReady}" "${SOL_EXEC}"
 
-        run_cpp_file ${filenameReady} ${exec} ${in} ${out} false
+        run_cpp_file "${filenameReady}" "${SOL_EXEC}" "${SOL_IN}" "${SOL_OUT}" false
 
-        test_cpp_file ${filenameReady} ${out} ${exp} ${configFile}
+        test_cpp_file "${filenameReady}" "${SOL_OUT}" "${SOL_EXP}" "${SOL_CONFIG}"
     fi
 
     # last update
-    set_last_update_into_config ${configFile} "$(date +"%d-%m-%Y") $(date +"%T")"
+    set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 }
 
 prepare_help() {

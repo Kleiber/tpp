@@ -42,7 +42,7 @@ code compilation, testing, and debugging time.
 
  Find more information at: https://github.com/Kleiber/tpp
 
-Usage:  kad COMMAND [OPTIONS]
+Usage:  tpp COMMAND [OPTIONS]
 
 Commands:
   build     Compile the .cpp file into the solution
