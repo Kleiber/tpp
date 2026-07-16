@@ -288,7 +288,7 @@ debug:67 myVariable : "tpp tool"  myStack: [')' '(']  myQueue: [(1,0) (0,1)]  my
 Hello World!
 
 $ test
-'hello.cpp' test PASSED!
+Case 1: PASSED (0.04s)
 
 $ list
 SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
@@ -296,7 +296,7 @@ hello                                             Passed         No        28-08
 
 $ prepare
 'hello_ready.cpp' was generated successfully!
-'hello_ready.cpp' test PASSED!
+'hello_ready.cpp' TEST PASSED!
 
 $ list
 SOLUTION NAME           JUDGE       TAG           TEST STATUS    READY     LAST UPDATE
