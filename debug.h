@@ -4,9 +4,14 @@
 #include <queue>
 #include <stack>
 #include <vector>
-#include <regex>
+#include <algorithm>
 
 using namespace std;
+
+// Forward declarations for template resolution
+template <typename A> string to_string(A a);
+template <typename A> string to_string(vector<A> a);
+template <typename A, typename B> string to_string(pair<A, B> p);
 
 #define debug(...) cerr<<"debug:"<<__LINE__<<" "<<#__VA_ARGS__<<": "<<to_string(__VA_ARGS__)<<endl
 #define debugm(...) cerr<<"debug:"<<__LINE__<<" ", debug_out_multiple(#__VA_ARGS__, __VA_ARGS__)
@@ -53,7 +58,7 @@ string to_string(tuple<A, B, C, D> p) {
 template <typename A>
 string to_string(vector<A> a) {
   string output = "\n[";
-    for (int i = 0; i < a.size(); i++) {
+    for (int i = 0; i < (int)a.size(); i++) {
         if(i > 0) output += " ";
         output += to_string(a[i]);
     }
@@ -62,32 +67,29 @@ string to_string(vector<A> a) {
 }
 
 template <typename A>
-string to_string(queue<A>& a) {
-  typedef typename std::queue<A>::container_type Container;
-  const auto containerPtr = reinterpret_cast<const Container*>(&a);
-
+string to_string(queue<A> a) {
   vector<A> tmp;
-  for(auto v : *containerPtr) tmp.push_back(v);
-
+  while (!a.empty()) {
+    tmp.push_back(a.front());
+    a.pop();
+  }
   return to_string(tmp);
 }
 
 template <typename A>
-string to_string(stack<A>& a) {
-  typedef typename std::stack<A>::container_type Container;
-  const auto containerPtr = reinterpret_cast<const Container*>(&a);
-
+string to_string(stack<A> a) {
   vector<A> tmp;
-  for(auto v : *containerPtr) tmp.push_back(v);
-  reverse(tmp.begin(), tmp.end());
-
+  while (!a.empty()) {
+    tmp.push_back(a.top());
+    a.pop();
+  }
   return to_string(tmp);
 }
 
 template <typename A, size_t R>
 string to_string(A (&a)[R]){
     string output = "\n[";
-    for (int i = 0; i < R; i++) {
+    for (int i = 0; i < (int)R; i++) {
         if(i > 0) output += " ";
         output += to_string(a[i]);
     }
@@ -98,7 +100,7 @@ string to_string(A (&a)[R]){
 template <typename A, size_t R, size_t C>
 string to_string(A (&a)[R][C]) {
     string output = "";
-    for (int i = 0; i < R; i++) {
+    for (int i = 0; i < (int)R; i++) {
         output += to_string(a[i]);
     }
     output += "";
@@ -118,6 +120,15 @@ string to_string(A a) {
   return output;
 }
 
+static inline string remove_newlines(const string& s) {
+  string result;
+  result.reserve(s.size());
+  for (char c : s) {
+    if (c != '\n') result += c;
+  }
+  return result;
+}
+
 void debug_out_multiple(string names) { cerr << endl; }
 
 template <typename Head, typename... Tail>
@@ -130,9 +141,7 @@ void debug_out_multiple(string names, Head H, Tail... T) {
   }
 
   auto output = to_string(H);
-
-  regex remove_newlines("\n+");
-  output = regex_replace(output, remove_newlines, "");
+  output = remove_newlines(output);
 
   cerr<<name<<": "<<output<<"  ";
   debug_out_multiple(names, T...);

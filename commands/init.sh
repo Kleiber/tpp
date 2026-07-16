@@ -5,51 +5,44 @@
 set -e
 
 function init_tpp_solution() {
-    local name=${1}
+    local name="${1}"
     local dir="${TPP_WORKSPACE}/${name}"
     local configDir="${dir}/${CONFIG_DIR}"
 
-    if ! isValidName ${name}; then
+    if ! isValidName "${name}"; then
         echo "Error: invalid solution name '${name}'." >&2
         exit 1
     fi
 
-    if dirExists ${dir}; then
+    if dirExists "${dir}"; then
         echo "Error: '${name}' solution already exists." >&2
         exit 1
     fi
 
-    # create solution and tpp config directories
     mkdir -p "${dir}" "${configDir}"
+    touch "$(get_input_file "${dir}" 1)" "$(get_expected_file "${dir}" 1)"
 
-    # create input and expected files
-    touch "$(get_input_file ${dir} 1)" "$(get_expected_file ${dir} 1)"
-
-    # create tpp config file
     local configFile="${configDir}/${CONFIG_FILE}"
     local filename="${name}.${EXTENSION_FILE}"
+    config_template "${filename}" "${configFile}"
 
-    config_template ${filename} ${configFile}
-
-    # define reference to debug.h
-    local debugRefPath=${TPP_DIR}
+    # debug.h path must be absolute for the #include directive
+    local debugRefPath="${TPP_DIR}"
 
     if isWindows; then
         local partition="${debugRefPath:1:1}"
         debugRefPath="${partition^}:${debugRefPath:2}"
     fi
 
-    # generate cpp template file
     if isMac; then
-        mac_os_template ${dir} ${filename} ${debugRefPath}
+        mac_os_template "${dir}" "${filename}" "${debugRefPath}"
     else
-        linux_os_template ${dir} ${filename} ${debugRefPath}
+        linux_os_template "${dir}" "${filename}" "${debugRefPath}"
     fi
 
-    # try to fill samples inputs and outputs
-    if [[ ${TPP_FILL} == "1" ]]; then
+    if [[ "${TPP_FILL}" == "1" ]]; then
         echo "Loading samples..."
-        python3 -W ignore ${TPP_DIR}/scraper/scraper.py ${name} ${dir}
+        python3 -W ignore "${TPP_DIR}/scraper/scraper.py" "${name}" "${dir}"
     fi
 
     echo "'${name}' solution was initialized successfully!"
@@ -75,13 +68,13 @@ init_cmd() {
         exit 1
     fi
 
-    local argument=${1}
+    local argument="${1}"
     case ${argument} in
         --help | -h)
             init_help
             ;;
         *)
-            init_tpp_solution ${argument}
+            init_tpp_solution "${argument}"
             ;;
     esac
 }

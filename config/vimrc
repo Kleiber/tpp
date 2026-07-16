@@ -70,7 +70,9 @@ cnoreabbrev add Add
 :command! -nargs=? In w | execute '!tpp in ' . (<q-args> == '' ? '1' : <q-args>)
 :command! -nargs=? Out w | execute '!tpp out ' . (<q-args> == '' ? '1' : <q-args>)
 :command! -nargs=? Exp w | execute '!tpp exp ' . (<q-args> == '' ? '1' : <q-args>)
+:command! -nargs=? Dif execute '!tpp dif ' . (<q-args> == '' ? '' : <q-args>)
 
 cnoreabbrev in In
 cnoreabbrev out Out
 cnoreabbrev exp Exp
+cnoreabbrev dif Dif

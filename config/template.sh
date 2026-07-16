@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
 ## author: KleiberXD
-
-set -e
+## C++ template generators for new solutions
 
 function linux_os_template() {
-    local dir=${1}
-    local filename=${2}
-    local debugRefPath=${3}
+    local dir="${1}"
+    local filename="${2}"
+    local debugRefPath="${3}"
 
     cat > "${dir}/${filename}" <<-EOF
 /**
@@ -33,10 +32,10 @@ int main() {
 EOF
 }
 
-function mac_os_template {
-    local dir=${1}
-    local filename=${2}
-    local debugRefPath=${3}
+function mac_os_template() {
+    local dir="${1}"
+    local filename="${2}"
+    local debugRefPath="${3}"
 
     cat > "${dir}/${filename}" <<-EOF
 /**
@@ -78,12 +77,12 @@ EOF
 }
 
 config_template() {
-    local filename=${1}
-    local configFile=${2}
+    local filename="${1}"
+    local configFile="${2}"
 
-    cat > ${configFile} <<-EOF
+    cat > "${configFile}" <<-EOF
 [info]
-    name = $filename
+    name = ${filename}
     create = $(date +"%d-%m-%Y %H:%M:%S")
     judge = empty
     tag = empty

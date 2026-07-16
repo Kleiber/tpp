@@ -5,16 +5,16 @@
 set -e
 
 expected_tpp_solution() {
-    local num=${1}
-    local name=${2}
+    local num="${1}"
+    local name="${2}"
 
-    resolve_solution ${name}
+    resolve_solution "${name}"
 
-    if [[ ! ${num} ]]; then
+    if [[ ! "${num}" ]]; then
         num=1
     fi
 
-    local expFile=$(get_expected_file "${SOL_DIR}" ${num})
+    local expFile=$(get_expected_file "${SOL_DIR}" "${num}")
 
     # create if doesn't exist
     touch "${expFile}"
@@ -45,14 +45,14 @@ expected_cmd() {
         exit 1
     fi
 
-    if [[ ${1} == "--help" ]] || [[ ${1} == "-h" ]]; then
+    if [[ "${1}" == "--help" ]] || [[ "${1}" == "-h" ]]; then
         expected_help
         exit 0
     fi
 
-    if [[ ${1} =~ ^[0-9]+$ ]]; then
-        expected_tpp_solution ${1} ${2}
+    if [[ "${1}" =~ ^[0-9]+$ ]]; then
+        expected_tpp_solution "${1}" "${2}"
     else
-        expected_tpp_solution "" ${1}
+        expected_tpp_solution "" "${1}"
     fi
 }

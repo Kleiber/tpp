@@ -5,19 +5,19 @@
 set -e
 
 test_tpp_solution() {
-    local name=${1}
+    local name="${1}"
 
-    resolve_solution ${name}
+    resolve_solution "${name}"
 
     if ! fileExists "${SOL_FILENAME}"; then
-        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain the cpp file." >&2
+        echo "Error: '$(basename "${SOL_FILENAME%.*}")' solution does not contain the cpp file." >&2
         exit 1
     fi
 
     local caseCount=$(get_case_count "${SOL_DIR}")
 
     if [[ ${caseCount} -eq 0 ]]; then
-        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain test cases."
+        echo "Error: '$(basename "${SOL_FILENAME%.*}")' solution does not contain test cases."
         exit 1
     fi
 
@@ -27,9 +27,9 @@ test_tpp_solution() {
     local ranAny=false
 
     for i in $(seq 1 ${caseCount}); do
-        local inFile=$(get_input_file "${SOL_DIR}" ${i})
-        local outFile=$(get_output_file "${SOL_DIR}" ${i})
-        local expFile=$(get_expected_file "${SOL_DIR}" ${i})
+        local inFile=$(get_input_file "${SOL_DIR}" "${i}")
+        local outFile=$(get_output_file "${SOL_DIR}" "${i}")
+        local expFile=$(get_expected_file "${SOL_DIR}" "${i}")
 
         if isEmpty "${inFile}"; then
             echo "Case ${i}: EMPTY"
@@ -74,18 +74,16 @@ test_tpp_solution() {
         exit 0
     fi
 
-    # update test status
     if ${allPassed}; then
         set_test_status_into_config "${SOL_CONFIG}" "Passed"
         echo ""
-        echo -e "${BGreen}'$(basename ${SOL_FILENAME})' TEST PASSED!${ColorOff}"
+        echo -e "${BGreen}'$(basename "${SOL_FILENAME}")' TEST PASSED!${ColorOff}"
     else
         set_test_status_into_config "${SOL_CONFIG}" "Failed"
         echo ""
-        echo -e "${BRed}'$(basename ${SOL_FILENAME})' TEST FAILED!${ColorOff}"
+        echo -e "${BRed}'$(basename "${SOL_FILENAME}")' TEST FAILED!${ColorOff}"
     fi
 
-    # last update
     set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 }
 
@@ -110,13 +108,13 @@ test_cmd() {
         exit 1
     fi
 
-    local argument=${1}
+    local argument="${1}"
     case ${argument} in
         --help | -h)
             test_help
             ;;
         *)
-            test_tpp_solution ${argument}
+            test_tpp_solution "${argument}"
             ;;
     esac
 }

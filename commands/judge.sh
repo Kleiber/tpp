@@ -5,13 +5,13 @@
 set -e
 
 set_judge_to_tpp_solution() {
-    local judgeName=${1}
-    local name=${2}
+    local judgeName="${1}"
+    local name="${2}"
 
-    resolve_solution ${name}
+    resolve_solution "${name}"
 
     # set judge name
-    set_judge_name_into_config "${SOL_CONFIG}" ${judgeName}
+    set_judge_name_into_config "${SOL_CONFIG}" "${judgeName}"
 }
 
 judge_help() {
@@ -35,18 +35,18 @@ judge_cmd() {
         exit 1
     fi
 
-    if [[ ${1} == "--help" ]] || [[ ${1} == "-h" ]]; then
+    if [[ "${1}" == "--help" ]] || [[ "${1}" == "-h" ]]; then
         judge_help
         exit 0
     fi
 
-    if [[ ${1} == -* ]] || [[ ${2} == -* ]]; then
+    if [[ "${1}" == -* ]] || [[ "${2}" == -* ]]; then
         echo "Error: Invalid flag." >&2
         exit 1
     fi
 
-    local judgeName=${1}
-    local name=${2}
+    local judgeName="${1}"
+    local name="${2}"
 
-    set_judge_to_tpp_solution ${judgeName} ${name}
+    set_judge_to_tpp_solution "${judgeName}" "${name}"
 }

@@ -5,20 +5,17 @@
 set -e
 
 build_tpp_solution() {
-    local name=${1}
+    local name="${1}"
 
-    resolve_solution ${name}
+    resolve_solution "${name}"
 
-    # build cpp file and create executable
     build_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}"
 
-    # reset test status (code changed)
+    # reset test status (code changed, previous results invalid)
     set_test_status_into_config "${SOL_CONFIG}" "Pending"
-
-    # last update
     set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 
-    echo "'$(basename ${SOL_FILENAME%.*})' solution was compiled successfully!"
+    echo "'$(basename "${SOL_FILENAME%.*}")' solution was compiled successfully!"
 }
 
 build_help() {
@@ -42,13 +39,13 @@ build_cmd() {
         exit 1
     fi
 
-    local argument=${1}
+    local argument="${1}"
     case ${argument} in
         --help | -h)
             build_help
             ;;
         *)
-            build_tpp_solution ${argument}
+            build_tpp_solution "${argument}"
             ;;
     esac
 }

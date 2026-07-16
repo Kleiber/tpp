@@ -5,19 +5,19 @@
 set -e
 
 output_tpp_solution() {
-    local num=${1}
-    local name=${2}
+    local num="${1}"
+    local name="${2}"
 
-    resolve_solution ${name}
+    resolve_solution "${name}"
 
-    if [[ ! ${num} ]]; then
+    if [[ ! "${num}" ]]; then
         num=1
     fi
 
-    local outFile=$(get_output_file "${SOL_DIR}" ${num})
+    local outFile=$(get_output_file "${SOL_DIR}" "${num}")
 
     if ! fileExists "${outFile}"; then
-        echo "Error: '$(basename ${SOL_FILENAME%.*})' solution does not contain output file for case ${num}." >&2
+        echo "Error: '$(basename "${SOL_FILENAME%.*}")' solution does not contain output file for case ${num}." >&2
         exit 1
     fi
 
@@ -47,14 +47,14 @@ output_cmd() {
         exit 1
     fi
 
-    if [[ ${1} == "--help" ]] || [[ ${1} == "-h" ]]; then
+    if [[ "${1}" == "--help" ]] || [[ "${1}" == "-h" ]]; then
         output_help
         exit 0
     fi
 
-    if [[ ${1} =~ ^[0-9]+$ ]]; then
-        output_tpp_solution ${1} ${2}
+    if [[ "${1}" =~ ^[0-9]+$ ]]; then
+        output_tpp_solution "${1}" "${2}"
     else
-        output_tpp_solution "" ${1}
+        output_tpp_solution "" "${1}"
     fi
 }

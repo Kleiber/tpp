@@ -5,62 +5,56 @@
 set -e
 
 check_submit_setup() {
-    if [[ ${TPP_GITHUB} == "tpp_github" ]]; then
+    if [[ "${TPP_GITHUB}" == "tpp_github" ]]; then
         echo "Error: 'TPP_GITHUB' is unset, please set a value." >&2
         exit 1
     fi
 
-    if [[ ${TPP_REPO} == "tpp_repo" ]]; then
+    if [[ "${TPP_REPO}" == "tpp_repo" ]]; then
         echo "Error: 'TPP_REPO' is unset, please set a value." >&2
         exit 1
     fi
 
-    if [[ ${TPP_BRANCH} == "tpp_branch" ]]; then
+    if [[ "${TPP_BRANCH}" == "tpp_branch" ]]; then
         echo "Error: 'TPP_BRANCH' is unset, please set a value." >&2
         exit 1
     fi
 }
 
 submit_tpp_solution() {
-    local name=${1}
+    local name="${1}"
 
-    resolve_solution ${name}
+    resolve_solution "${name}"
 
-    # clone tpp github repo if it does not exist yet
-    repoGithub=$(basename ${TPP_GITHUB})
-    repoDir=${TPP_REPO}
+    local repoDir="${TPP_REPO}"
 
-    if ! dirExists ${repoDir}; then
+    if ! dirExists "${repoDir}"; then
         echo "Cloning into '${repoDir}'..."
-        git clone --quiet ${TPP_GITHUB} ${repoDir}
+        git clone --quiet "${TPP_GITHUB}" "${repoDir}"
     fi
 
-    # check judge name and retrieve tag name
     local tagName=$(get_tag_name_from_config "${SOL_CONFIG}")
     local judgeName=$(get_judge_name_from_config "${SOL_CONFIG}")
-    if [[ ${judgeName} == "empty" ]]; then
+    if [[ "${judgeName}" == "empty" ]]; then
         echo "Error: judge name unset. please set a value." >&2
         exit 1
     fi
 
     local judgeDir=""
-    if [[ ${tagName} == "empty" ]]; then
+    if [[ "${tagName}" == "empty" ]]; then
         judgeDir="${judgeName}"
     else
         judgeDir="${judgeName}/${tagName}"
     fi
 
     local targetDir="${repoDir}/${judgeDir}"
-
-    # check test status
     local testStatus=$(get_test_status_from_config "${SOL_CONFIG}")
 
-    if [[ ${TPP_TEST} == "1" && ${testStatus} != "Passed" ]]; then
+    if [[ "${TPP_TEST}" == "1" && "${testStatus}" != "Passed" ]]; then
         echo "Error: The tests did not pass, first test your solution!" >&2
         exit 1
     fi
 
-    # check prepare solution
     local filenameReady="${SOL_FILENAME%.*}_ready.${EXTENSION_FILE}"
 
     if ! fileExists "${filenameReady}"; then
@@ -68,28 +62,26 @@ submit_tpp_solution() {
         exit 1
     fi
 
-    # checkout to the tpp branch and update it
-    pushd ${repoDir} > /dev/null
-    git checkout --quiet ${TPP_BRANCH}
-    git pull --quiet origin ${TPP_BRANCH}
+    # Sync with remote branch before pushing
+    pushd "${repoDir}" > /dev/null
+    git checkout --quiet "${TPP_BRANCH}"
+    git pull --quiet origin "${TPP_BRANCH}"
     popd > /dev/null
 
-    # copy solution to repo
-    mkdir -p ${targetDir}
-    cp ${filenameReady} ${targetDir}
+    mkdir -p "${targetDir}"
+    cp "${filenameReady}" "${targetDir}"
 
-    # request commit message
     echo "Insert a commit message and press enter:"
     read commitMessage
 
-    # push changes to github repo
-    echo "Pushing '$(basename ${filenameReady})' to '${judgeDir}' directory..."
-    pushd ${repoDir} > /dev/null
-    git add .
+    # Stage only the target file (avoid committing unrelated files)
+    echo "Pushing '$(basename "${filenameReady}")' to '${judgeDir}' directory..."
+    pushd "${repoDir}" > /dev/null
+    git add "${judgeDir}/$(basename "${filenameReady}")"
     git commit --quiet --message "${commitMessage}"
-    git push --quiet origin ${TPP_BRANCH}
+    git push --quiet origin "${TPP_BRANCH}"
     popd > /dev/null
-    echo "'$(basename ${SOL_FILENAME%.*})' solution was upload to the github repo successfully!"
+    echo "'$(basename "${SOL_FILENAME%.*}")' solution was upload to the github repo successfully!"
 }
 
 submit_help() {
@@ -114,14 +106,14 @@ submit_cmd() {
         exit 1
     fi
 
-    local argument=${1}
+    local argument="${1}"
     case ${argument} in
         --help | -h)
             submit_help
             ;;
         *)
             check_submit_setup
-            submit_tpp_solution ${argument}
+            submit_tpp_solution "${argument}"
             ;;
     esac
 }
