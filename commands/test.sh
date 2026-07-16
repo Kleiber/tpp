@@ -77,8 +77,12 @@ test_tpp_solution() {
     # update test status
     if ${allPassed}; then
         set_test_status_into_config "${SOL_CONFIG}" "Passed"
+        echo ""
+        echo -e "${BGreen}'$(basename ${SOL_FILENAME})' TEST PASSED!${ColorOff}"
     else
         set_test_status_into_config "${SOL_CONFIG}" "Failed"
+        echo ""
+        echo -e "${BRed}'$(basename ${SOL_FILENAME})' TEST FAILED!${ColorOff}"
     fi
 
     # last update
