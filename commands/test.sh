@@ -37,12 +37,12 @@ test_tpp_solution() {
         local expFile=$(get_expected_file "${SOL_DIR}" ${i})
 
         if isEmpty "${inFile}"; then
-            echo "Case ${i}: SKIPPED (empty input)"
+            echo "Case ${i}: EMPTY"
             continue
         fi
 
-        if ! fileExists "${expFile}" || isEmpty "${expFile}"; then
-            echo "Case ${i}: SKIPPED (no expected output)"
+        if ! fileExists "${expFile}"; then
+            echo "Case ${i}: EMPTY"
             continue
         fi
 
@@ -61,6 +61,9 @@ test_tpp_solution() {
         else
             allPassed=false
             local lineNum=$(diff "${expFile}" "${outFile}" | head -1 | grep -o '^[0-9]*')
+            if [[ "${lineNum}" == "0" || -z "${lineNum}" ]]; then
+                lineNum=1
+            fi
             local expLine=$(sed -n "${lineNum}p" "${expFile}")
             local outLine=$(sed -n "${lineNum}p" "${outFile}")
             echo -e "${BRed}Case ${i}: FAILED (${elapsed}s, line ${lineNum})${ColorOff}"
