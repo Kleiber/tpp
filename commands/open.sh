@@ -17,13 +17,18 @@ open_tpp_solution() {
     # last update
     set_last_update_into_config "${SOL_CONFIG}" "$(date +"%d-%m-%Y") $(date +"%T")"
 
-    # open source code using vim editor
+    # open source code
+    local ide_cmd="${TPP_IDE}"
+    if [[ "${TPP_IDE}" == "vi" || "${TPP_IDE}" == "vim" ]]; then
+        ide_cmd="${TPP_IDE} -u ${TPP_VIMRC}"
+    fi
+
     if [[ ${TPP_VIEWS} == "1" ]]; then
         local inFile=$(get_input_file "${SOL_DIR}" 1)
         local expFile=$(get_expected_file "${SOL_DIR}" 1)
-        ${TPP_IDE} -O "${SOL_FILENAME}" "${expFile}" -c "winc l" -c "sp ${inFile}" -c "vertical res 60" -c "winc h"
+        ${ide_cmd} -O "${SOL_FILENAME}" "${expFile}" -c "winc l" -c "sp ${inFile}" -c "vertical res 60" -c "winc h"
     else
-        ${TPP_IDE} "${SOL_FILENAME}"
+        ${ide_cmd} "${SOL_FILENAME}"
     fi
 }
 
