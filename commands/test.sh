@@ -47,15 +47,27 @@ test_tpp_solution() {
         fi
 
         ranAny=true
-        run_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}" "${inFile}" "${outFile}" false
+        local runStatus=0
+        local startTime=$(perl -MTime::HiRes=time -e 'printf "%.2f\n", time()')
+        run_cpp_file "${SOL_FILENAME}" "${SOL_EXEC}" "${inFile}" "${outFile}" false || runStatus=$?
+        local endTime=$(perl -MTime::HiRes=time -e 'printf "%.2f\n", time()')
+        local elapsed=$(printf "%.2f" $(echo "${endTime} - ${startTime}" | bc))
 
-        if [[ $(diff "${expFile}" "${outFile}") == "" ]]; then
-            echo -e "${BGreen}Case ${i}: PASSED${ColorOff}"
+        if [[ ${runStatus} -eq 124 ]]; then
+            allPassed=false
+            echo -e "${BRed}Case ${i}: TLE (${elapsed}s)${ColorOff}"
+        elif [[ $(diff "${expFile}" "${outFile}") == "" ]]; then
+            echo -e "${BGreen}Case ${i}: PASSED (${elapsed}s)${ColorOff}"
         else
             allPassed=false
-            echo -e "${BRed}Case ${i}: FAILED${ColorOff}"
-            diff "${expFile}" "${outFile}" | head -10 || true
-            echo ""
+            local lineNum=$(diff "${expFile}" "${outFile}" | head -1 | grep -o '^[0-9]*')
+            local expLine=$(sed -n "${lineNum}p" "${expFile}")
+            local outLine=$(sed -n "${lineNum}p" "${outFile}")
+            echo -e "${BRed}Case ${i}: FAILED (${elapsed}s, line ${lineNum})${ColorOff}"
+            echo "  Expected:"
+            echo "    ${expLine}"
+            echo "  Output:"
+            echo "    ${outLine}"
         fi
     done
 

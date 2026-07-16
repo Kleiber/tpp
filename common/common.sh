@@ -223,6 +223,52 @@ build_cpp_file() {
     fi
 }
 
+run_with_timeout() {
+    local limit=${TPP_TL}
+    local exec=${1}
+    local in=${2}
+    local out=${3}
+    local show=${4}
+
+    local status=0
+    if ${show}; then
+        (
+            set +e
+            "${exec}" < "${in}" &
+            local pid=$!
+            (sleep ${limit}; kill ${pid} 2>/dev/null) &
+            local watchdog=$!
+            wait ${pid} 2>/dev/null
+            status=$?
+            kill ${watchdog} 2>/dev/null
+            wait ${watchdog} 2>/dev/null
+            if [[ ${status} -eq 137 || ${status} -eq 143 ]]; then
+                exit 124
+            fi
+            exit ${status}
+        )
+        status=$?
+    else
+        (
+            set +e
+            "${exec}" < "${in}" 2>/dev/null > "${out}" &
+            local pid=$!
+            (sleep ${limit}; kill ${pid} 2>/dev/null) &
+            local watchdog=$!
+            wait ${pid} 2>/dev/null
+            status=$?
+            kill ${watchdog} 2>/dev/null
+            wait ${watchdog} 2>/dev/null
+            if [[ ${status} -eq 137 || ${status} -eq 143 ]]; then
+                exit 124
+            fi
+            exit ${status}
+        )
+        status=$?
+    fi
+    return ${status}
+}
+
 run_cpp_file() {
     local cppFile=${1}
     local exec=${2}
@@ -251,13 +297,14 @@ run_cpp_file() {
             exit 1
         fi
     else
-        if ${show}; then
-            "${exec}" < ${in}
-        else
-            "${exec}" < ${in} 2>/dev/null > ${out}
+        local status=0
+        run_with_timeout "${exec}" "${in}" "${out}" ${show} || status=$?
+
+        if [[ ${status} -eq 124 ]]; then
+            return 124
         fi
 
-        if errorExists; then
+        if [[ ${status} -ne 0 ]]; then
             echo "Error: '$(basename ${cppFile})' execution with input data failed." >&2
             exit 1
         fi

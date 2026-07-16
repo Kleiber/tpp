@@ -42,9 +42,12 @@ function prepare_tpp_solution() {
                 continue
             fi
 
-            run_cpp_file "${filenameReady}" "${SOL_EXEC}" "${inFile}" "${outFile}" false
+            local runStatus=0
+            run_cpp_file "${filenameReady}" "${SOL_EXEC}" "${inFile}" "${outFile}" false || runStatus=$?
 
-            if [[ $(diff "${expFile}" "${outFile}") != "" ]]; then
+            if [[ ${runStatus} -eq 124 ]]; then
+                allPassed=false
+            elif [[ $(diff "${expFile}" "${outFile}") != "" ]]; then
                 allPassed=false
             fi
         done
