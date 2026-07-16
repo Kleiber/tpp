@@ -19,6 +19,9 @@ export TPP_BRANCH="${TPP_BRANCH:-main}"
 
 export TPP_VIMRC="${HOME}/tpp/config/vimrc"
 
+# Enable Ctrl+S in terminal (prevents freeze)
+stty -ixon 2>/dev/null
+
 # aliases
 alias init="tpp init"
 alias add="tpp add"
